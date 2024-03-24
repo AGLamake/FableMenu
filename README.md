@@ -45,6 +45,7 @@ Archive breakdown:
 # Issues
 - Hiding HUD might make menu disappear when any object is being targeted, simple way to fix is to close menu if open and untick hide HUD option in the pause menu.
 - Custom interface translation may be disabled and no longer load. Restarting the game helps avoid the problem.
+- The list of objects does not close. A fix will be provided in the next update.
 
 # Usage
 
@@ -75,7 +76,7 @@ ID, Original_name, Translated_name, Note, Crash, Limited
 
 ## Acknowledgments
 
-- Jacks (Егор Сычов) - Ideological mastermind, leader of FRC. Made a great contribution to the translation of the list of objects and entities.
+- Jacks (Егор Сычёв) - Ideological mastermind, leader of FRC. Made a great contribution to the translation of the list of objects and entities.
 - Ivan Vasiljevich - Contributed to the translation of the list of objects and entities.
 - Stanislav Meshkov - Contributed to the translation of the list of objects and entities.
 - OdarenkoAs (Андрей Одаренко) - FRC Administrator. Providing advice on some issues related to objects and entities.
