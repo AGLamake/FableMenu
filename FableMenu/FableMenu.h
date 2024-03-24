@@ -2,13 +2,14 @@
 #include "Fable.h"
 
 
-#define FABLEMENU_VERSION "0.5"
+#define FABLEMENU_VERSION "0.5.1 (FRC)"
 
 
 enum eMenuSubMenus {
 	SM_Settings,
 	SM_Creature_List,
 	SM_Object_List,
+	SM_FableShop_List,
 	SM_Total
 };
 
@@ -58,6 +59,7 @@ public:
 	void DrawSettings();
 	void DrawCreatureList();
 	void DrawObjectList();
+	void DrawFableShopList();
 
 	void DrawKeyBind(char* name, int* var);
 	void KeyBind(int* var, char* bindName, char* name);

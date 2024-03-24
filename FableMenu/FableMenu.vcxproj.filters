@@ -183,6 +183,9 @@
     <ClInclude Include="fable\ScriptInterface.h">
       <Filter>Header Files\fable</Filter>
     </ClInclude>
+    <ClInclude Include="CsvReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -301,6 +304,9 @@
     </ClCompile>
     <ClCompile Include="fable\ActionBase.cpp">
       <Filter>Header Files\fable</Filter>
+    </ClCompile>
+    <ClCompile Include="CsvReader.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

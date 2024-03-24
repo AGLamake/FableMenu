@@ -1,4 +1,4 @@
-# FableMenu
+# FableMenu by ermaccer
 
 FableMenu is a plugin for the PC version of Fable: The Lost Chapters, it adds an ImGui powered menu with many features including free camera, object creation, player data manipulation and more!
 
@@ -37,3 +37,13 @@ Archive breakdown:
 Press ~ (default) to open or close menu.
 
 Check .ini file for extra options.
+
+
+# FableMenu FRC version
+
+
+# Updates
+
+- Added support for using custom translations for the interface and lists of objects and entities.
+- The design of the creation tab (objects, creatures) has been changed and brought to a single, dynamically changing view.
+

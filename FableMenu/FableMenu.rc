@@ -13,7 +13,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Polish (Poland) resources
+// Польский (Польша) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_PLK)
 LANGUAGE LANG_POLISH, SUBLANG_DEFAULT
@@ -44,6 +44,16 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
+#endif    // Польский (Польша) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Русский resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
+LANGUAGE LANG_RUSSIAN, SUBLANG_NEUTRAL
+#pragma code_page(1251)
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -51,7 +61,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,5,0,0
+ FILEVERSION 0,5,1,0
  PRODUCTVERSION 0,0,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -65,13 +75,13 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "041504b0"
+        BLOCK "001904b0"
         BEGIN
-            VALUE "CompanyName", "ermaccer"
-            VALUE "FileDescription", "FableMenu"
-            VALUE "FileVersion", "0.5.0.0"
+            VALUE "CompanyName", "Lamake"
+            VALUE "FileDescription", "FableMenu (FRC)"
+            VALUE "FileVersion", "0.5.1.0"
             VALUE "InternalName", "FableMenu.asi"
-            VALUE "LegalCopyright", "Copyright (C) 2022"
+            VALUE "LegalCopyright", "Copyright (C) 2024"
             VALUE "OriginalFilename", "FableMenu.asi"
             VALUE "ProductName", "FableMenu"
             VALUE "ProductVersion", "0.0.0.0"
@@ -79,11 +89,11 @@ BEGIN
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x415, 1200
+        VALUE "Translation", 0x19, 1200
     END
 END
 
-#endif    // Polish (Poland) resources
+#endif    // Русский resources
 /////////////////////////////////////////////////////////////////////////////
 
 

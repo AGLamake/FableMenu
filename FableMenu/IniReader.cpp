@@ -38,8 +38,8 @@ CIniReader::CIniReader(char* szFileName, bool path)
 		memset(m_szFileName, 0x00, 255);
 		memcpy(m_szFileName, szFileName, strlen(szFileName));
 	}
-	
 }
+
 int CIniReader::ReadInteger(char* szSection, char* szKey, int iDefaultValue)
 {
  int iResult = GetPrivateProfileInt(szSection,  szKey, iDefaultValue, m_szFileName); 
