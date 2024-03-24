@@ -41,6 +41,9 @@ Archive breakdown:
  - dinput8.dll - [Ultimate ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader/)
  - FableMenu.asi 
  - FableMenu.ini - configuration file
+ - fablemneu_lang.ini - Decoding phrases of the main menu.
+ - obj.csv - Decoding of the object list.
+ - crt.csv - Decoding of the creatures list.
 
 # Issues
 - Hiding HUD might make menu disappear when any object is being targeted, simple way to fix is to close menu if open and untick hide HUD option in the pause menu.
