@@ -134,7 +134,7 @@ void eDirectX9Hook::ReloadImGuiFont()
 	ImGuiStyle* style = &ImGui::GetStyle();
 	ImGuiIO io = ImGui::GetIO();
 	io.Fonts->Clear();
-	io.Fonts->AddFontFromMemoryCompressedTTF(Font_compressed_data, Font_compressed_size, fontSize * SettingsMgr->fMenuScale);
+	io.Fonts->AddFontFromMemoryCompressedTTF(Font_compressed_data, Font_compressed_size, fontSize * SettingsMgr->fMenuScale, NULL, io.Fonts->GetGlyphRangesCyrillic());
 	io.Fonts->Build();
 	ImGui_ImplDX9_InvalidateDeviceObjects();
 

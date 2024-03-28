@@ -368,10 +368,6 @@ void FableMenu::Draw()
                 {
                     m_bSubmenuActive[SM_Object_List] = true;
                 }
-				if (ImGui::MenuItem(lang.ReadString("Menu", "menu_fableshop", "FableShop List")))
-				{
-					m_bSubmenuActive[SM_FableShop_List] = true;
-				}
                 if (ImGui::BeginMenu(lang.ReadString("Menu", "menu_about", "About")))
                 {
                     ImGui::MenuItem(lang.ReadString("Menu", "menu_about_version" FABLEMENU_VERSION, "Version: " FABLEMENU_VERSION));
@@ -1153,10 +1149,12 @@ void FableMenu::DrawCreatureList()
 
 void FableMenu::DrawObjectList()
 {
+	std::string selectID = "";
+
 	ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, { 0.5f, 0.5f });
 	ImGui::SetNextWindowPos({ ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y / 2.0f }, ImGuiCond_Once, { 0.5f, 0.5f });
 	ImGui::SetNextWindowSize({ 700,700 }, ImGuiCond_Once);
-	ImGui::Begin(lang.ReadString("Objects", "obj_list_text", "Object List"), &m_bSubmenuActive[SM_FableShop_List]);
+	ImGui::Begin(lang.ReadString("Objects", "obj_list_text", "Object List"), &m_bSubmenuActive[SM_Object_List]);
 
 	static ImGuiTextFilter filter;
 	ImGui::TextWrapped(lang.ReadString("Objects", "obj_list_text_copy", "Click on any entry to copy to clipboard."));
@@ -1167,23 +1165,22 @@ void FableMenu::DrawObjectList()
 
 	ImGui::BeginChild("##olist", { 0, -ImGui::GetFrameHeightWithSpacing() }, true);
 
-	const char* selectID = "";
 	for (auto &pair : object_dir)
 	{
-		const char* key = pair.first.c_str();
-		const char* value = (pair.second.translate + " [" + pair.second.original + "]").c_str();
+		const std::string key = pair.first;
+		const std::string display_text = pair.second.translate + " [" + pair.second.original + "]";
 
-		if (filter.PassFilter(key))
+		if (filter.PassFilter(display_text.c_str()))
 		{
 			bool is_selected = (selectID == key);
-			if (ImGui::Selectable(value, is_selected))
+			if (ImGui::Selectable(display_text.c_str(), is_selected))
 			{
 				selectID = key;
 
-				HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, strlen(key) + 1);
-				memcpy(GlobalLock(hMem), key, strlen(key) + 1);
+				const size_t len = key.length() + 1;
+				HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, len);
+				memcpy(GlobalLock(hMem), key.c_str(), len);
 				GlobalUnlock(hMem);
-
 				OpenClipboard(NULL);
 				EmptyClipboard();
 				SetClipboardData(CF_TEXT, hMem);
@@ -1191,7 +1188,6 @@ void FableMenu::DrawObjectList()
 				Notifications->SetNotificationTime(5000);
 				Notifications->PushNotification(lang.ReadString("Objects", "obj_list_notification", "Copied %s to clipboard!"));
 			}
-
 		}
 	}
 
