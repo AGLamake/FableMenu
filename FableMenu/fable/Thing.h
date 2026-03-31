@@ -42,13 +42,13 @@
 #include "Creature.h"
 
 enum eMovementTypes {
-	ST_SLOW_WALK,
-	ST_WALK,
-	ST_JOG,
-	ST_RUN,
-	ST_SPRINT,
-	STANDARD_FLY,
-	TOTAL_MOVEMENT_TYPES
+    ST_SLOW_WALK,
+    ST_WALK,
+    ST_JOG,
+    ST_RUN,
+    ST_SPRINT,
+    STANDARD_FLY,
+    TOTAL_MOVEMENT_TYPES
 };
 
 class CTCRegionDisplay;
@@ -59,17 +59,17 @@ class CThingManager;
 
 class CThing {
 public:
-	char pad[0xB0];
-	float m_fMaxHealth;
-	float m_fHealth;
+    char pad[0xB0];
+    float m_fMaxHealth;
+    float m_fHealth;
 
     static CThingManager* GetCurrentThingManager();
     const CPlayer* PeekPlayer();
-	CTCBase* GetTC(ETCInterfaceType id);
+    CTCBase* GetTC(ETCInterfaceType id);
     CTCBase* AddTC(CCharString* name, int voverride, int pparams_base);
     bool HasTC(ETCInterfaceType id);
     void RemoveTC(ETCInterfaceType id);
-	CVector* GetPosition();
+    CVector* GetPosition();
     static int GetThingID(char* name);
     ECreatureType GetCreatureType();
     static CWorldMap* GetWorldMap();

@@ -107,7 +107,7 @@ void GUIImplementationDX9::ImGui_ReloadFont()
 	ImGuiStyle* style = &ImGui::GetStyle();
 	ImGuiIO io = ImGui::GetIO();
 	io.Fonts->Clear();
-	io.Fonts->AddFontFromMemoryCompressedTTF(Font_compressed_data, Font_compressed_size, fontSize * SettingsMgr->fMenuScale, NULL, io.Fonts->GetGlyphRangesCyrillic());
+	io.Fonts->AddFontFromMemoryCompressedTTF(Font_compressed_data, Font_compressed_size, fontSize * fMenuScale, NULL, io.Fonts->GetGlyphRangesCyrillic());
 	io.Fonts->Build();
 
 	ImGui_ImplDX9_InvalidateDeviceObjects();
@@ -146,19 +146,19 @@ LRESULT WINAPI GUIImplementationDX9::WndProc(const HWND hWnd, UINT uMsg, WPARAM 
 	switch (uMsg)
 	{
 	case WM_KILLFOCUS:
-		TheMenu->m_bIsFocused = false;
+		GetMenu().m_bIsFocused = false;
 		break;
 	case WM_SETFOCUS:
-		TheMenu->m_bIsFocused = true;
+		GetMenu().m_bIsFocused = true;
 		break;
 	case WM_KEYDOWN:
 		if (wParam == SettingsMgr->iMenuOpenKey)
-			TheMenu->OnActivate();
+			GetMenu().OnActivate();
 		break;
 	default:
 		break;
 	}
-	if (TheMenu->m_bIsActive)
+	if (GetMenu().m_bIsActive)
 	{
 		ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 		return true;
@@ -217,7 +217,7 @@ void GUIImplementationDX9::GUI_Process()
 	}
 
 	Notifications->Draw();
-	TheMenu->Draw();
+	GetMenu().Draw();
 }
 
 void GUIImplementationDX9::OnBeforeReset(LPDIRECT3DDEVICE9 pDevice, D3DPRESENT_PARAMETERS* pPresentationParameters)

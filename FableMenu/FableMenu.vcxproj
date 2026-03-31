@@ -15,33 +15,20 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{571c44e9-2ef2-4a6d-995f-93833d99bc2b}</ProjectGuid>
     <RootNamespace>ScarfaceMenu</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>FableMenu</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -62,14 +49,6 @@
     <TargetExt>.asi</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-    <TargetExt>.asi</TargetExt>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
-    <TargetExt>.asi</TargetExt>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.asi</TargetExt>
   </PropertyGroup>
@@ -111,51 +90,8 @@
       <AdditionalDependencies>d3d9.lib;dinput8.lib;Dxguid.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;SCARFACEMENU_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>d3d9.lib;dinput8.lib;Dxguid.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;SCARFACEMENU_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>d3d9.lib;dinput8.lib;Dxguid.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="core.h" />
-    <ClInclude Include="CsvReader.h" />
-    <ClInclude Include="eDirectInput8Hook.h" />
-    <ClInclude Include="eDirectX9Hook.h" />
-    <ClInclude Include="eNotifManager.h" />
-    <ClInclude Include="eSettingsManager.h" />
-    <ClInclude Include="fable\ActionBase.h" />
-    <ClInclude Include="fable\Base.h" />
     <ClInclude Include="fable\BulletTime.h" />
     <ClInclude Include="fable\Creature.h" />
     <ClInclude Include="fable\CreatureActions\CreatureAction_AddRealObjectToInventory.h" />
@@ -251,11 +187,11 @@
     <ClInclude Include="plugin\Menu.h" />
     <ClInclude Include="plugin\Settings.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="utils\CsvReader.h" />
     <ClInclude Include="utils\IniReader.h" />
     <ClInclude Include="utils\MemoryMgr.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CsvReader.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="fable\Creature.cpp" />
     <ClCompile Include="fable\CreatureActions\CreatureAction_AddRealObjectToInventory.cpp" />
@@ -347,10 +283,16 @@
     <ClCompile Include="plugin\FreeCamera.cpp" />
     <ClCompile Include="plugin\Menu.cpp" />
     <ClCompile Include="plugin\Settings.cpp" />
+    <ClCompile Include="utils\CsvReader.cpp" />
     <ClCompile Include="utils\IniReader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="FableMenu.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\SteamLibrary\steamapps\common\Fable The Lost Chapters\crt.csv" />
+    <None Include="..\..\..\SteamLibrary\steamapps\common\Fable The Lost Chapters\fablemenu_lang.ini" />
+    <None Include="..\..\..\SteamLibrary\steamapps\common\Fable The Lost Chapters\obj.csv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

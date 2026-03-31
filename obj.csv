@@ -1,4 +1,3 @@
-ID,ORIGINAL,TRANSLATE,CRASH,LIMITED
 125,NULLDEF_OBJECT,СБОЙ,СБОЙ (вылетает игра),1
 285,OBJECT_BASE,Шаблон для объектов,СБОЙ (вылетает игра),1
 286,OBJECT_FENCE_TEMPLATE,Шаблон для забора (Пустой объект с коллизией),Ландшафт (не поднять),0
@@ -124,12 +123,12 @@ ID,ORIGINAL,TRANSLATE,CRASH,LIMITED
 800,OBJECT_PRISON_COURTYARD_11,Часть Баргейтской темницы Двор 11,Ландшафт (не поднять),0
 801,OBJECT_PRISON_COURTYARD_12,Часть Баргейтской темницы Двор 12,Ландшафт (не поднять),0
 802,OBJECT_PRISON_COURTYARD_13,Часть Баргейтской темницы Двор 13,Ландшафт (не поднять),0
-803,OBJECT_PRISON_EXTERIOR_01,Часть Баргейтской темницы,Ландшафт (не поднять),0
-804,OBJECT_PRISON_EXTERIOR_02,Часть Баргейтской темницы,Ландшафт (не поднять),0
-805,OBJECT_PRISON_EXTERIOR_03,Часть Баргейтской темницы,Ландшафт (не поднять),0
-806,OBJECT_PRISON_EXTERIOR_04,Часть Баргейтской темницы,Ландшафт (не поднять),0
-807,OBJECT_PRISON_EXTERIOR_05,Часть Баргейтской темницы,Ландшафт (не поднять),0
-808,OBJECT_PRISON_EXTERIOR_06,Часть Баргейтской темницы,Ландшафт (не поднять),0
+803,OBJECT_PRISON_EXTERIOR_01,Часть Баргейтской темницы,Ландшафт 1 (не поднять),0
+804,OBJECT_PRISON_EXTERIOR_02,Часть Баргейтской темницы,Ландшафт 2 (не поднять),0
+805,OBJECT_PRISON_EXTERIOR_03,Часть Баргейтской темницы,Ландшафт 3 (не поднять),0
+806,OBJECT_PRISON_EXTERIOR_04,Часть Баргейтской темницы,Ландшафт 4 (не поднять),0
+807,OBJECT_PRISON_EXTERIOR_05,Часть Баргейтской темницы,Ландшафт 5 (не поднять),0
+808,OBJECT_PRISON_EXTERIOR_06,Часть Баргейтской темницы,Ландшафт 6 (не поднять),0
 841,OBJECT_WW_SWORD_IN_STONE_01,Меч в камне,Ландшафт (не поднять),0
 842,OBJECT_WW_SWORD_IN_STONE_BASE_01,Камень без меча,Ландшафт (не поднять),0
 843,OBJECT_WW_SWORD_IN_STONE_PLACEHOLDER_01,Камень со стальным мечом,Ландшафт (не поднять),0
@@ -1221,10 +1220,10 @@ ID,ORIGINAL,TRANSLATE,CRASH,LIMITED
 3963,OBJECT_HAUNTED_HOUSE_OUTBUILDING_WALLSECTION,Часть каменный стены,Ландшафт (не поднять),0
 3964,OBJECT_HAUNTED_HOUSE_OUTBUILDING_WALLGATE,Стена с аркой и пристройкой,Ландшафт (не поднять),0
 3965,OBJECT_HAUNTED_HOUSE_GATE_01,Врата в дом Греев,Ландшафт (не поднять),0
-3966,OBJECT_HERO_TITLE_DUMMY_TEMPLATE,Ничего не появляется,"Ничего не появляется, сбоя нет",0
-3967,OBJECT_HERO_TITLE_BEGINNER_STRENGTH,Ничего не появляется,"Ничего не появляется, сбоя нет",0
-3968,OBJECT_HERO_TITLE_BEGINNER_SKILL,Ничего не появляется,"Ничего не появляется, сбоя нет",0
-3969,OBJECT_HERO_TITLE_BEGINNER_WILL,Ничего не появляется,"Ничего не появляется, сбоя нет",0
+3966,OBJECT_HERO_TITLE_DUMMY_TEMPLATE,Dummy,"Ничего не появляется, сбоя нет",0
+3967,OBJECT_HERO_TITLE_BEGINNER_STRENGTH,Beginner Strength,"Ничего не появляется, сбоя нет",0
+3968,OBJECT_HERO_TITLE_BEGINNER_SKILL,Beginner Skill,"Ничего не появляется, сбоя нет",0
+3969,OBJECT_HERO_TITLE_BEGINNER_WILL,Beginner Will,"Ничего не появляется, сбоя нет",0
 3970,OBJECT_HERO_TITLE_REAPER,Страхолюд,Титул (имя) [не заспаунить через FableMenu],0
 3971,OBJECT_HERO_TITLE_SHADOWHUNTER,Танцующий-с-Тенями,Титул (имя) [не заспаунить через FableMenu],0
 3972,OBJECT_HERO_TITLE_MALEFICUS,Малефикус,Титул (имя) [не заспаунить через FableMenu],0
@@ -2769,24 +2768,24 @@ ID,ORIGINAL,TRANSLATE,CRASH,LIMITED
 5546,OBJECT_BANDIT_SWORD_SMALL,Короткий меч,Оружие,0
 5547,OBJECT_HERO_SWORD_FIRST,Длинный меч,Оружие,0
 5548,OBJECT_WARRIOR_SWORD,Большой меч,Оружие,0
-5549,OBJECT_BANDIT_WEAPON_01,Кривая сабля,Оружие,0
+5549,OBJECT_BANDIT_WEAPON_01,Кривая сабля (Бандит),Оружие,0
 5550,OBJECT_BANDIT_WEAPON_02,Охотничий нож,Оружие,0
 5551,OBJECT_BANDIT_SWORD_LONG,Длинный меч,Оружие,0
-5552,OBJECT_BANDIT_SWORD_LIEUTENANT_01,Кривая сабля,Оружие,0
-5553,OBJECT_BANDIT_SWORD_LIEUTENANT_02,Кривая сабля,Оружие,0
-5554,OBJECT_BANDITKING_SWORD_01,Кривая сабля (как у Два-Ножа),Оружие,0
-5555,OBJECT_BANDITKING_SWORD_02,Кривая сабля (как у Два-Ножа),Оружие,0
-5556,OBJECT_BANDITKING_HAMMER_01,Кривая сабля (молот как у Два-Ножа),Оружие,0
-5557,OBJECT_BANDITKING_HAMMER_02,Кривая сабля (молот как у Два-Ножа),Оружие,0
-5558,OBJECT_AXE_VILLAGER_01,Кривая сабля (крестьянский топор),Оружие,0
-5559,OBJECT_AXE_VILLAGER_02,Кривая сабля (крестьянский топор),Оружие,0
+5552,OBJECT_BANDIT_SWORD_LIEUTENANT_01,Кривая сабля (Бандит-Лейтенант 1),Оружие,0
+5553,OBJECT_BANDIT_SWORD_LIEUTENANT_02,Кривая сабля (Бандит-Лейтенант 2),Оружие,0
+5554,OBJECT_BANDITKING_SWORD_01,Кривая сабля (как у Два-Ножа 1),Оружие,0
+5555,OBJECT_BANDITKING_SWORD_02,Кривая сабля (как у Два-Ножа 2),Оружие,0
+5556,OBJECT_BANDITKING_HAMMER_01,Кривая сабля (молот как у Два-Ножа 1),Оружие,0
+5557,OBJECT_BANDITKING_HAMMER_02,Кривая сабля (молот как у Два-Ножа 2),Оружие,0
+5558,OBJECT_AXE_VILLAGER_01,Кривая сабля (крестьянский топор 1),Оружие,0
+5559,OBJECT_AXE_VILLAGER_02,Кривая сабля (крестьянский топор 2),Оружие,0
 5560,OBJECT_CLUB_GUARD_03,Дубинка Оркона,Оружие,0
 5561,OBJECT_UNDEAD_AXE_01,Кривая сабля (секира как у нежити),Оружие,0
 5562,OBJECT_UNDEAD_SWORD_01,Кривая сабля (как у нежити),Оружие,0
-5563,OBJECT_UNDEAD_AXE_LIEUTENANT_01,Кривая сабля (секира как у нежити),Оружие,0
+5563,OBJECT_UNDEAD_AXE_LIEUTENANT_01,Кривая сабля (секира как у нежити-лейтенанта),Оружие,0
 5564,OBJECT_UNDEAD_AXE_LIEUTENANT_PROP_01,Кривая сабля (топор как у нежити),Оружие,0
-5565,OBJECT_UNDEAD_SWORD_LIEUTENANT_01,Кривая сабля (меч как у нежити),Оружие,0
-5566,OBJECT_UNDEAD_SWORD_GENERAL_01,Кривая сабля (меч как у нежити),Оружие,0
+5565,OBJECT_UNDEAD_SWORD_LIEUTENANT_01,Кривая сабля (меч как у нежити-лейтенанта),Оружие,0
+5566,OBJECT_UNDEAD_SWORD_GENERAL_01,Кривая сабля (меч как у нежити-генерала),Оружие,0
 5567,OBJECT_UNDEAD_SWORD_ICE_HORDE_01,Кривая сабля (булава как у умерлов),Оружие,0
 5568,OBJECT_ICE_HORDE_WEAPON_PROP_01,Кривая сабля (топор как у умерлов),Оружие,0
 5569,OBJECT_NOSTRO_SWORD_01,Кривая сабля (Меч Ностро),Оружие,0
@@ -2806,11 +2805,11 @@ ID,ORIGINAL,TRANSLATE,CRASH,LIMITED
 5583,OBJECT_RIVAL_HERO_SCYTHE_WEAPON,Кривая сабля (коса Жнеца),Оружие,0
 5584,OBJECT_RIVAL_HERO_WHISPER_STAFF,Кривая сабля (палка Уиспер),Оружие,0
 5585,OBJECT_RIVAL_HERO_MAZE_STAFF_01,Кривая сабля (палка Мэйза),Оружие,0
-5586,OBJECT_RIVAL_HERO_THUNDER_SWORD,"Кривая сабля (меч Громобоя, урон 200)",Оружие,0
-5587,OBJECT_RIVAL_HERO_THUNDER_SWORD_V2,"Кривая сабля (меч Громобоя, урон 400)",Оружие,0
+5586,OBJECT_RIVAL_HERO_THUNDER_SWORD,"Кривая сабля (меч Громобоя урон 200)",Оружие,0
+5587,OBJECT_RIVAL_HERO_THUNDER_SWORD_V2,"Кривая сабля (меч Громобоя урон 400)",Оружие,0
 5588,OBJECT_RIVAL_HERO_THUNDER_SHIELD,Кривая сабля (щит Громобоя),Оружие,0
-5589,OBJECT_BRIAR_ROSE_SWORD,"Стальная катана (меч Браэр Роуз, урон 530)",Оружие,0
-5590,OBJECT_BRIAR_ROSE_IMPOSTER_SWORD,"Стальная катана (меч Браэр Роуз, урон 300)",Оружие,0
+5589,OBJECT_BRIAR_ROSE_SWORD,"Стальная катана (меч Браэр Роуз урон 530)",Оружие,0
+5590,OBJECT_BRIAR_ROSE_IMPOSTER_SWORD,"Стальная катана (меч Браэр Роуз урон 300)",Оружие,0
 5591,OBJECT_LUTE,Сковородка (лютня),Оружие,0
 5592,OBJECT_FRYING_PAN,Сковорода (урон 100),Оружие,0
 5593,OBJECT_FAKE_FRYING_PAN,Сковорода (урон 0),Оружие,0
@@ -2841,10 +2840,10 @@ ID,ORIGINAL,TRANSLATE,CRASH,LIMITED
 5618,OBJECT_FIRE_CROSSBOW,Арбалет,Оружие,0
 5619,OBJECT_WARRIOR_SWORD_LITE,Большой меч,Оружие,0
 5620,OBJECT_SWORD_OF_STRENGTH,Губитель,Оружие,0
-5621,OBJECT_BANDIT_SWORD_MED,Меч,Оружие,0
+5621,OBJECT_BANDIT_SWORD_MED,Бандитсчский Меч,Оружие,0
 5622,OBJECT_SWORD_LONG,Длинный меч,Оружие,0
 5623,OBJECT_SWORD_MED,Меч,Оружие,0
-5624,OBJECT_HERO_SWORD_MED,Меч,Оружие,0
+5624,OBJECT_HERO_SWORD_MED,Геройский Меч,Оружие,0
 5625,OBJECT_MINION_WEAPON,Длинный меч (оружие миньонов),Оружие,0
 5626,OBJECT_MINION_WEAPON_DREADWINGS,Длинный меч (оружие миньонов),Оружие,0
 5627,OBJECT_MINION_WEAPON_DREADWINGS_RANGED,Длинный меч (оружие миньонов),Оружие,0

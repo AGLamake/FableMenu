@@ -112,7 +112,7 @@ bool CThing::SetCurrentAction(CTCBase* action)
 
 bool CThing::IsFreeToPerformAction(CTCBase* action)
 {
-    return CallMethodAndReturn<bool, 0x662210, CThing*,CTCBase*>(this, action);
+    return CallMethodAndReturn<bool, 0x662210, CThing*, CTCBase*>(this, action);
 }
 
 bool CThing::HasPrecedingAction()

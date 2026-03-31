@@ -22,7 +22,7 @@ void FreeCamera::Update()
 {
 	UpdateMovement();
 	UpdateRotation();
-	TheCamera->pos = TheMenu->camPos;
+	TheCamera->pos = GetMenu().camPos;
 }
 
 void FreeCamera::UpdateRotation()
@@ -66,17 +66,17 @@ void FreeCamera::UpdateMovement()
 	float delta = GUIImplementationDX9::GetDeltaTime();
 
 	if (GetAsyncKeyState(SettingsMgr->iFreeCameraKeyForward))
-		TheMenu->camPos += fwd * TheMenu->m_fFreeCamSpeed * delta * 1;
+		GetMenu().camPos += fwd * GetMenu().m_fFreeCamSpeed * delta * 1;
 	if (GetAsyncKeyState(SettingsMgr->iFreeCameraKeyBack))
-		TheMenu->camPos += fwd * TheMenu->m_fFreeCamSpeed * delta * -1;
+		GetMenu().camPos += fwd * GetMenu().m_fFreeCamSpeed * delta * -1;
 
 	if (GetAsyncKeyState(SettingsMgr->iFreeCameraKeyLeft))
-		TheMenu->camPos += strafe * TheMenu->m_fFreeCamSpeed * delta * -1;
+		GetMenu().camPos += strafe * GetMenu().m_fFreeCamSpeed * delta * -1;
 	if (GetAsyncKeyState(SettingsMgr->iFreeCameraKeyRight))
-		TheMenu->camPos += strafe * TheMenu->m_fFreeCamSpeed * delta * 1;
+		GetMenu().camPos += strafe * GetMenu().m_fFreeCamSpeed * delta * 1;
 
 	if (GetAsyncKeyState(SettingsMgr->iFreeCameraKeyUp))
-		TheMenu->camPos += up * TheMenu->m_fFreeCamSpeed * delta * 1;
+		GetMenu().camPos += up * GetMenu().m_fFreeCamSpeed * delta * 1;
 	if (GetAsyncKeyState(SettingsMgr->iFreeCameraKeyDown))
-		TheMenu->camPos += up * TheMenu->m_fFreeCamSpeed * delta * -1;
+		GetMenu().camPos += up * GetMenu().m_fFreeCamSpeed * delta * -1;
 }

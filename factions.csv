@@ -1,0 +1,30 @@
+0,NULLDEF_FACTION,Пустая фракция
+1,FACTION_HERO,Герой
+2,FACTION_MONSTERS,Монстры
+3,FACTION_VILLAGERS,Жители деревни
+4,FACTION_BANDITS,Бандиты
+5,FACTION_TWINBLADE_CAMP_BANDITS,Бандиты лагеря Два-Ножа
+6,FACTION_TWINBLADE_CAMP_NEUTRALS,Нейтралы лагеря Два-Ножа
+7,FACTION_TRADERS,Торговцы
+8,FACTION_NEUTRALS,Нейтралы
+9,FACTION_FARM_HANDS,Сельские рабочие
+10,FACTION_GUILD_APPRENTICES_GOOD,Ученики гильдии (Добрые)
+11,FACTION_GUILD_APPRENTICES_EVIL,Ученики гильдии (Злые)
+12,FACTION_GUILD_SERVANTS,Слуги гильдии
+13,FACTION_GUILD_MEMBERS,Члены гильдии
+14,FACTION_BANDITS_FRIENDLY,Дружелюбные бандиты
+15,FACTION_MAP_KEEPER,Хранитель карты
+16,FACTION_CTF_FLAG,Флаг (CTF - Захват флага)
+17,FACTION_CTF_BLUE_TEAM,Команда синих (CTF - Захват флага)
+18,FACTION_CTF_RED_TEAM,Команда красных (CTF - Захват флага)
+19,FACTION_HTE_BANDIT,Бандит (HTE - Попади во врага)
+20,FACTION_HTE_PRISONER,Пленник (HTE - Попади во врага)
+21,FACTION_HTE_GUARD,Стражник (HTE - Попади во врага)
+22,FACTION_RIVAL_HERO,Герой-соперник
+23,FACTION_RIVAL_HERO_ALLY,Союзник героя-соперника
+24,FACTION_GUARDS_ENEMY,Враждебные стражники
+25,FACTION_PRISON_GUARD,Тюремный стражник
+26,FACTION_PRISONER,Заключённый
+27,FACTION_BODYGUARD,Телохранитель
+28,FACTION_PICNIC_AREA,Парк
+29,FACTION_SCRIPT_NEUTRAL,Нейтральный (скриптовый)

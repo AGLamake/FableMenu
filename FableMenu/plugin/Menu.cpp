@@ -16,9 +16,33 @@
 #include <iostream>
 #include <Windows.h>
 
+#include "../utils/CsvReader.h"
+#include "../utils/IniReader.h"
+#include <string>
+#include <map>
+#include "../gui/log.h"
+#include "../fable/Thing.h"
+
+
 
 using namespace Memory::VP;
-FableMenu* TheMenu = new FableMenu();
+static FableMenu* g_pMenu = nullptr;
+
+FableMenu& GetMenu() {
+	if (!g_pMenu) {
+		g_pMenu = new FableMenu();
+	}
+	return *g_pMenu;
+}
+
+static CIniReader* g_pLang = nullptr;
+
+CIniReader& GetLang() {
+	if (!g_pLang) {
+		g_pLang = new CIniReader("fablemenu_lang.ini");
+	}
+	return *g_pLang;
+}
 
 bool FableMenu::ms_bFreeCam = false;
 bool FableMenu::m_bCustomCameraPos = false;
@@ -57,8 +81,170 @@ static void ShowWarnMarker(const char* desc)
     }
 }
 
+struct Translation {
+    std::string original;
+    std::string translate;
+    std::string note;
+    std::string crash;
+    std::string limited;
+};
+
+struct DictionaryInfo {
+    std::string filename;
+    std::map<std::string, Translation>& dictionary;
+    int columns;
+};
+
+std::map<std::string, Translation> object_dir;
+std::map<std::string, Translation> crt_dir;
+std::map<std::string, Translation> attack_dir;
+std::map<std::string, Translation> brain_dir;
+std::map<std::string, Translation> creature_modes_dir;
+std::map<std::string, Translation> player_modes_dir;
+std::map<std::string, Translation> expressions_dir;
+std::map<std::string, Translation> creature_animations_dir;
+std::map<std::string, Translation> factions_dir;
+std::map<std::string, Translation> building_dir;
+std::map<std::string, Translation> holysites_dir;
+
+template<typename K, typename V>
+std::pair<K, V> findValue(const std::map<K, V>& map, const std::string& value) {
+    for (const auto& pair : map) {
+        if (pair.second.original == value || pair.first == value) {
+            return pair;
+        }
+    }
+    return std::pair<K, V>();
+}
+
+template<typename K, typename V>
+std::pair<K, V> getByKey(const std::map<K, V>& map, const K& key) {
+    auto it = map.find(key);
+    if (it != map.end()) {
+        return *it;
+    }
+    return std::pair<K, V>();
+}
+
+std::pair<std::string, Translation> getById(const std::map<std::string, Translation>& map, int id) {
+    std::string key = std::to_string(id);
+    auto it = map.find(key);
+    if (it != map.end()) {
+        return *it;
+    }
+    return std::pair<std::string, Translation>();
+}
+
+template<typename K, typename V>
+bool isPairEmpty(const std::pair<K, V>& pair) {
+    return pair.first.empty();
+}
+
+bool LoadDictionary(DictionaryInfo& dictInfo) {
+    try {
+        CCsvReader reader(dictInfo.filename.c_str(), true);
+
+        if (!reader.OpenCsv()) {
+            throw std::string("Не удалось открыть файл: ") + dictInfo.filename;
+        }
+
+        std::vector<std::string> columns;
+        while (!(columns = reader.ReadLine()).empty()) {
+            if (columns.size() >= 2) {
+                Translation trans;
+
+                switch (dictInfo.columns) {
+                case 3:
+                    trans.original = columns[1];
+                    trans.translate = columns[2];
+                    trans.note = "";
+                    trans.crash = "";
+                    trans.limited = "0";
+                    break;
+
+                case 4:
+                    trans.original = columns[1];
+                    trans.translate = columns[2];
+                    trans.note = columns[3];
+                    trans.crash = "";
+                    trans.limited = "0";
+                    break;
+
+                case 5:
+                    trans.original = columns[1];
+                    trans.translate = columns[2];
+                    trans.note = columns[3];
+                    trans.crash = columns[4];
+                    trans.limited = "0";
+                    break;
+
+                case 6:
+                    trans.original = columns[1];
+                    trans.translate = columns[2];
+                    trans.note = columns[3];
+                    trans.crash = columns[4];
+                    trans.limited = columns[5];
+                    break;
+
+                default:
+                    trans.original = columns[1];
+                    trans.translate = columns[2];
+                    trans.note = "";
+                    trans.crash = "";
+                    trans.limited = "0";
+                    break;
+                }
+
+                dictInfo.dictionary[columns[0]] = trans;
+            }
+        }
+
+        return true;
+
+    }
+    catch (const std::string& error) {
+        Notifications->SetNotificationTime(5000);
+        Notifications->PushNotification(error.c_str());
+    }
+    catch (const char* error) {
+        Notifications->SetNotificationTime(5000);
+        Notifications->PushNotification(error);
+    }
+    catch (const std::exception& ex) {
+        Notifications->SetNotificationTime(5000);
+        Notifications->PushNotification(ex.what());
+    }
+
+    return false;
+}
+
+void LoadAllDictionaries() {
+    std::vector<DictionaryInfo> dictionaries = {
+        {"creature_animations.csv", creature_animations_dir, 3},
+        {"factions.csv", factions_dir, 3},
+        {"expressions.csv", expressions_dir, 3},
+        {"player_modes.csv", player_modes_dir, 3},
+        {"creature_modes.csv", creature_modes_dir, 3},
+        {"brain.csv", brain_dir, 3},
+        {"attack.csv", attack_dir, 3},
+        {"building.csv", building_dir, 3},
+        {"holysites.csv", holysites_dir, 3},
+
+        {"obj.csv", object_dir, 4},
+
+        {"crt.csv", crt_dir, 5}
+    };
+
+    for (auto& dict : dictionaries) {
+        LoadDictionary(dict);
+    }
+}
+
+
 FableMenu::FableMenu()
 {
+    LoadAllDictionaries();
+
     sprintf(szFactionName, szFactions[0]);
 }
 
@@ -69,39 +255,40 @@ void FableMenu::OnActivate()
 
 void FableMenu::Draw()
 {
+
     if (!m_bIsActive)
         return;
 
     ImGui::GetIO().MouseDrawCursor = true;
 
-    ImGui::Begin("FableMenu by ermaccer, beqwit & unveler", &m_bIsActive, ImGuiWindowFlags_MenuBar);
+	ImGui::Begin(GetLang().ReadString("Window", "main_window", "FableMenu by ermaccer"), &m_bIsActive, ImGuiWindowFlags_MenuBar);
     {
         ImGui::SetWindowSize({ 600, 500 }, ImGuiCond_Once);
         if (ImGui::BeginMenuBar())
         {
-            if (ImGui::BeginMenu("Settings"))
+			if (ImGui::BeginMenu(GetLang().ReadString("Menu", "menu_settings", "Settings")))
             {
                 m_bSubmenuActive[SM_Settings] = true;
                 ImGui::EndMenu();
             }
-            if (ImGui::BeginMenu("Help"))
+			if (ImGui::BeginMenu(GetLang().ReadString("Menu", "menu_help", "Help")))
             {
-                if (ImGui::MenuItem("Creature List"))
+				if (ImGui::MenuItem(GetLang().ReadString("Menu", "menu_help_creatures", "Creature List")))
                 {
                     m_bSubmenuActive[SM_Creature_List] = true;
                 }
-                if (ImGui::MenuItem("Particle List"))
+                if (ImGui::MenuItem(GetLang().ReadString("Menu", "menu_help_particles", "Particle List")))
                 {
                     m_bSubmenuActive[SM_Particle_List] = true;
                 }
-                if (ImGui::MenuItem("Object List"))
+				if (ImGui::MenuItem(GetLang().ReadString("Menu", "menu_help_objects", "Objects List")))
                 {
                     m_bSubmenuActive[SM_Object_List] = true;
                 }
-                if (ImGui::BeginMenu("About"))
+				if (ImGui::BeginMenu(GetLang().ReadString("Menu", "menu_about", "About")))
                 {
-                    ImGui::MenuItem("Version: " FABLEMENU_VERSION);
-                    ImGui::MenuItem("Date: " __DATE__);
+					ImGui::MenuItem(GetLang().ReadString("Menu", "menu_about_version" FABLEMENU_VERSION, "Version: " FABLEMENU_VERSION));
+					ImGui::MenuItem((GetLang().ReadString("Menu", "menu_about_date" __DATE__, "Date: " __DATE__)));
                     ImGui::EndMenu();
                 }
                 ImGui::EndMenu();
@@ -113,42 +300,42 @@ void FableMenu::Draw()
         {
             if (ImGui::BeginTabBar("##tabs"))
             {
-                if (ImGui::BeginTabItem("Hero"))
+				if (ImGui::BeginTabItem(GetLang().ReadString("Tabs", "tab_hero", "Hero")))
                 {
                     DrawHeroTab();
                     ImGui::EndTabItem();
                 }
-                if (ImGui::BeginTabItem("Player"))
+				if (ImGui::BeginTabItem(GetLang().ReadString("Tabs", "tab_player", "Player")))
                 {
                     DrawPlayerTab();
                     ImGui::EndTabItem();
                 }
-                if (ImGui::BeginTabItem("Creatures"))
+				if (ImGui::BeginTabItem(GetLang().ReadString("Tabs", "tab_creatures", "Creatures")))
                 {
                     DrawCreaturesTab();
                     ImGui::EndTabItem();
                 }
-                if (ImGui::BeginTabItem("Objects"))
+				if (ImGui::BeginTabItem(GetLang().ReadString("Tabs", "tab_objects", "Objects")))
                 {
                     DrawObjectsTab();
                     ImGui::EndTabItem();
                 }
-                if (ImGui::BeginTabItem("Camera"))
+				if (ImGui::BeginTabItem(GetLang().ReadString("Tabs", "tab_camera", "Camera")))
                 {
                     DrawCameraTab();
                     ImGui::EndTabItem();
                 }
-                if (ImGui::BeginTabItem("World"))
+				if (ImGui::BeginTabItem(GetLang().ReadString("Tabs", "tab_world", "World")))
                 {
                     DrawWorldTab();
                     ImGui::EndTabItem();
                 }
-                if (ImGui::BeginTabItem("Quest"))
+				if (ImGui::BeginTabItem(GetLang().ReadString("Tabs", "tab_quest", "Quest")))
                 {
                     DrawQuestTab();
                     ImGui::EndTabItem();
                 }
-                if (ImGui::BeginTabItem("Misc."))
+				if (ImGui::BeginTabItem(GetLang().ReadString("Tabs", "tab_misc", "Misc.")))
                 {
                     DrawMiscTab();
                     ImGui::EndTabItem();
@@ -157,7 +344,7 @@ void FableMenu::Draw()
             }
         }
         else
-            ImGui::TextWrapped("Not ready!");
+			ImGui::TextWrapped(GetLang().ReadString("Preload", "not_ready", "Not ready!"));
     }
     ImGui::End();
 
@@ -237,62 +424,81 @@ void FableMenu::DrawHeroTab()
         CTCCarrying* carrying = (CTCCarrying*)t->GetTC(TCI_CARRYING);
         if (stats)
         {
-            if (ImGui::CollapsingHeader("Data"))
+			if (ImGui::CollapsingHeader(GetLang().ReadString("Data", "data_text", "Data")))
             {
-                ImGui::InputFloat("Health", &t->m_fHealth);
-                ImGui::InputFloat("Max. Health", &t->m_fMaxHealth);
-                ImGui::InputInt("Will##data", &stats->m_nStamina, 0);
-                ImGui::InputInt("Max. Will", &stats->m_nMaxStamina, 0);
-                ImGui::InputInt("Gold", &stats->m_nMoney);
-                ImGui::InputFloat("Age", &stats->m_fAge);
+				ImGui::InputFloat(GetLang().ReadString("Data", "data_health", "Health"), &t->m_fHealth);
+				ImGui::InputFloat(GetLang().ReadString("Data", "data_max_health", "Max. Health"), &t->m_fMaxHealth);
+                ImGui::InputInt(GetLang().ReadString("Data", "data_max_will", "Will"), &stats->m_nStamina, 0);
+                ImGui::InputInt(GetLang().ReadString("Data", "data_max_will", "Max. Will"), &stats->m_nMaxStamina, 0);
+                ImGui::InputInt(GetLang().ReadString("Data", "data_gold", "Gold"), &stats->m_nMoney);
+                ImGui::InputFloat(GetLang().ReadString("Data", "data_age", "Age"), &stats->m_fAge);
                 if (hero)
                 {
-                    ImGui::Checkbox("Can Use Weapons", &hero->m_bCanUseWeapons);
-                    ImGui::Checkbox("Can Use Will", &hero->m_bCanUseWill);
+                    ImGui::Checkbox(GetLang().ReadString("Data", "data_can_use_weapons", "Can Use Weapons"), &hero->m_bCanUseWeapons);
+                    ImGui::Checkbox(GetLang().ReadString("Data", "data_can_use_will", "Can Use Will"), &hero->m_bCanUseWill);
 
                     ImGui::Separator();
-                    ImGui::Text("Renown Data");
+                    ImGui::Text(GetLang().ReadString("Data", "data_renown_text", "Renown Data"));
                     ImGui::Separator();
 
-                    ImGui::InputInt("Renown", &stats->m_nRenownTotal);
-                    if (ImGui::SliderInt("Renown Level", &stats->m_nRenownLevel, 1, stats->m_nRenownMaxLevel))
+                    ImGui::InputInt(GetLang().ReadString("Data", "data_renown", "Renown"), &stats->m_nRenownTotal);
+                    if (ImGui::SliderInt(GetLang().ReadString("Data", "data_renown_level", "Renown Level"), &stats->m_nRenownLevel, 1, stats->m_nRenownMaxLevel))
                     {
                         stats->CheckForNewExpressions();
                     }
-                    ImGui::InputInt("Renown Points In Level", &stats->m_nRenownPointsInLevel);
-                    ImGui::InputInt("Morality", &stats->m_nMorality);
+                    ImGui::InputInt(GetLang().ReadString("Data", "data_renown_points", "Renown Points In Level"), &stats->m_nRenownPointsInLevel);
+                    ImGui::InputInt(GetLang().ReadString("Data", "data_morality", "Morality"), &stats->m_nMorality);
 
                     static int titleObjectID = 1220;
                     const char* defPrefix = "OBJECT_HERO_TITLE";
+                    size_t prefixLen = strlen(defPrefix);
 
                     ImGui::Separator();
-                    ImGui::Text("Title");
+                    ImGui::Text(GetLang().ReadString("Data", "data_title", "Title"));
                     ImGui::Separator();
                     ImGui::PushItemWidth(-FLT_MIN);
-                    if (ImGui::BeginCombo("##title", szObjectsList[titleObjectID]))
+
+                    std::string currentTitle = "Unknown";
+                    auto currentResult = findValue(object_dir, std::to_string(titleObjectID));
+                    std::string translate;
+                    if (!isPairEmpty(currentResult)) {
+                        currentTitle = currentResult.second.original;
+						translate = currentResult.second.translate;
+                    }
+
+                    if (ImGui::BeginCombo("##title", translate.c_str()))
                     {
-                        for (int n = 0; n < IM_ARRAYSIZE(szObjectsList); n++)
+                        for (const auto& pair : object_dir)
                         {
-                            if (strncmp(szObjectsList[n], defPrefix, strlen(defPrefix)) != 0)
+                            const std::string& key = pair.first;
+                            const Translation& trans = pair.second;
+
+                            if (trans.original.find(defPrefix) == 0)
                             {
-                                continue;
+                                int id = std::stoi(key);
+                                bool is_selected = (titleObjectID == id);
+
+                                if (ImGui::Selectable(trans.translate.c_str(), is_selected))
+                                {
+                                    titleObjectID = id;
+                                }
+                                if (is_selected)
+                                {
+                                    ImGui::SetItemDefaultFocus();
+                                }
                             }
-
-                            bool is_selected = (titleObjectID == n);
-                            if (ImGui::Selectable(szObjectsList[n], is_selected))
-                                titleObjectID = n;
-                            if (is_selected)
-                                ImGui::SetItemDefaultFocus();
                         }
-
                         ImGui::EndCombo();
                     }
                     ImGui::PopItemWidth();
 
-                    if (ImGui::Button("Set Title", { -FLT_MIN, 0 }))
+                    if (ImGui::Button(GetLang().ReadString("Data", "data_set_title", "Set Title"), { -FLT_MIN, 0 }))
                     {
                         CGameDefinitionManager* defManager = CGameDefinitionManager::GetDefinitionManager();
-                        CCharString titleDef((char*)(szObjectsList[titleObjectID]));
+                        CCharString titleDef((char*)(currentTitle.c_str()));
+
+                        Notifications->SetNotificationTime(2500);
+                        Notifications->PushNotification((currentResult.second.translate + " [" + currentResult.second.original + "]").c_str());
 
                         int titleDefIndex = defManager->GetDefGlobalIndexFromName(&titleDef);
                         hero->SetTitle(titleDefIndex);
@@ -301,15 +507,15 @@ void FableMenu::DrawHeroTab()
                 if (exp)
                 {
                     ImGui::Separator();
-                    ImGui::Text("Experience");
+					ImGui::Text(GetLang().ReadString("Exp", "exp_text", "Experience"));
                     ImGui::Separator();
 
-                    ImGui::InputInt("General##exp", &exp->m_nGeneralExperience, 0);
-                    ImGui::InputInt("Strength##exp", &exp->m_pExperience[EXPERIENCE_STRENGTH], 0);
-                    ImGui::InputInt("Will##exp", &exp->m_pExperience[EXPERIENCE_WILL], 0);
-                    ImGui::InputInt("Skill##exp", &exp->m_pExperience[EXPERIENCE_SKILL], 0);
+                    ImGui::InputInt(GetLang().ReadString("Exp", "exp_general", "General"), &exp->m_nGeneralExperience, 0);
+                    ImGui::InputInt(GetLang().ReadString("Exp", "exp_strength", "Strength"), &exp->m_pExperience[EXPERIENCE_STRENGTH], 0);
+                    ImGui::InputInt(GetLang().ReadString("Exp", "exp_will", "Will"), &exp->m_pExperience[EXPERIENCE_WILL], 0);
+                    ImGui::InputInt(GetLang().ReadString("Exp", "exp_skill", "Skill"), &exp->m_pExperience[EXPERIENCE_SKILL], 0);
 
-                    if (ImGui::Button("Learn All Abilities"))
+                    if (ImGui::Button(GetLang().ReadString("Exp", "exp_learn_all", "Learn All Abilities")))
                     {
                         for (int i = 1; i < MAX_NUMBER_OF_HERO_ABILITIES; i++)
                         {
@@ -317,14 +523,14 @@ void FableMenu::DrawHeroTab()
                         }
                     }
                     ImGui::SameLine();
-                    if (ImGui::Button("Abilities To Max Level"))
+                    if (ImGui::Button(GetLang().ReadString("Exp", "exp_abilities_to_max", "Abilities To Max Level")))
                     {
                         CTCInventoryAbilities* abilities = (CTCInventoryAbilities*)t->GetTC(TCI_HERO_ABILITIES);
 
                         if (abilities)
                             abilities->ForceAllAbilitesToMaxLevel();
                     }
-                    if (ImGui::Button("Learn All Expressions", { -FLT_MIN, 0 }))
+                    if (ImGui::Button(GetLang().ReadString("Exp", "exp_learn_all_expressions", "Learn All Expressions"), { -FLT_MIN, 0 }))
                     {
                         for (auto expression : expressionNames)
                         {
@@ -336,68 +542,72 @@ void FableMenu::DrawHeroTab()
                 if (stats)
                 {
                     ImGui::Separator();
-                    ImGui::Text("Misc.");
+                    ImGui::Text(GetLang().ReadString("Stats", "stats_text", "Misc."));
                     ImGui::Separator();
 
-                    ImGui::InputFloat("Sound Radius Multiplier", &stats->m_fSoundRadiusMultiplier);
-                    ImGui::InputFloat("Visibility Multiplier", &stats->m_fVisibilityMultiplier);
-                    ImGui::InputFloat("Max Chicken Throw", &stats->m_fMaxChickenThrow);
-                    ImGui::Checkbox("Had Scripted Sex", &stats->m_bHadScriptedSex);
-                    ImGui::Checkbox("Had Scripted Gay Sex", &stats->m_bHadScriptedGaySex);
+                    ImGui::InputFloat(GetLang().ReadString("Stats", "stats_sound_radius_mult", "Sound Radius Multiplier"), &stats->m_fSoundRadiusMultiplier);
+                    ImGui::InputFloat(GetLang().ReadString("Stats", "stats_visibility_mult", "Visibility Multiplier"), &stats->m_fVisibilityMultiplier);
+                    ImGui::InputFloat(GetLang().ReadString("Stats", "stats_chicken_throw", "Max Chicken Throw"), &stats->m_fMaxChickenThrow);
+                    ImGui::Checkbox(GetLang().ReadString("Stats", "stats_has_scripted_sex", "Had Scripted Sex"), &stats->m_bHadScriptedSex);
+                    ImGui::Checkbox(GetLang().ReadString("Stats", "stats_has_scripted_gay_sex", "Had Scripted Gay Sex"), &stats->m_bHadScriptedGaySex);
                 }
             }
         }
         if (morph)
         {
-            if (ImGui::CollapsingHeader("Morph"))
+			if (ImGui::CollapsingHeader(GetLang().ReadString("Morph", "morph_text", "Morph")))
             {
-                ImGui::SliderFloat("Strength", &morph->m_fStrength, 0.00f, 1.0f);
-                ImGui::SliderFloat("Berserk", &morph->m_fBerserk, 0.00f, 1.0f);
-                ImGui::SliderFloat("Will", &morph->m_fWill, 0.00f, 1.0f);
-                ImGui::SliderFloat("Skill", &morph->m_fSkill, 0.00f, 1.0f);
-                ImGui::SliderFloat("Age##morph", &morph->m_fAge, 0.00f, 1.0f);
-                ImGui::SliderFloat("Alignment", &morph->m_fAlign, 0.00f, 1.0f);
-                ImGui::SliderFloat("Fatness", &morph->m_fFat, 0.00f, 1.0f);
+                ImGui::SliderFloat(GetLang().ReadString("Morph", "morph_strength", "Strength"), &morph->m_fStrength, 0.00f, 1.0f);
+                ImGui::SliderFloat(GetLang().ReadString("Morph", "morph_berserk", "Berserk"), &morph->m_fBerserk, 0.00f, 1.0f);
+                ImGui::SliderFloat(GetLang().ReadString("Morph", "morph_will", "Will"), &morph->m_fWill, 0.00f, 1.0f);
+                ImGui::SliderFloat(GetLang().ReadString("Morph", "morph_skill", "Skill"), &morph->m_fSkill, 0.00f, 1.0f);
+                ImGui::SliderFloat(GetLang().ReadString("Morph", "morph_age", "Age"), &morph->m_fAge, 0.00f, 1.0f);
+                ImGui::SliderFloat(GetLang().ReadString("Morph", "morph_alignment", "Alignment"), &morph->m_fAlign, 0.00f, 1.0f);
+                ImGui::SliderFloat(GetLang().ReadString("Morph", "morph_fatness", "Fatness"), &morph->m_fFat, 0.00f, 1.0f);
 
-                ImGui::Checkbox("Kid", &morph->m_bKid);
-                if (ImGui::Button("Update##Morph", ImVec2(-FLT_MIN, 0)))
+                ImGui::Checkbox(GetLang().ReadString("Morph", "morph_kid", "Kid"), &morph->m_bKid);
+                if (ImGui::Button(GetLang().ReadString("Morph", "morph_update", "Update"), ImVec2(-FLT_MIN, 0)))
                     morph->m_bUpdate = true;
             }
         }
         if (carrying)
         {
-            if (ImGui::CollapsingHeader("Weapon"))
+            if (ImGui::CollapsingHeader(GetLang().ReadString("Weapon", "weapon_text", "Weapon")))
             {
                 CThing* thingPrimarySlot = carrying->GetThingInPrimarySlot();
 
                 if (thingPrimarySlot && thingPrimarySlot->HasTC(TCI_WEAPON))
                 {
                     ImGui::Separator();
-                    ImGui::Text("Augmentations");
+                    ImGui::Text(GetLang().ReadString("Weapon", "weapon_augmentation", "Augmentations"));
                     ImGui::Separator();
 
                     CTCObjectAugmentations* augObject = (CTCObjectAugmentations*)thingPrimarySlot->GetTC(TCI_OBJECT_AUGMENTATIONS);
                     int numberOfSlots = augObject->GetNumberOfSlots();
                     static int selectedAug = 0;
-                    const char* augmentationDefs[] = {
-                        "OBJECT_SHARPENING_AUGMENTATION",
-                        "OBJECT_PIERCING_AUGMENTATION",
-                        "OBJECT_SILVER_AUGMENTATION",
-                        "OBJECT_FLAME_AUGMENTATION",
-                        "OBJECT_LIGHTNING_AUGMENTATION",
-                        "OBJECT_EXPERIENCE_AUGMENTATION",
-                        "OBJECT_HEALTH_AUGMENTATION",
-                        "OBJECT_MANA_AUGMENTATION"
-                    };
+
+                    std::vector<std::pair<std::string, std::string>> augList;
+                    for (const auto& pair : object_dir)
+                    {
+                        const std::string& key = pair.first;
+                        const Translation& trans = pair.second;
+
+                        if (key.find("AUGMENTATION") != std::string::npos ||
+                            trans.original.find("AUGMENTATION") != std::string::npos)
+                        {
+                            augList.push_back({ key, trans.original });
+                        }
+                    }
+
                     static bool slotsLimit = false;
 
-                    ImGui::Text("Damage Multiplier: %f", augObject->GetDamageMultiplier());
-                    ImGui::Text("Expirience Multiplier: %f", augObject->GetExperienceMultiplier());
+                    ImGui::Text(GetLang().ReadString("Weapon", "weapon_dmg_multi", "Damage Multiplier: %f"), augObject->GetDamageMultiplier());
+                    ImGui::Text(GetLang().ReadString("Weapon", "weapon_exp_multi", "Expirience Multiplier: %f"), augObject->GetExperienceMultiplier());
 
-                    ImGui::BeginChild("Augmention Slots", { 0, -ImGui::GetFrameHeightWithSpacing() + 200 }, true);
+                    ImGui::BeginChild(GetLang().ReadString("Weapon", "weapon_aug_slots", "Augmention Slots"), { 0, -ImGui::GetFrameHeightWithSpacing() + 200 }, true);
                     if (numberOfSlots == 0)
                     {
-                        ImGui::LabelText("", "No Slots Available");
+                        ImGui::LabelText("", GetLang().ReadString("Weapon", "weapon_no_slots", "No Slots Available"));
                     }
                     else
                     {
@@ -406,18 +616,34 @@ void FableMenu::DrawHeroTab()
                             CWideString name;
                             augObject->GetAugmentationNameInSlot(&name, i);
 
-                            ImGui::LabelText("", "%s", GetUTF8String(name.GetWideStringData()));
+                            wchar_t* wstr = name.GetWideStringData();
+                            int len = wcslen(wstr);
+                            std::string augName(len, '\0');
+                            WideCharToMultiByte(CP_UTF8, 0, wstr, len, &augName[0], len, NULL, NULL);
+
+                            std::string displayName = augName;
+
+                            auto result = findValue(object_dir, augName);
+                            if (!isPairEmpty(result))
+                            {
+                                displayName = result.second.translate;
+                            }
+
+                            ImGui::LabelText("", "%s", displayName.c_str());
 
                             ImGui::SameLine();
                             ImGui::PushID(i);
-                            if (ImGui::Button("Set"))
+                            if (ImGui::Button(GetLang().ReadString("Weapon", "weapon_btn_set", "Set")))
                             {
-                                CCharString augDefName((char*)augmentationDefs[selectedAug]);
-                                int augIndex = CGameDefinitionManager::GetDefinitionManager()->GetDefGlobalIndexFromName(&augDefName);
-                                augObject->AttachAugmentationToSlot(augIndex, i);
+                                if (!augList.empty() && selectedAug < augList.size())
+                                {
+                                    CCharString augDefName((char*)augList[selectedAug].second.c_str());
+                                    int augIndex = CGameDefinitionManager::GetDefinitionManager()->GetDefGlobalIndexFromName(&augDefName);
+                                    augObject->AttachAugmentationToSlot(augIndex, i);
+                                }
                             }
                             ImGui::SameLine();
-                            if (ImGui::Button("Clear"))
+                            if (ImGui::Button(GetLang().ReadString("Weapon", "weapon_btn_clear", "Clear")))
                             {
                                 augObject->RemoveAugmentationFromSlot(i);
                             }
@@ -425,24 +651,34 @@ void FableMenu::DrawHeroTab()
                         }
                     }
                     ImGui::EndChild();
-                    ImGui::LabelText("", "Augmentation Name");
-                    ImGui::PushItemWidth(-FLT_MIN);
-                    if (ImGui::BeginCombo("##augmentation", augmentationDefs[selectedAug]))
-                    {
-                        for (int n = 0; n < IM_ARRAYSIZE(augmentationDefs); n++)
-                        {
-                            bool is_selected = (selectedAug == n);
-                            if (ImGui::Selectable(augmentationDefs[n], is_selected))
-                                selectedAug = n;
-                            if (is_selected)
-                                ImGui::SetItemDefaultFocus();
-                        }
 
+                    ImGui::LabelText("", GetLang().ReadString("Weapon", "weapon_aug_name", "Augmentation Name"));
+                    ImGui::PushItemWidth(-FLT_MIN);
+
+                    if (ImGui::BeginCombo("##augmentation", !augList.empty() ?
+                        object_dir[augList[selectedAug].first].translate.c_str() : "No augmentations"))
+                    {
+                        for (size_t n = 0; n < augList.size(); n++)
+                        {
+                            auto it = object_dir.find(augList[n].first);
+                            if (it == object_dir.end()) continue;
+
+                            bool is_selected = (selectedAug == (int)n);
+                            if (ImGui::Selectable(it->second.translate.c_str(), is_selected))
+                            {
+                                selectedAug = (int)n;
+                            }
+                            if (is_selected)
+                            {
+                                ImGui::SetItemDefaultFocus();
+                            }
+                        }
                         ImGui::EndCombo();
                     }
+
                     ImGui::PopItemWidth();
 
-                    if (ImGui::Checkbox("Disable Slots Limit", &slotsLimit))
+                    if (ImGui::Checkbox(GetLang().ReadString("Weapon", "weapon_disable_slot_limit", "Disable Slots Limit"), &slotsLimit))
                     {
                         if (slotsLimit)
                         {
@@ -453,38 +689,39 @@ void FableMenu::DrawHeroTab()
                             Patch(0x766D88, { 0x7D, 0x38 });
                         }
                     }
-                    if (ImGui::Button("Add New Slot", { -FLT_MIN, 0 }))
+
+                    if (ImGui::Button(GetLang().ReadString("Weapon", "weapon_add_new_slot", "Add New Slot"), { -FLT_MIN, 0 }))
                     {
                         augObject->AddNewSlot();
                     }
                 }
                 else
                 {
-                    ImGui::Text("No selected weapon");
+                    ImGui::Text(GetLang().ReadString("Weapon", "weapon_so_selected_weapon", "No selected weapon"));
                 }
             }
         }
         if (haste)
         {
-            if (ImGui::CollapsingHeader("Haste"))
+            if (ImGui::CollapsingHeader(GetLang().ReadString("Haste", "haste_text", "Haste")))
             {
                 static float combatSpeed = 1;
-                ImGui::InputFloat("Adrenaline Multiplier", &combatSpeed);
-                if (ImGui::Button("Set Adrenaline", { -FLT_MIN, 0 }))
+                ImGui::InputFloat(GetLang().ReadString("Haste", "haste_adr_multi", "Adrenaline Multiplier"), &combatSpeed);
+                if (ImGui::Button(GetLang().ReadString("Haste", "haste_set_adr", "Set Adrenaline"), { -FLT_MIN, 0 }))
                 {
                     haste->UnsetActionSpeedMultiplier(t);
                     haste->SetActionSpeedMultiplier(t, combatSpeed);
                 }
                 ImGui::Separator();
-                ImGui::Text("Movement");
+                ImGui::Text(GetLang().ReadString("Haste", "haste_movement", "Movement"));
                 ImGui::Separator();
 
                 static const char* movementNames[] = {
-                    "Slow Walk",
-                    "Walk",
-                    "Jog",
-                    "Run",
-                    "Roll"
+					GetLang().ReadString("Movement", "mov_slow", "Slow Walk"),
+					GetLang().ReadString("Movement", "mov_walk", "Walk"),
+					GetLang().ReadString("Movement", "mov_jog", "Jog"),
+					GetLang().ReadString("Movement", "mov_run", "Run"),
+					GetLang().ReadString("Movement", "mov_roll", "Roll")
                 };
 
                 for (int i = 0; i < TOTAL_MOVEMENT_TYPES - 1; i++)
@@ -497,59 +734,60 @@ void FableMenu::DrawHeroTab()
                 static int movementType = -1;
 
                 ImGui::Separator();
-                ImGui::Text("Movement Type");
+                ImGui::Text(GetLang().ReadString("Haste", "haste_move_type", "Movement Type"));
                 ImGui::Separator();
 
-                ImGui::RadioButton("Default", &movementType, DEFAULT_MOVEMENT);
+                ImGui::RadioButton(GetLang().ReadString("Haste", "haste_move_type_default", "Default"), &movementType, DEFAULT_MOVEMENT);
                 ImGui::SameLine();
-                ImGui::RadioButton("Walk Movement", &movementType, WALK_MOVEMENT);
+                ImGui::RadioButton(GetLang().ReadString("Haste", "haste_move_type_walk", "Walk Movement"), &movementType, WALK_MOVEMENT);
                 ImGui::SameLine();
-                ImGui::RadioButton("Jog Movement", &movementType, JOG_MOVEMENT);
+                ImGui::RadioButton(GetLang().ReadString("Haste", "haste_move_type_jog", "Jog Movement"), &movementType, JOG_MOVEMENT);
                 ImGui::SameLine();
-                ImGui::RadioButton("Run Movement", &movementType, RUN_MOVEMENT);
+                ImGui::RadioButton(GetLang().ReadString("Haste", "haste_move_type_run", "Run Movement"), &movementType, RUN_MOVEMENT);
 
                 Memory::VP::Patch(0x6AB514, { 0xB8, (movementType != DEFAULT_MOVEMENT ? (unsigned char)movementType : (unsigned char)JOG_MOVEMENT) });
                 Memory::VP::Patch(0x6AB5BC, { 0xB8, (movementType != DEFAULT_MOVEMENT ? (unsigned char)movementType : (unsigned char)RUN_MOVEMENT) });
             }
         }
-        if (ImGui::CollapsingHeader("Spell Data"))
+		if (ImGui::CollapsingHeader(GetLang().ReadString("Spell", "spell_text", "Spell Data")))
         {
             int& curSummonCreature = *(int*)(0x138306C);
-            ImGui::TextWrapped("Current Summon Creature ID");
+			ImGui::TextWrapped(GetLang().ReadString("Spell", "spell_current", "Current Summon Creature ID"));
             ImGui::SameLine();
-            ShowHelpMarker("You can get desired creature ID from World->Creatures section.");
+			ShowHelpMarker(GetLang().ReadString("Spell", "spell_help", "You can get desired creature ID from World->Cretures section."));
             ImGui::PushItemWidth(-FLT_MIN);
             ImGui::InputInt("##creaturesumid", &curSummonCreature);
             ImGui::PopItemWidth();
             ImGui::Separator();
 
         }
-        if (ImGui::CollapsingHeader("Input"))
+		if (ImGui::CollapsingHeader(GetLang().ReadString("Input", "input_text", "Input")))
         {
-            if (ImGui::Button("Disable Input", { -FLT_MIN, 0 }))
+			ImGui::TextWrapped(GetLang().ReadString("Input", "input_help", ""));
+			if (ImGui::Button(GetLang().ReadString("Input", "input_disable", "Disable"), { -FLT_MIN, 0 }))
             {
                 if (plr)
                     plr->DisableInput();
             }
-            if (ImGui::Button("Enable Input", { -FLT_MIN, 0 }))
+			if (ImGui::Button(GetLang().ReadString("Input", "input_enable", "Enable"), { -FLT_MIN, 0 }))
             {
                 if (plr)
                     plr->EnableInput();
             }
         }
-        if (ImGui::CollapsingHeader("Appearance"))
+		if (ImGui::CollapsingHeader(GetLang().ReadString("Appearance", "ap_text", "Appearance")))
         {
             DrawAppearanceCollapse(t);
         }
         if (physics)
         {
-            if (ImGui::CollapsingHeader("Physics"))
+            if (ImGui::CollapsingHeader(GetLang().ReadString("Physics", "phys_text", "Physics")))
             {
                 DrawPhysicsCollapse(t);
                 bool isGravityEnabled = physics->IsGravityEnabled();
-                if (ImGui::Checkbox("Enable Gravity", &isGravityEnabled))
+                if (ImGui::Checkbox(GetLang().ReadString("Physics", "phys_enable_gravity", "Enable Gravity"), &isGravityEnabled))
                     physics->EnableGravity(isGravityEnabled);
-                ImGui::Checkbox("Enable Player Collision", &NGlobalConsole::EnableHeroThingCollision);
+                ImGui::Checkbox(GetLang().ReadString("Physics", "phys_enable_collision", "Enable Player Collision"), &NGlobalConsole::EnableHeroThingCollision);
             }
         }
     }
@@ -561,14 +799,14 @@ void FableMenu::DrawPlayerTab()
 
 #ifdef _DEBUG
     ImGui::SetWindowFontScale(0.85f);
-    ImGui::Text("Player Number: %d", plr->m_dNumber);
+    ImGui::Text(GetLang().ReadString("Player", "player_number", "Player Number: %d"), plr->m_dNumber);
     ImGui::SameLine();
-    ImGui::Text("Current Mode: %d", plr->GetCurrentMode());
+    ImGui::Text(GetLang().ReadString("Player", "player_current_mode", "Current Mode: %d"), plr->GetCurrentMode());
     ImGui::SetWindowFontScale(1.0f);
     ImGui::Separator();
 #endif
 
-    if (ImGui::CollapsingHeader("Modes"))
+    if (ImGui::CollapsingHeader(GetLang().ReadString("Player", "player_modes", "Modes")))
     {
         std::list<enum EPlayerMode> playerModes = plr->m_lPlayerModes;
         int removeID = 0;
@@ -576,13 +814,15 @@ void FableMenu::DrawPlayerTab()
         ImGui::BeginChild("#mlist", { 0, -ImGui::GetFrameHeightWithSpacing() - 200}, true);
         for (EPlayerMode mode : playerModes)
         {
-            ImGui::LabelText("", szPlayerModeNames[mode]);
+            auto result = findValue(player_modes_dir, szPlayerModeNames[mode]);
+			std::string displayText = result.second.translate; //  + " (" + result.second.original + ")";
+            ImGui::LabelText("", displayText.c_str());
            
             if (playerModes.size() > 1)
-            {
+            { 
                 ImGui::SameLine();
                 ImGui::PushID(removeID);
-                if (ImGui::Button("Remove"))
+                if (ImGui::Button(GetLang().ReadString("Player", "player_button_remove", "Remove")))
                 {
                     plr->RemoveMode(mode);
                 }
@@ -593,20 +833,26 @@ void FableMenu::DrawPlayerTab()
 		ImGui::EndChild();
         static int modeID = 0;
 
-        if (ImGui::BeginCombo("Mode Name", szPlayerModeNames[modeID]))
+        if (ImGui::BeginCombo(GetLang().ReadString("Player", "player_mode_name", "Mode Name"), getById(player_modes_dir, modeID).second.translate.c_str()))
         {
-            for (int n = 0; n < IM_ARRAYSIZE(szPlayerModeNames); n++)
+            for (auto& pair : player_modes_dir)
             {
-                bool is_selected = (modeID == n);
-                if (ImGui::Selectable(szPlayerModeNames[n], is_selected))
-                    modeID = n;
-                if (is_selected)
+                const std::string key = pair.first;
+                int intKey = std::stoi(key);
+                const std::string display_text = pair.second.translate; // + " [" + pair.second.original + "]";
+                bool is_selected = (modeID == intKey);
+                if (ImGui::Selectable(display_text.c_str(), is_selected)) {
+                    modeID = intKey;
+                }
+                if (is_selected) {
                     ImGui::SetItemDefaultFocus();
+                }
+                    
             }
             ImGui::EndCombo();
         }
 
-        if (ImGui::Button("Add Mode", {-FLT_MIN, 0}))
+        if (ImGui::Button(GetLang().ReadString("Player", "player_button_add_mode", "Add Mode"), {-FLT_MIN, 0}))
         {
             plr->AddMode((EPlayerMode)modeID, 0);
         }
@@ -614,7 +860,7 @@ void FableMenu::DrawPlayerTab()
 
         static bool aggressiveMode;
 
-        if (ImGui::Checkbox("Aggressive Mode", &aggressiveMode))
+        if (ImGui::Checkbox(GetLang().ReadString("Player", "player_aggressive_mode", "Aggressive Mode"), &aggressiveMode))
         {
             if (!FGlobals::GUsePassiveAggressiveMode)
             {
@@ -624,11 +870,11 @@ void FableMenu::DrawPlayerTab()
             plr->SetAgressiveMode(aggressiveMode);
         }
     }
-    if (ImGui::CollapsingHeader("Actions"))
+    if (ImGui::CollapsingHeader(GetLang().ReadString("Player", "player_actions", "Actions")))
     {
         DrawActionsCollapse(plr->GetCharacterThing());
     }
-    if (ImGui::CollapsingHeader("Character"))
+    if (ImGui::CollapsingHeader(GetLang().ReadString("Player", "player_character", "Character")))
     {
         static bool manualInput = false;
         static bool uninitPlayerCharacter = true;
@@ -638,7 +884,7 @@ void FableMenu::DrawPlayerTab()
 
         if (playerCharacterDefinitionError)
         {
-            ImGui::TextColored(ImVec4(1.f, 0.3f, 0.3f, 1.f), "Invalid character definition");
+            ImGui::TextColored(ImVec4(1.f, 0.3f, 0.3f, 1.f), GetLang().ReadString("Player", "player_invalid_character", "Invalid character definition"));
         }
 
         static const char* playerCharacterDefs[] =
@@ -651,12 +897,26 @@ void FableMenu::DrawPlayerTab()
 
         if (!manualInput)
         {
-            if (ImGui::BeginCombo("Character Definition", playerCharacterDefs[characterID]))
+            std::string currentDisplay = playerCharacterDefs[characterID];
+            auto result = findValue(crt_dir, playerCharacterDefs[characterID]);
+            if (!isPairEmpty(result))
+            {
+                currentDisplay = result.second.translate;
+            }
+
+            if (ImGui::BeginCombo(GetLang().ReadString("Player", "player_character_definition", "Character Definition"), currentDisplay.c_str()))
             {
                 for (int n = 0; n < IM_ARRAYSIZE(playerCharacterDefs); n++)
                 {
+                    std::string displayText = playerCharacterDefs[n];
+                    auto result2 = findValue(crt_dir, playerCharacterDefs[n]);
+                    if (!isPairEmpty(result2))
+                    {
+                        displayText = result2.second.translate;
+                    }
+
                     bool is_selected = (characterID == n);
-                    if (ImGui::Selectable(playerCharacterDefs[n], is_selected))
+                    if (ImGui::Selectable(displayText.c_str(), is_selected))
                         characterID = n;
                     if (is_selected)
                         ImGui::SetItemDefaultFocus();
@@ -666,19 +926,19 @@ void FableMenu::DrawPlayerTab()
         }
         else
         {
-            ImGui::InputText("Character Definition", selectedPlayerDefManually, sizeof(selectedPlayerDefManually));
+            ImGui::InputText(GetLang().ReadString("Player", "player_character_definition", "Character Definition"), selectedPlayerDefManually, sizeof(selectedPlayerDefManually));
         }
 
-        ImGui::Checkbox("Manual Input##plrmode", &manualInput);
-        ImGui::SameLine(); ShowWarnMarker("Defintion has to be compatible with the hero.");
+        ImGui::Checkbox(GetLang().ReadString("Player", "player_manual_input", "Manual Input##plrmode"), &manualInput);
+        ImGui::SameLine(); ShowWarnMarker(GetLang().ReadString("Player", "player_warn_marker", "Defintion has to be compatible with the hero."));
         ImGui::SameLine();
-        ImGui::Checkbox("Uninit Character", &uninitPlayerCharacter);
-        ImGui::InputFloat3("Repawn Position", &FGlobals::GOverridePlayerStartPos->X);
-        if (ImGui::Button("Get Player Position"))
+        ImGui::Checkbox(GetLang().ReadString("Player", "player_uninit_character", "Uninit Character"), &uninitPlayerCharacter);
+        ImGui::InputFloat3(GetLang().ReadString("Player", "player_respawn_position", "Repawn Position"), &FGlobals::GOverridePlayerStartPos->X);
+        if (ImGui::Button(GetLang().ReadString("Player", "player_get_position", "Get Player Position")))
         {
             *FGlobals::GOverridePlayerStartPos = *plr->GetCharacterThing()->GetPosition();
         }
-        if (ImGui::Button("Respawn Hero", { -FLT_MIN, 0 }))
+        if (ImGui::Button(GetLang().ReadString("Player", "player_button_respawn", "Respawn Hero"), { -FLT_MIN, 0 }))
         {
             if (!FGlobals::GOverridePlayerStartPosFromConsole)
             {
@@ -721,115 +981,170 @@ void FableMenu::DrawCreaturesTab()
     std::list<CThing*> regionCreatures = *search->PeekTypeList(1);
 
     static char creatureName[512] = { };
+    static char creatureNote[512] = { };
     static CVector creaturePosition = {};
     static int creatureId;
+    static int creatureCount = 1;
     static bool advanced;
     static bool playerFollower;
 
-    if (ImGui::CollapsingHeader("Creature Spawner"))
+    if (ImGui::CollapsingHeader(GetLang().ReadString("Creatures", "creature_text", "Creature Spawner")))
     {
-        ImGui::TextWrapped("Spawn Position (X | Y | Z)");
+        ImGui::TextWrapped(GetLang().ReadString("Creatures", "creature_position", "Spawn Position (X | Y | Z)"));
         ImGui::PushItemWidth(-FLT_MIN);
         ImGui::InputFloat3("", &creaturePosition.X);
         ImGui::PopItemWidth();
 
-        if (ImGui::Button("Get Player Position", { -FLT_MIN, 0 }))
+        if (ImGui::Button(GetLang().ReadString("Creatures", "creature_get_position", "Get Player Position"), { -FLT_MIN, 0 }))
         {
             if (plr)
                 creaturePosition = *playerCharacter->GetPosition();
         }
 
-        ImGui::Checkbox("Advanced Settings", &advanced);
+        ImGui::Checkbox(GetLang().ReadString("Creatures", "creature_advanced_settings", "Advanced Settings"), &advanced);
         if (advanced)
         {
             ImGui::Separator();
-            ImGui::InputInt("Owner ID##creatures", &creatureId);
+            ImGui::InputInt(GetLang().ReadString("Creatures", "creature_owner_id", "Owner ID##creatures"), &creatureId);
 
-            ImGui::TextWrapped("Faction");
+            ImGui::TextWrapped(GetLang().ReadString("Creatures", "creature_faction", "Faction"));
             ImGui::PushItemWidth(-FLT_MIN);
-            if (ImGui::BeginCombo("##faclist", szFactionName))
+
+            static int selectedFactionIndex = 0;
+            static std::vector<std::string> factionOriginalList;
+            static std::vector<std::string> factionTranslateList;
+
+            if (factionOriginalList.empty())
             {
-                for (int n = 0; n < IM_ARRAYSIZE(szFactions); n++)
+                for (const auto& pair : factions_dir)
                 {
-                    bool is_selected = (szFactionName == szFactions[n]);
-                    if (ImGui::Selectable(szFactions[n], is_selected))
-                        sprintf(szFactionName, szFactions[n]);
+                    factionOriginalList.push_back(pair.first);
+                    factionTranslateList.push_back(pair.second.translate);
+                }
+            }
+
+            std::string currentDisplay;
+            for (size_t i = 0; i < factionOriginalList.size(); i++)
+            {
+                if (factionOriginalList[i] == szFactionName)
+                {
+                    currentDisplay = factionTranslateList[i];
+                    selectedFactionIndex = i;
+                    break;
+                }
+            }
+            if (currentDisplay.empty() && !factionOriginalList.empty())
+            {
+                currentDisplay = factionTranslateList[0];
+                strcpy_s(szFactionName, sizeof(szFactionName), factionOriginalList[0].c_str());
+                selectedFactionIndex = 0;
+            }
+
+            if (ImGui::BeginCombo("##faclist", currentDisplay.c_str()))
+            {
+                for (size_t n = 0; n < factionOriginalList.size(); n++)
+                {
+                    bool is_selected = (szFactionName == factionOriginalList[n]);
+                    if (ImGui::Selectable(factionTranslateList[n].c_str(), is_selected))
+                    {
+                        strcpy_s(szFactionName, sizeof(szFactionName), factionOriginalList[n].c_str());
+                        selectedFactionIndex = n;
+                    }
                     if (is_selected)
                         ImGui::SetItemDefaultFocus();
                 }
                 ImGui::EndCombo();
             }
             ImGui::PopItemWidth();
-            ImGui::Checkbox("Create as player follower", &playerFollower);
+            ImGui::Checkbox(GetLang().ReadString("Creatures", "creature_as_follower", "Create as player follower"), &playerFollower);
+            ImGui::SameLine();
+            ShowHelpMarker(GetLang().ReadString("Creating", "cr_as_follower_help", "Creature will follow and defend player, this only works with some creatures (usually those that are simple enough, eg. swords or spirits)"));
             ImGui::Separator();
         }
-        ImGui::Text("Creature Name");
+        ImGui::Text(GetLang().ReadString("Creatures", "creature_name", "Creature Name"));
         ImGui::SameLine();
-        ShowHelpMarker("Creature list is available in Help menu.");
+        ShowHelpMarker(GetLang().ReadString("Creatures", "create_help_list", "Creature list is available in Help menu."));
         ImGui::PushItemWidth(-FLT_MIN);
         ImGui::InputText("##creature", creatureName, sizeof(creatureName));
+
         ImGui::PopItemWidth();
 
-        if (ImGui::Button("Get ID", { -FLT_MIN, 0 }))
+        if (ButtonAutoSize(GetLang().ReadString("Creatures", "create_paste", "Paste")))
+        {
+            std::string clip = GetClipboardText();
+            strcpy_s(creatureName, sizeof(creatureName), clip.c_str());
+
+            CGameDefinitionManager* defManager = CGameDefinitionManager::GetDefinitionManager();
+            CCharString ccsCreatureName((char*)creatureName);
+            creatureId = defManager->GetDefGlobalIndexFromName(&ccsCreatureName);
+        }
+        ImGui::SameLine();
+        if (ButtonAutoSize(GetLang().ReadString("Creatures", "creature_get_id", "Get ID")))
         {
             CGameDefinitionManager* defManager = CGameDefinitionManager::GetDefinitionManager();
             CCharString ccsCreatureName((char*)creatureName);
             creatureId = defManager->GetDefGlobalIndexFromName(&ccsCreatureName);
         }
 
-        ImGui::InputInt("Creature ID", &creatureId);
-
+        ImGui::InputInt(GetLang().ReadString("Creatures", "creature_id", "Creature ID"), &creatureId);
         if (creatureId <= 0)
-            ImGui::TextWrapped("Invalid creature ID!");
+            ImGui::TextWrapped(GetLang().ReadString("Creatures", "creature_invalid_id", "Invalid creature ID!"));
         else
         {
-            if (ImGui::Button("Spawn Creature", { -FLT_MIN, 0 }))
+            ImGui::InputInt(GetLang().ReadString("Creatures", "creature_count", "Count"), &creatureCount);
+
+            if (getById(factions_dir, creatureId).second.crash == "1") {
+                ImGui::TextColored(ImVec4(1.f, 0.3f, 0.3f, 1.f), GetLang().ReadString("Creatures", "creature_crash_warning", "This creature is known to cause crashes when spawned!"));
+            }
+
+            if (ImGui::Button(GetLang().ReadString("Creatures", "creature_spawn", "Spawn Creature"), { -FLT_MIN, 0 }))
             {
-                CThing* creature = CreateCreature(creatureId, &creaturePosition, 0);
-                if (creature && advanced)
-                {
-                    if (plr)
+                for (int i = 1; i <= creatureCount; i++) {
+                    CThing* creature = CreateCreature(creatureId, &creaturePosition, 0);
+                    if (creature && advanced)
                     {
-                        if (!creature->HasTC(TCI_ENEMY))
+                        if (plr)
                         {
-                            CCharString enemyTC((char*)"CTCEnemy");
-                            creature->AddTC(&enemyTC, 0, 0);
-                        }
-                        CTCEnemy* enemy = (CTCEnemy*)creature->GetTC(TCI_ENEMY);
-                        CCharString faction(szFactionName);
-                        enemy->SetFaction(&faction);
+                            if (!creature->HasTC(TCI_ENEMY))
+                            {
+                                CCharString enemyTC((char*)"CTCEnemy");
+                                creature->AddTC(&enemyTC, 0, 0);
+                            }
+                            CTCEnemy* enemy = (CTCEnemy*)creature->GetTC(TCI_ENEMY);
+                            CCharString faction(szFactionName);
+                            enemy->SetFaction(&faction);
 
-                        if (playerFollower)
-                        {
-                            CIntelligentPointer ptr(creature);
-                                
-                            CTCRegionFollower* rf = (CTCRegionFollower*)plr->GetCharacterThing()->GetTC(TCI_REGION_FOLLOWER);
-                            rf->AddFollower(*ptr);
+                            if (playerFollower)
+                            {
+                                CIntelligentPointer ptr(creature);
 
-                            CTCFollowed* pf = (CTCFollowed*)plr->GetCharacterThing()->GetTC(TCI_FOLLOWED);
-                            enemy->AddAlly(plr->GetCharacterThing());
-                            pf->AddFollower(*ptr, 1);
+                                CTCRegionFollower* rf = (CTCRegionFollower*)plr->GetCharacterThing()->GetTC(TCI_REGION_FOLLOWER);
+                                rf->AddFollower(*ptr);
 
-                            CCharString brainName((char*)"BRAIN_FOLLOW_PLAYER");
-                            CGameDefinitionManager* defManager = CGameDefinitionManager::GetDefinitionManager();
-                            int brainIndex = defManager->GetDefGlobalIndexFromName(&brainName);
-                            int result[1];
-                            result[0] = 0;
-                            defManager->GetOpinionPersonalitDef(brainIndex, result);
-                            creature->SetNewBrain(result[0]);
-                        }
-                        else
-                        {
-                            if (strcmp(szFactionName, "FACTION_HERO") == 0)
+                                CTCFollowed* pf = (CTCFollowed*)plr->GetCharacterThing()->GetTC(TCI_FOLLOWED);
                                 enemy->AddAlly(plr->GetCharacterThing());
+                                pf->AddFollower(*ptr, 1);
+
+                                CCharString brainName((char*)"BRAIN_FOLLOW_PLAYER");
+                                CGameDefinitionManager* defManager = CGameDefinitionManager::GetDefinitionManager();
+                                int brainIndex = defManager->GetDefGlobalIndexFromName(&brainName);
+                                int result[1];
+                                result[0] = 0;
+                                defManager->GetOpinionPersonalitDef(brainIndex, result);
+                                creature->SetNewBrain(result[0]);
+                            }
+                            else
+                            {
+                                if (strcmp(szFactionName, "FACTION_HERO") == 0)
+                                    enemy->AddAlly(plr->GetCharacterThing());
+                            }
                         }
                     }
-
                 }
             }
         }
     }
-    if (ImGui::CollapsingHeader("Region Creatures"))
+    if (ImGui::CollapsingHeader(GetLang().ReadString("Creatures", "creature_region", "Region Creatures")))
     {
         static std::list<CThing*> filteredCreatures;
         static std::vector<char> creatureDataWindowsOpen;
@@ -840,7 +1155,7 @@ void FableMenu::DrawCreaturesTab()
         filteredCreatures.clear();
 
         size_t creaturesInLocation = regionCreatures.size();
-        ImGui::Text("Creatures In Location: %d", creaturesInLocation);
+        ImGui::Text(GetLang().ReadString("Creatures", "creature_in_region", "Creatures In Location: %d"), creaturesInLocation);
         ImGui::Separator();
 
         if (!displayCreatureFilterOptions || filteredType == -1)
@@ -892,30 +1207,30 @@ void FableMenu::DrawCreaturesTab()
             creatureList = filteredCreatures;
         }
 
-        ImGui::Checkbox("Creature Filter", &displayCreatureFilterOptions);
+        ImGui::Checkbox(GetLang().ReadString("CreatureFilter", "filter", "Creature Filter"), &displayCreatureFilterOptions);
         if (displayCreatureFilterOptions)
         {
-            ImGui::RadioButton("All", &filteredType, -1);
+            ImGui::RadioButton(GetLang().ReadString("CreatureFilter", "filter_all", "All"), &filteredType, -1);
             ImGui::SameLine();
-            ImGui::RadioButton("Not Humans", &filteredType, 0);
+            ImGui::RadioButton(GetLang().ReadString("CreatureFilter", "filter_not_humans", "Not Humans"), &filteredType, 0);
             ImGui::SameLine();
-            ImGui::RadioButton("Children", &filteredType, 1);
-            ImGui::RadioButton("Adults", &filteredType, 2);
+            ImGui::RadioButton(GetLang().ReadString("CreatureFilter", "filter_children", "Children"), &filteredType, 1);
+            ImGui::RadioButton(GetLang().ReadString("CreatureFilter", "filter_adults", "Adults"), &filteredType, 2);
             ImGui::SameLine();
-            ImGui::RadioButton("Elderly", &filteredType, 3);
+            ImGui::RadioButton(GetLang().ReadString("CreatureFilter", "filter_elderly", "Elderly"), &filteredType, 3);
             ImGui::SameLine();
-            ImGui::RadioButton("Bandits", &filteredType, 4);
-            ImGui::RadioButton("Guards", &filteredType, 5);
+            ImGui::RadioButton(GetLang().ReadString("CreatureFilter", "filter_bandits", "Bandits"), &filteredType, 4);
+            ImGui::RadioButton(GetLang().ReadString("CreatureFilter", "filter_guards", "Guards"), &filteredType, 5);
             ImGui::SameLine();
-            ImGui::RadioButton("Traders", &filteredType, 6);
+            ImGui::RadioButton(GetLang().ReadString("CreatureFilter", "filter_traders", "Traders"), &filteredType, 6);
             ImGui::SameLine();
-            ImGui::RadioButton("Heroes", &filteredType, 7);
+            ImGui::RadioButton(GetLang().ReadString("CreatureFilter", "filter_heroes", "Heroes"), &filteredType, 7);
         }
 
         size_t creatureNumber = creatureList.size();
         creatureDataWindowsOpen.resize(creatureNumber, false);
 
-        if (ImGui::Button("Kill All"))
+        if (ImGui::Button(GetLang().ReadString("CreatureFilter", "filter_kill_all", "Kill All")))
         {
             for (auto creature : creatureList)
             {
@@ -923,7 +1238,7 @@ void FableMenu::DrawCreaturesTab()
             }
         }
         ImGui::SameLine();
-        if (ImGui::Button("Teleport All"))
+        if (ImGui::Button(GetLang().ReadString("CreatureFilter", "filter_teleport_all", "Teleport All")))
         {
             for (auto creature : creatureList)
             {
@@ -931,18 +1246,27 @@ void FableMenu::DrawCreaturesTab()
                 physics->SetPosition(playerCharacter->GetPosition());
             }
         }
-        
+
         if (creatureNumber != 0)
         {
             int i = 0;
-            ImGui::BeginChild("##regionCreatureList", { 0, 0 }, true);
+            ImGui::BeginChild("##regionCreatureList", { 0, -ImGui::GetFrameHeightWithSpacing() + 400 }, true);
             for (CThing* creature : creatureList)
             {
                 CDefString* defName = creature->GetDefName();
                 CCharString buffer;
                 CDefString::GetString(&buffer, defName->tablePos);
                 char* charDefName = buffer.GetStringData();
-                const char* thingName = (const char*)charDefName;
+
+                const char* thingName;
+
+                auto trnslate = findValue(crt_dir, charDefName);
+                if (!isPairEmpty(trnslate)) {
+					thingName = trnslate.second.translate.c_str();
+                }
+                else {
+                    thingName = (const char*)charDefName;;
+                }
 
                 ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.15f, 0.75f, 0.35f, 1.0f));
                 ImGui::PushItemWidth(420.f);
@@ -952,7 +1276,7 @@ void FableMenu::DrawCreaturesTab()
                 ImGui::SameLine();
                 char* isOpen = &creatureDataWindowsOpen[i];
                 ImGui::PushID(i);
-                if (ImGui::Button("Open Data"))
+                if (ImGui::Button(GetLang().ReadString("CreatureFilter", "filter_open_data", "Open Data")))
                 {
                     *isOpen = !(*isOpen);
                 }
@@ -971,11 +1295,11 @@ void FableMenu::DrawCreaturesTab()
         }
         else
         {
-			ImGui::Separator();
-            ImGui::TextColored({ 1.f, 0.3f, 0.3f, 1.f }, "No creatures to display");
+            ImGui::Separator();
+            ImGui::TextColored({ 1.f, 0.3f, 0.3f, 1.f }, GetLang().ReadString("CreatureFilter", "filter_no_creatures", "No creatures to display"));
         }
     }
-    if (ImGui::CollapsingHeader("Village Data"))
+    if (ImGui::CollapsingHeader(GetLang().ReadString("Village", "village_text", "Village Data")))
     {
         CTCVillage* village = CMainGameComponent::Get()->GetPlayerManager()->GetMainPlayer()->GetPNearestTCVillage();
 
@@ -985,30 +1309,30 @@ void FableMenu::DrawCreaturesTab()
 
         if (!village)
         {
-            ImGui::TextColored({ 1.f, 0.3f, 0.3f, 1.f }, "No Village");
+            ImGui::TextColored({ 1.f, 0.3f, 0.3f, 1.f }, GetLang().ReadString("Village", "village_no_village", "No Village"));
             return;
         }
 
-        ImGui::InputText("Villager Definition", villagerDef, sizeof(villagerDef));
+        ImGui::InputText(GetLang().ReadString("Village", "village_villager_def", "Villager Definition"), villagerDef, sizeof(villagerDef));
 
-        if (ImGui::Button((const char*)(disableVillager ? "Disable Villager" : "Enable Villager")))
+        if (ImGui::Button((const char*)(disableVillager ? GetLang().ReadString("Village", "village_disable_villager", "Disable Villager") : GetLang().ReadString("Village", "village_enable_villager", "Enable Villager"))))
         {
             CCharString defName(villagerDef);
             village->EnableVillagerDefTypes(villagerDef, &defName);
 
             disableVillager = !disableVillager;
         }
-        ImGui::SameLine(); ShowHelpMarker("Disables creature by definition, works only for village member.");
+        ImGui::SameLine(); ShowHelpMarker(GetLang().ReadString("Village", "village_help", "Disables creature by definition, works only for village member."));
         ImGui::Separator();
-        if (ImGui::Checkbox("Enable Guards", &toggleGuardVillagers))
+        if (ImGui::Checkbox(GetLang().ReadString("Village", "village_enable_guards", "Enable Guards"), &toggleGuardVillagers))
         {
             village->EnableGuards(toggleGuardVillagers);
         }
-        if (ImGui::Button("Clear Crimes", { -FLT_MIN, 0 }))
+        if (ImGui::Button(GetLang().ReadString("Village", "village_clear_crimes", "Clear Crimes"), { -FLT_MIN, 0 }))
         {
             village->ClearCrimes();
         }
-        if (ImGui::Button("Village Limbo", { -FLT_MIN, 0 }))
+        if (ImGui::Button(GetLang().ReadString("Village", "village_limbo", "Village Limbo"), { -FLT_MIN, 0 }))
         {
             village->SetVillageLimbo(1);
         }
@@ -1022,37 +1346,37 @@ void FableMenu::DrawObjectsTab()
     static char objectName[512] = { };
     CPlayer* player = CMainGameComponent::Get()->GetPlayerManager()->GetMainPlayer();
 
-    if (ImGui::CollapsingHeader("Object Spawner"))
+    if (ImGui::CollapsingHeader(GetLang().ReadString("Objects", "obj_spawner_text", "Object Spawner")))
     {
-        ImGui::TextWrapped("Spawn Position (X | Y | Z)");
+        ImGui::TextWrapped(GetLang().ReadString("Objects", "obj_spawn_position", "Spawn Position (X | Y | Z)"));
         ImGui::PushItemWidth(-FLT_MIN);
         ImGui::InputFloat3("", &position.X);
         ImGui::PopItemWidth();
-        if (ImGui::Button("Get Player Position", { -FLT_MIN, 0 }))
+        if (ImGui::Button(GetLang().ReadString("Objects", "obj_get_player_pos", "Get Player Position"), { -FLT_MIN, 0 }))
         {
             if (player)
                 position = *player->GetCharacterThing()->GetPosition();
         }
 
-        ImGui::Text("Object Name");
+        ImGui::Text(GetLang().ReadString("Objects", "obj_name", "Object Name"));
         ImGui::SameLine();
-        ShowHelpMarker("Object list is available in Help menu.");
+        ShowHelpMarker(GetLang().ReadString("Objects", "obj_help", "Object list is available in Help menu."));
         ImGui::PushItemWidth(-FLT_MIN);
         ImGui::InputText("##object", objectName, sizeof(objectName));
         ImGui::PopItemWidth();
 
-        if (ImGui::Button("Get ID", { -FLT_MIN, 0 }))
+        if (ImGui::Button(GetLang().ReadString("Objects", "obj_get_id", "Get ID"), { -FLT_MIN, 0 }))
             objectId = GetThingID(objectName);
 
-        ImGui::InputInt("Object ID", &objectId);
+        ImGui::InputInt(GetLang().ReadString("Objects", "obj_id", "Object ID"), &objectId);
 
         if (objectId <= 0)
-            ImGui::TextWrapped("Invalid object ID!");
+            ImGui::TextWrapped(GetLang().ReadString("Objects", "obj_invalid_id", "Invalid object ID!"));
         else
-            if (ImGui::Button("Create Object"))
+            if (ImGui::Button(GetLang().ReadString("Objects", "obj_create", "Create Object")))
                 CreateThing(objectId, &position, 0, 0, 0, "newObj");
-    } 
-    if (ImGui::CollapsingHeader("Region Buildings"))
+    }
+    if (ImGui::CollapsingHeader(GetLang().ReadString("Objects", "obj_region_buildings", "Region Buildings")))
     {
         static std::vector<char> objectDataWindowsOpen;
         CThingSearchTools* searchTools = CMainGameComponent::Get()->GetWorld()->GetThingSearchTools();
@@ -1067,9 +1391,9 @@ void FableMenu::DrawObjectsTab()
             if (building->HasTC(TCI_SHOP))
                 shopsCount++;
         }
-        ImGui::Text("Shops In Region: %d", shopsCount);
+        ImGui::Text(GetLang().ReadString("Objects", "obj_shops_in_region", "Shops In Region: %d"), shopsCount);
         ImGui::Separator();
-        if (ImGui::Button("Unlock All Doors"))
+        if (ImGui::Button(GetLang().ReadString("Objects", "obj_unlock_doors", "Unlock All Doors")))
         {
             std::list<CThing*> allObjects = *searchTools->PeekTypeList(5);
             for (auto object : allObjects)
@@ -1081,8 +1405,8 @@ void FableMenu::DrawObjectsTab()
                 }
             }
         }
-		ImGui::SameLine();
-        if (ImGui::Button("Evict All Residents"))
+        ImGui::SameLine();
+        if (ImGui::Button(GetLang().ReadString("Objects", "obj_evict_residents", "Evict All Residents")))
         {
             for (auto building : regionBuildings)
             {
@@ -1095,7 +1419,7 @@ void FableMenu::DrawObjectsTab()
             }
         }
         ImGui::SameLine();
-        if (ImGui::Button("Own All Buildings"))
+        if (ImGui::Button(GetLang().ReadString("Objects", "obj_own_buildings", "Own All Buildings")))
         {
             for (auto building : regionBuildings)
             {
@@ -1109,7 +1433,7 @@ void FableMenu::DrawObjectsTab()
         if (buildingCount != 0)
         {
             int i = 0;
-			ImGui::BeginChild("##regionBuildingList", { 0, 0 }, true);
+            ImGui::BeginChild("##regionBuildingList", { 0, -ImGui::GetFrameHeightWithSpacing() + 400 }, true);
             for (CThing* object : regionBuildings)
             {
                 CDefString* defName = object->GetDefName();
@@ -1117,20 +1441,28 @@ void FableMenu::DrawObjectsTab()
                 CDefString::GetString(&buffer, defName->tablePos);
                 char* charDefName = buffer.GetStringData();
                 const char* thingName = (const char*)charDefName;
+
+                std::string displayName = thingName;
+                auto result = findValue(building_dir, thingName);
+                if (!isPairEmpty(result))
+                {
+                    displayName = result.second.translate;
+                }
+
                 ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.15f, 0.75f, 0.35f, 1.0f));
-                ImGui::LabelText("", thingName);
+                ImGui::LabelText("", displayName.c_str());
                 ImGui::PopStyleColor();
                 ImGui::SameLine();
                 char* isOpen = &objectDataWindowsOpen[i];
                 ImGui::PushID(i);
-                if (ImGui::Button("Open Data"))
+                if (ImGui::Button(GetLang().ReadString("Objects", "obj_open_data", "Open Data")))
                 {
                     *isOpen = !(*isOpen);
                 }
                 ImGui::PopID();
 
                 char windowTitle[256];
-                snprintf(windowTitle, sizeof(windowTitle), "%s##%d", thingName, i);
+                snprintf(windowTitle, sizeof(windowTitle), "%s##%d", displayName.c_str(), i);
 
                 if (*isOpen)
                 {
@@ -1138,11 +1470,11 @@ void FableMenu::DrawObjectsTab()
                 }
                 i++;
             }
-			ImGui::EndChild();
+            ImGui::EndChild();
         }
     }
 
-    if (ImGui::CollapsingHeader("Region Objects"))
+    if (ImGui::CollapsingHeader(GetLang().ReadString("Objects", "obj_region_objects", "Region Objects")))
     {
         static std::vector<char> objectDataWindowsOpen;
         CThingSearchTools* searchTools = CMainGameComponent::Get()->GetWorld()->GetThingSearchTools();
@@ -1151,7 +1483,7 @@ void FableMenu::DrawObjectsTab()
         objectDataWindowsOpen.resize(objectCount, false);
         static ImGuiTextFilter filter;
         static bool canTakeStockItems;
-        if (ImGui::Checkbox("Can Take Shop Items", &canTakeStockItems))
+        if (ImGui::Checkbox(GetLang().ReadString("Objects", "obj_can_take_shop", "Can Take Shop Items"), &canTakeStockItems))
         {
             std::list<CThing*> stockItems;
             for (CThing* object : allObjects)
@@ -1178,8 +1510,8 @@ void FableMenu::DrawObjectsTab()
                 Patch<char>(0x773538, 0x74);
             }
         }
-		ImGui::Separator();
-        ImGui::Text("Search");
+        ImGui::Separator();
+        ImGui::Text(GetLang().ReadString("Objects", "obj_list_search", "Search"));
         ImGui::PushItemWidth(-FLT_MIN);
         filter.Draw("##rolist");
         ImGui::PopItemWidth();
@@ -1194,22 +1526,30 @@ void FableMenu::DrawObjectsTab()
                 CDefString::GetString(&buffer, defName->tablePos);
                 char* charDefName = buffer.GetStringData();
                 const char* thingName = (const char*)charDefName;
+
+                std::string displayName = thingName;
+                auto result = findValue(object_dir, thingName);
+                if (!isPairEmpty(result))
+                {
+                    displayName = result.second.translate;
+                }
+
                 if (filter.PassFilter(thingName))
                 {
                     ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.15f, 0.75f, 0.35f, 1.0f));
-                    ImGui::LabelText("", thingName);
+                    ImGui::LabelText("", displayName.c_str());
                     ImGui::PopStyleColor();
                     ImGui::SameLine();
                     char* isOpen = &objectDataWindowsOpen[i];
                     ImGui::PushID(i);
-                    if (ImGui::Button("Open Data"))
+                    if (ImGui::Button(GetLang().ReadString("Objects", "obj_open_data", "Open Data")))
                     {
                         *isOpen = !(*isOpen);
                     }
                     ImGui::PopID();
 
                     char windowTitle[256];
-                    snprintf(windowTitle, sizeof(windowTitle), "%s##%d", thingName, i);
+                    snprintf(windowTitle, sizeof(windowTitle), "%s##%d", displayName.c_str(), i);
 
                     if (*isOpen)
                     {
@@ -1226,19 +1566,19 @@ void FableMenu::DrawObjectsTab()
 void FableMenu::DrawAppearanceCollapse(CThing* thing)
 {
     static int alpha = 255;
-    ImGui::SliderInt("Alpha", &alpha, 0, 255);
+    ImGui::SliderInt(GetLang().ReadString("Appearance", "ap_alpha", "Alpha"), &alpha, 0, 255);
 
     static ImVec4 appearanceColor = { 1.0, 1.0, 1.0, 1.0 };
-    ImGui::ColorEdit3("Color", (float*)&appearanceColor);
+    ImGui::ColorEdit3(GetLang().ReadString("Appearance", "ap_color", "Color"), (float*)&appearanceColor);
 
     static bool highlight = false;
     static ImVec4 highlightColor = { 1.0, 1.0, 1.0, 1.0 };
 
-    ImGui::Checkbox("Change Highlight", &highlight);
+    ImGui::Checkbox(GetLang().ReadString("Appearance", "ap_change_highlight", "Change Highlight"), &highlight);
 
     if (highlight)
     {
-        ImGui::ColorEdit4("Highlight", (float*)&highlightColor);
+        ImGui::ColorEdit4(GetLang().ReadString("Appearance", "ap_highlight", "Highlight"), (float*)&highlightColor);
     }
 
     CRGBAFloat acolor(appearanceColor.x, appearanceColor.y, appearanceColor.z, appearanceColor.w);
@@ -1248,9 +1588,9 @@ void FableMenu::DrawAppearanceCollapse(CThing* thing)
 
     CTCGraphicAppearance* ga = (CTCGraphicAppearance*)thing->GetTC(TCI_GRAPHIC_APPEARANCE_NEW);
 
-    ImGui::InputFloat("Scale", &scale);
+    ImGui::InputFloat(GetLang().ReadString("Appearance", "ap_scale", "Scale"), &scale);
 
-    if (ImGui::Button("Update##Appearance", { -FLT_MIN, 0 }))
+    if (ImGui::Button(GetLang().ReadString("Appearance", "ap_btn_update", "Update##Appearance"), { -FLT_MIN, 0 }))
     {
         if (ga)
         {
@@ -1264,7 +1604,7 @@ void FableMenu::DrawAppearanceCollapse(CThing* thing)
         }
     }
 
-    if (ImGui::Button("Clear Highlight", { -FLT_MIN, 0 }))
+    if (ImGui::Button(GetLang().ReadString("Appearance", "ap_btn_clear_highlight", "Clear Highlight"), { -FLT_MIN, 0 }))
     {
         ga->ClearHighlighted(ga);
     }
@@ -1274,27 +1614,27 @@ void FableMenu::DrawAppearanceCollapse(CThing* thing)
     if (light)
     {
         ImGui::Separator();
-        ImGui::Text("Light");
+        ImGui::Text(GetLang().ReadString("Appearance", "ap_light", "Light"));
         ImGui::Separator();
         static float lightFlicker = 1.0f;
         static float innerRadius = 1.0f;
         static float outerRadius = 10.0f;
         static ImVec4 lightColor = { 1.0, 1.0, 1.0, 1.0 };
 
-        if (ImGui::InputFloat("Inner Radius", &innerRadius))
+        if (ImGui::InputFloat(GetLang().ReadString("Appearance", "ap_inner_radius", "Inner Radius"), &innerRadius))
         {
             light->SetInnerRadius(innerRadius);
         }
-        if(ImGui::InputFloat("Outer Radius", &outerRadius))
+        if(ImGui::InputFloat(GetLang().ReadString("Appearance", "ap_outer_radius", "Outer Radius"), &outerRadius))
         {
             light->SetOuterRadius(outerRadius);
         }
-        if (ImGui::ColorEdit3("Light Color", (float*)&lightColor))
+        if (ImGui::ColorEdit3(GetLang().ReadString("Appearance", "ap_light_color", "Light Color"), (float*)&lightColor))
         {
             CRGBAFloat lcolor = { lightColor.x, lightColor.y, lightColor.z, lightColor.w };
             light->SetColour(&lcolor.GetUINTColor());
         }
-        if (ImGui::Checkbox("Enable Light", &light->m_bActive))
+        if (ImGui::Checkbox(GetLang().ReadString("Appearance", "ap_enable_light", "Enable Light"), &light->m_bActive))
         {
             light->SetOverridden(1);
             light->SetActive(light->m_bActive);
@@ -1318,26 +1658,26 @@ void DrawAnimationCollapse(CThing* thing)
     static int animPriority;
 
     ImGui::Separator();
-    ImGui::Text("Animations");
+    ImGui::Text(GetLang().ReadString("Animation", "anim_text", "Animations"));
     ImGui::Separator();
     if (!useInput)
     {
-        if (ImGui::BeginCombo("##animations", szCreatureAnimations[selectedAnimation]))
+        if (ImGui::BeginCombo("##animations", getById(creature_animations_dir, selectedAnimation).second.translate.c_str()))
         {
-            size_t arraySize = sizeof(szCreatureAnimations) / sizeof(szCreatureAnimations[0]);
-
-            for (int i = 0; i < arraySize; i++)
+            const std::string selectID ="";
+            for (auto& pair : creature_animations_dir)
             {
-                bool isSelected = (selectedAnimation == i);
+                int intKey = std::stoi(pair.first);
+                bool isSelected = (selectedAnimation == intKey);
 
-                if (ImGui::Selectable(szCreatureAnimations[i], isSelected))
+                if (ImGui::Selectable(pair.second.translate.c_str(), isSelected))
                 {
-                    selectedAnimation = i;
+                    selectedAnimation = intKey;
+                }
 
-                    if (isSelected)
-                    {
-                        ImGui::SetItemDefaultFocus();
-                    }
+                if (isSelected)
+                {
+                    ImGui::SetItemDefaultFocus();
                 }
             }
             ImGui::EndCombo();
@@ -1348,34 +1688,39 @@ void DrawAnimationCollapse(CThing* thing)
         ImGui::InputText("##anim", animInputName, sizeof(animInputName));
     }
     ImGui::SameLine();
-    ImGui::Text("Animation Name");
-    ImGui::Checkbox("Manual Input##anim", &useInput);
+    ImGui::Text(GetLang().ReadString("Animation", "anim_name", "Animation Name"));
+    ImGui::Checkbox(GetLang().ReadString("Animation", "anim_manual_input", "Manual Input##anim"), &useInput);
     ImGui::SameLine();
-    ImGui::Checkbox("Looping", &looping);
+    ImGui::Checkbox(GetLang().ReadString("Animation", "anim_looping", "Looping"), &looping);
     ImGui::SameLine();
-    ImGui::Checkbox("Use Physics", &usePhysics);
+    ImGui::Checkbox(GetLang().ReadString("Animation", "anim_use_physics", "Use Physics"), &usePhysics);
     ImGui::SameLine();
-    ImGui::Checkbox("Use Movement", &useMovement);
-    ImGui::Checkbox("Allow Looking", &allowLooking);
+    ImGui::Checkbox(GetLang().ReadString("Animation", "anim_use_movement", "Use Movement"), &useMovement);
+    ImGui::Checkbox(GetLang().ReadString("Animation", "anim_allow_looking", "Allow Looking"), &allowLooking);
     ImGui::SameLine();
-    ImGui::Checkbox("Stay In Last Frame", &stayOnLastFrame);
+    ImGui::Checkbox(GetLang().ReadString("Animation", "anim_stay_last_frame", "Stay In Last Frame"), &stayOnLastFrame);
     ImGui::SameLine();
-    ImGui::Checkbox("Wait For Anim To Finish", &waitForAnimToFinish);
+    ImGui::Checkbox(GetLang().ReadString("Animation", "anim_wait_finish", "Wait For Anim To Finish"), &waitForAnimToFinish);
     ImGui::Separator();
-    ImGui::InputInt("Animation Priority", &animPriority);
+    ImGui::InputInt(GetLang().ReadString("Animation", "anim_priority", "Animation Priority"), &animPriority);
     if (looping)
-        ImGui::InputInt("Number Loops", &numLoops);
-    if (ImGui::Button("Play Animation", { -FLT_MIN, 0 }))
+        ImGui::InputInt(GetLang().ReadString("Animation", "anim_num_loops", "Number Loops"), &numLoops);
+    if (ImGui::Button(GetLang().ReadString("Animation", "anim_btn_play", "Play Animation"), { -FLT_MIN, 0 }))
     {
         CTCScriptedControl* scriptControl = (CTCScriptedControl*)thing->GetTC(TCI_SCRIPTED_CONTROL);
         CTCScriptedControl::CActionBase* animation = (CTCScriptedControl::CActionBase*)GameMalloc(180);
 
-        char* animationName;
-        if (!useInput)
-            animationName = (char*)szCreatureAnimations[selectedAnimation];
-        else
+        std::string animationName;
+        if (!useInput) {
+            animationName = getById(creature_animations_dir, selectedAnimation).second.original;
+        }
+        else {
             animationName = animInputName;
-        CCharString name(animationName);
+        }
+
+        Notifications->SetNotificationTime(2500);
+        Notifications->PushNotification(animationName.c_str());
+        CCharString name((char*)animationName.c_str());
 
         new CActionPlayAnimation(animation, &name, stayOnLastFrame, looping, numLoops, useMovement, animPriority, 0, waitForAnimToFinish, usePhysics, false, allowLooking);
         scriptControl->AddAction(animation);
@@ -1387,17 +1732,17 @@ void FableMenu::DrawActionsCollapse(CThing* thing)
     DrawAnimationCollapse(thing);
 
     ImGui::Separator();
-    ImGui::Text("Carrying");
+    ImGui::Text(GetLang().ReadString("Actions", "act_carrying", "Carrying"));
     ImGui::Separator();
 
     static bool destroyDropped = false;
-    ImGui::Checkbox("Destroy Dropped Weapon", &destroyDropped);
-    if (ImGui::Button("Take Crate"))
+    ImGui::Checkbox(GetLang().ReadString("Actions", "act_destroy_dropped", "Destroy Dropped Weapon"), &destroyDropped);
+    if (ImGui::Button(GetLang().ReadString("Actions", "act_take_crate", "Take Crate")))
     {
         FableMenu::TakeActionItem(thing, (char*)"OBJECT_CRATE_SMALL_EXPLOSIVE_01_USABLE");
     }
     ImGui::SameLine();
-    if (ImGui::Button("Drop Carried"))
+    if (ImGui::Button(GetLang().ReadString("Actions", "act_drop_carried", "Drop Carried")))
     {
         // Patch to make it work for swords
         Patch<char>(0x845D86 + 1, 0x84);
@@ -1424,7 +1769,7 @@ void FableMenu::DrawActionsCollapse(CThing* thing)
         }
     }
 	ImGui::Separator();
-    if (ImGui::Button("Finish Current Action"))
+    if (ImGui::Button(GetLang().ReadString("Actions", "act_finish_action", "Finish Current Action")))
     {
         thing->FinishCurrentAction();
     }
@@ -1433,20 +1778,20 @@ void FableMenu::DrawActionsCollapse(CThing* thing)
 void FableMenu::DrawPhysicsCollapse(CThing* thing)
 {
     ImGui::Separator();
-    ImGui::Text("X | Y | Z");
+    ImGui::Text(GetLang().ReadString("Physics", "phys_xyz", "X | Y | Z"));
     ImGui::Separator();
     CTCPhysicsStandard* physics = (CTCPhysicsStandard*)thing->GetTC(TCI_PHYSICS);
-    ImGui::InputFloat3("Position", &physics->GetPosition()->X);
+    ImGui::InputFloat3(GetLang().ReadString("Physics", "phys_position", "Position"), &physics->GetPosition()->X);
     if (thing->HasTC(TCI_HERO_STATS))
-        ImGui::InputFloat3("Velocity", &physics->GetVelocity()->X);
+        ImGui::InputFloat3(GetLang().ReadString("Physics", "phys_velocity", "Velocity"), &physics->GetVelocity()->X);
     ImGui::Separator();
-    ImGui::InputFloat3("Forward", &physics->GetRHSet()->Forward.X);
-    ImGui::InputFloat3("Up", &physics->GetRHSet()->Up.X);
+    ImGui::InputFloat3(GetLang().ReadString("Physics", "phys_forward", "Forward"), &physics->GetRHSet()->Forward.X);
+    ImGui::InputFloat3(GetLang().ReadString("Physics", "phys_up", "Up"), &physics->GetRHSet()->Up.X);
     ImGui::Separator();
 
     bool isPhysicsEnabled = physics->IsPhysicsEnabled();
 
-    if (ImGui::Checkbox("Enable Physics", &isPhysicsEnabled))
+    if (ImGui::Checkbox(GetLang().ReadString("Physics", "phys_enable_phys", "Enable Physics"), &isPhysicsEnabled))
     {
         physics->EnablePhysics(isPhysicsEnabled);
     }
@@ -1467,21 +1812,21 @@ void FableMenu::DrawObjectData(const char* windowTitle, CThing* object, bool* is
             CTCBuyableHouse* buyableHouse = (CTCBuyableHouse*)object->GetTC(TCI_BUYABLE_HOUSE);
 
             ImGui::Separator();
-            ImGui::Text("Object");
+            ImGui::Text(GetLang().ReadString("ObjData", "od_object", "Object"));
             ImGui::Separator();
 
-            if (ImGui::Button("Show"))
+            if (ImGui::Button(GetLang().ReadString("ObjData", "od_show", "Show")))
             {
                 object->SetInLimbo(0);
             }
             ImGui::SameLine();
-            if (ImGui::Button("Hide"))
+            if (ImGui::Button(GetLang().ReadString("ObjData", "od_hide", "Hide")))
             {
                 object->SetInLimbo(1);
             }
             if (object->HasTC(TCI_STOCK_ITEM) || object->HasTC(TCI_HERO_RECEIVE_ITEMS))
             {
-                if (ImGui::Button("Add To Inventory"))
+                if (ImGui::Button(GetLang().ReadString("ObjData", "od_add_inventory", "Add To Inventory")))
                 {
                     CThing* playerCharacter = CMainGameComponent::Get()->GetPlayerManager()->GetMainPlayer()->GetCharacterThing();
                     CCreatureAction_AddRealObjectToInventory* addToInventory = (CCreatureAction_AddRealObjectToInventory*)GameMalloc(180);
@@ -1491,7 +1836,7 @@ void FableMenu::DrawObjectData(const char* windowTitle, CThing* object, bool* is
             }
             if (!buyableHouse)
             {
-                if (ImGui::Button("Teleport To Player Position"))
+                if (ImGui::Button(GetLang().ReadString("ObjData", "od_teleport_to_player", "Teleport To Player Position")))
                 {
                     CTCPhysicsStandard* objectPhysics = (CTCPhysicsStandard*)object->GetTC(TCI_PHYSICS);
                     CThing* playerCharacter = CMainGameComponent::Get()->GetPlayerManager()->GetMainPlayer()->GetCharacterThing();
@@ -1499,18 +1844,29 @@ void FableMenu::DrawObjectData(const char* windowTitle, CThing* object, bool* is
                     objectPhysics->EnablePhysics(0);
                 }
             }
+            ImGui::SameLine();
+            if (ImGui::Button(GetLang().ReadString("ObjData", "od_teleport_player_to", "Teleport Player to position")))
+            {
+
+                CPlayer* plr = CMainGameComponent::Get()->GetPlayerManager()->GetMainPlayer();
+                if (plr)
+                {
+                    CThing* t = plr->GetCharacterThing();
+                    *t->GetPosition() = *object->GetPosition();
+                }
+            }
             CTCChest* chest = (CTCChest*)object->GetTC(TCI_CONTAINER);
             if (chest)
             {
                 ImGui::Separator();
-                ImGui::Text("Chest");
+                ImGui::Text(GetLang().ReadString("ObjData", "od_chest", "Chest"));
                 ImGui::Separator();
 
-                if (ImGui::Button("Open", { -FLT_MIN, 0 }))
+                if (ImGui::Button(GetLang().ReadString("ObjData", "od_open", "Open"), { -FLT_MIN, 0 }))
                 {
                     chest->Open();
                 }
-                if (ImGui::Button("Close", { -FLT_MIN, 0 }))
+                if (ImGui::Button(GetLang().ReadString("ObjData", "od_close", "Close"), { -FLT_MIN, 0 }))
                 {
                     chest->Close();
                 }
@@ -1518,35 +1874,35 @@ void FableMenu::DrawObjectData(const char* windowTitle, CThing* object, bool* is
             if (buyableHouse)
             {
                 ImGui::Separator();
-                ImGui::Text("House Features");
+                ImGui::Text(GetLang().ReadString("ObjData", "od_house_features", "House Features"));
                 ImGui::Separator();
                 bool isUsed = buyableHouse->isBuildingBeingUsed(0);
-                ImGui::Text("Is Occupied: %s", isUsed ? "Yes" : "No");
+                ImGui::Text(GetLang().ReadString("ObjData", "od_is_occupied", "Is Occupied: %s"), isUsed ? GetLang().ReadString("ObjData", "od_is_yes", "Yes") : GetLang().ReadString("ObjData", "od_is_no", "No"));
 
-                if (ImGui::Button("Remove Owner"))
+                if (ImGui::Button(GetLang().ReadString("ObjData", "od_remove_owner", "Remove Owner")))
                 {
                     buyableHouse->Evict();
                 }
                 ImGui::SameLine();
-                if (ImGui::Button("Set Rented"))
+                if (ImGui::Button(GetLang().ReadString("ObjData", "od_set_rented", "Set Rented")))
                 {
                     buyableHouse->SetRented(1);
                 }
                 ImGui::SameLine();
-                if (ImGui::Button("Set Owned By Player"))
+                if (ImGui::Button(GetLang().ReadString("ObjData", "od_set_owned", "Set Owned By Player")))
                 {
                     CThing* playerCharacter = CMainGameComponent::Get()->GetPlayerManager()->GetMainPlayer()->GetCharacterThing();
                     CTCHeroStats* heroStats = (CTCHeroStats*)playerCharacter->GetTC(TCI_HERO_STATS);
-                    if(heroStats)
+                    if (heroStats)
                         buyableHouse->SetOwnedByPlayer(heroStats);
                 }
             }
             ImGui::Separator();
-            if (ImGui::CollapsingHeader("Physics"))
+            if (ImGui::CollapsingHeader(GetLang().ReadString("ObjData", "od_physics", "Physics")))
             {
                 DrawPhysicsCollapse(object);
             }
-            if (ImGui::CollapsingHeader("Appearance"))
+            if (ImGui::CollapsingHeader(GetLang().ReadString("ObjData", "od_appearance", "Appearance")))
             {
                 DrawAppearanceCollapse(object);
             }
@@ -1569,76 +1925,101 @@ void FableMenu::DrawCreatureData(const char* windowTitle, CThing* creature, bool
         if (ImGui::Begin(windowTitle, isOpen));
         {
             ImGui::Separator();
-            ImGui::Text("Data");
+            ImGui::Text(GetLang().ReadString("CrtData", "cd_data", "Data"));
             ImGui::Separator();
 
-            if (ImGui::InputFloat("Health", &creature->m_fHealth))
+            if (ImGui::InputFloat(GetLang().ReadString("CrtData", "cd_health", "Health"), &creature->m_fHealth))
             {
                 if (creature->m_fHealth > creature->m_fMaxHealth)
                     creature->m_fMaxHealth = creature->m_fHealth;
             }
-            if (ImGui::Button("Kill"))
+            if (ImGui::Button(GetLang().ReadString("CrtData", "cd_kill", "Kill")))
             {
                 creature->Kill(true);
                 *isOpen = false;
             }
             ImGui::SameLine();
-            if (ImGui::Button("Teleport To Player Position"))
+            if (ImGui::Button(GetLang().ReadString("CrtData", "cd_teleport_to_player", "Teleport To Player Position")))
             {
                 CTCPhysicsStandard* creaturePhysics = (CTCPhysicsStandard*)creature->GetTC(TCI_PHYSICS);
                 CThing* playerCharacter = CMainGameComponent::Get()->GetPlayerManager()->GetMainPlayer()->GetCharacterThing();
                 creaturePhysics->SetPosition(playerCharacter->GetPosition());
             }
-            if (ImGui::Button("Finish Current Action"))
+            ImGui::SameLine();
+            if (ImGui::Button(GetLang().ReadString("CrtData", "cd_teleport_player_to", "Teleport Player to position")))
+            {
+
+                CPlayer* plr = CMainGameComponent::Get()->GetPlayerManager()->GetMainPlayer();
+                if (plr)
+                {
+                    CThing* t = plr->GetCharacterThing();
+                    *t->GetPosition() = *creature->GetPosition();
+                }
+            }
+            if (ImGui::Button(GetLang().ReadString("CrtData", "cd_limbo", "Finish Current Action")))
             {
                 creature->FinishCurrentAction();
                 creature->ClearQueuedActions();
             }
             ImGui::Separator();
-            ImGui::Text("Limbo");
+            ImGui::Text(GetLang().ReadString("Actions", "act_finish_action", "Limbo"));
             ImGui::Separator();
-            if (ImGui::Button("Show"))
+            if (ImGui::Button(GetLang().ReadString("CrtData", "cd_show", "Show")))
             {
                 creature->SetInLimbo(0);
             }
             ImGui::SameLine();
-            if (ImGui::Button("Hide"))
+            if (ImGui::Button(GetLang().ReadString("CrtData", "cd_hide", "Hide")))
             {
                 creature->SetInLimbo(1);
             }
             ImGui::Separator();
-            if (ImGui::CollapsingHeader("Behavior"))
+            if (ImGui::CollapsingHeader(GetLang().ReadString("CrtData", "cd_behavior", "Behavior")))
             {
                 ImGui::Separator();
-                ImGui::Text("Brain");
+                ImGui::Text(GetLang().ReadString("CrtData", "cd_brain", "Brain"));
                 ImGui::Separator();
                 static int brainID = 0;
 
-                if (ImGui::BeginCombo("##CreatureBrain", szBrainNames[brainID]))
+                std::string currentDisplay = szBrainNames[brainID];
+                auto result = findValue(brain_dir, szBrainNames[brainID]);
+                if (!isPairEmpty(result))
+                {
+                    currentDisplay = result.second.translate;
+                }
+
+                if (ImGui::BeginCombo("##CreatureBrain", currentDisplay.c_str()))
                 {
                     for (int i = 0; i < IM_ARRAYSIZE(szBrainNames); i++)
                     {
+                        std::string displayText = szBrainNames[i];
+                        auto result2 = findValue(brain_dir, szBrainNames[i]);
+                        if (!isPairEmpty(result2))
+                        {
+                            displayText = result2.second.translate;
+                        }
+
                         bool isSelected = (brainID == i);
 
-                        if (ImGui::Selectable(szBrainNames[i], isSelected))
+                        if (ImGui::Selectable(displayText.c_str(), isSelected))
                         {
                             brainID = i;
+                        }
 
-                            if (isSelected)
-                            {
-                                ImGui::SetItemDefaultFocus();
-                            }
+                        if (isSelected)
+                        {
+                            ImGui::SetItemDefaultFocus();
                         }
                     }
                     ImGui::EndCombo();
                 }
 
                 ImGui::SameLine();
-                ImGui::Text("Brain Name");
+                ImGui::Text(GetLang().ReadString("CrtData", "cd_brain_name", "Brain Name"));
 
-                if (ImGui::Button("Set Brain", { -FLT_MIN, 0 }))
+                if (ImGui::Button(GetLang().ReadString("CrtData", "cd_set_brain", "Set Brain"), { -FLT_MIN, 0 }))
                 {
-                    ImGui::Text("Brain");
+                    ImGui::Text(GetLang().ReadString("CrtData", "cd_brain", "Brain"));
                     ImGui::Separator();
                     CCharString brainName((char*)szBrainNames[brainID]);
                     CGameDefinitionManager* defManager = CGameDefinitionManager::GetDefinitionManager();
@@ -1654,34 +2035,48 @@ void FableMenu::DrawCreatureData(const char* windowTitle, CThing* creature, bool
                 }
 
                 ImGui::Separator();
-                ImGui::Text("Combat");
+                ImGui::Text(GetLang().ReadString("CrtData", "cd_combat", "Combat"));
                 ImGui::Separator();
 
-                static int attackStyleID;
+                static int attackStyleID = 0;
 
-                if (ImGui::BeginCombo("##CreatureAttackStyle", szAttackStyleNames[attackStyleID]))
+                std::string currentDisplayA = szAttackStyleNames[attackStyleID];
+                auto resultA = findValue(attack_dir, szAttackStyleNames[attackStyleID]);
+                if (!isPairEmpty(result))
+                {
+                    currentDisplayA = resultA.second.translate;
+                }
+
+                if (ImGui::BeginCombo("##CreatureAttackStyle", currentDisplayA.c_str()))
                 {
                     for (int i = 0; i < IM_ARRAYSIZE(szAttackStyleNames); i++)
                     {
+                        std::string displayText = szAttackStyleNames[i];
+                        auto result2 = findValue(attack_dir, szAttackStyleNames[i]);
+                        if (!isPairEmpty(result2))
+                        {
+                            displayText = result2.second.translate;
+                        }
+
                         bool isSelected = (attackStyleID == i);
 
-                        if (ImGui::Selectable(szAttackStyleNames[i], isSelected))
+                        if (ImGui::Selectable(displayText.c_str(), isSelected))
                         {
                             attackStyleID = i;
+                        }
 
-                            if (isSelected)
-                            {
-                                ImGui::SetItemDefaultFocus();
-                            }
+                        if (isSelected)
+                        {
+                            ImGui::SetItemDefaultFocus();
                         }
                     }
                     ImGui::EndCombo();
                 }
 
                 ImGui::SameLine();
-                ImGui::Text("Combat Name");
+                ImGui::Text(GetLang().ReadString("CrtData", "cd_combat_name", "Combat Name"));
 
-                if (ImGui::Button("Set Combat", { -FLT_MIN, 0 }))
+                if (ImGui::Button(GetLang().ReadString("CrtData", "cd_set_combat", "Set Combat"), { -FLT_MIN, 0 }))
                 {
                     CGameDefinitionManager* defManager = CGameDefinitionManager::GetDefinitionManager();
                     CCharString combatName((char*)szAttackStyleNames[attackStyleID]);
@@ -1692,59 +2087,90 @@ void FableMenu::DrawCreatureData(const char* windowTitle, CThing* creature, bool
                     CTCCombat* combat = (CTCCombat*)creature->GetTC(TCI_COMBAT);
                     combat->SetCombatType(&combatType);
                 }
+
                 if (creature->HasTC(TCI_ENEMY))
                 {
                     ImGui::Separator();
-                    ImGui::Text("Faction");
+                    ImGui::Text(GetLang().ReadString("CrtData", "cd_faction", "Faction"));
                     ImGui::Separator();
                     CThing* playerCharacter = CMainGameComponent::Get()->GetPlayerManager()->GetMainPlayer()->GetCharacterThing();
                     CTCEnemy* enemy = (CTCEnemy*)creature->GetTC(TCI_ENEMY);
 
                     bool isEnemy = enemy->IsEnemyOf(playerCharacter);
-                    ImGui::Text("Is Hero Enemy: %s", isEnemy ? "Yes" : "No");
+                    ImGui::Text(GetLang().ReadString("CrtData", "cd_is_enemy", "Is Hero Enemy: %s"), isEnemy ? GetLang().ReadString("CrtData", "cd_is_yes", "Yes") : GetLang().ReadString("CrtData", "cd_is_no", "No"));
 
                     static int factionID = 0;
-                    if (ImGui::BeginCombo("##CreatureFaction", szFactions[factionID]))
+
+                    std::string currentDisplay = szFactions[factionID];
+                    auto result = findValue(factions_dir, szFactions[factionID]);
+                    if (!isPairEmpty(result))
+                    {
+                        currentDisplay = result.second.translate;
+                    }
+
+                    if (ImGui::BeginCombo("##CreatureFaction", currentDisplay.c_str()))
                     {
                         for (int i = 0; i < IM_ARRAYSIZE(szFactions); i++)
                         {
+                            std::string displayText = szFactions[i];
+                            auto result2 = findValue(factions_dir, szFactions[i]);
+                            if (!isPairEmpty(result2))
+                            {
+                                displayText = result2.second.translate;
+                            }
+
                             bool isSelected = (factionID == i);
 
-                            if (ImGui::Selectable(szFactions[i], isSelected))
+                            if (ImGui::Selectable(displayText.c_str(), isSelected))
                             {
                                 factionID = i;
+                            }
 
-                                if (isSelected)
-                                {
-                                    ImGui::SetItemDefaultFocus();
-                                }
+                            if (isSelected)
+                            {
+                                ImGui::SetItemDefaultFocus();
                             }
                         }
                         ImGui::EndCombo();
                     }
                     ImGui::SameLine();
-                    ImGui::Text("Faction Name");
-                    if (ImGui::Button("Set Faction", { -FLT_MIN, 0 }))
+                    ImGui::Text(GetLang().ReadString("CrtData", "cd_faction_name", "Faction Name"));
+                    if (ImGui::Button(GetLang().ReadString("CrtData", "cd_set_faction", "Set Faction"), { -FLT_MIN, 0 }))
                     {
                         CCharString factionName((char*)szFactions[factionID]);
                         enemy->SetFaction(&factionName);
                     }
                 }
             }
-            if (ImGui::CollapsingHeader("Physics"))
+            if (ImGui::CollapsingHeader(GetLang().ReadString("Physics", "phys_text", "Physics")))
             {
                 DrawPhysicsCollapse(creature);
             }
-            if (ImGui::CollapsingHeader("Modes"))
+            if (ImGui::CollapsingHeader(GetLang().ReadString("CrtData", "cd_modes", "Modes")))
             {
-                static int creatureModeID;
+                static int creatureModeID = 0;
                 CTCCreatureModeManager* modeManager = (CTCCreatureModeManager*)creature->GetTC(TCI_ENTITY_MODE_MANAGER);
-                if (ImGui::BeginCombo("Mode Name", szCreatureModeNames[creatureModeID]))
+
+                std::string currentDisplay = "Unknown";
+                auto result = findValue(creature_modes_dir, std::to_string(creatureModeID));
+                if (!isPairEmpty(result))
+                {
+                    currentDisplay = result.second.translate;
+                }
+
+                if (ImGui::BeginCombo(GetLang().ReadString("CrtData", "cd_mode_name", "Mode Name"), currentDisplay.c_str()))
                 {
                     for (int n = 0; n < IM_ARRAYSIZE(szCreatureModeNames); n++)
                     {
+                        std::string displayText = szCreatureModeNames[n];
+                        auto result2 = findValue(creature_modes_dir, std::to_string(n));
+                        if (!isPairEmpty(result2))
+                        {
+                            displayText = result2.second.translate;
+                        }
+
                         bool is_selected = (creatureModeID == n);
-                        if (ImGui::Selectable(szCreatureModeNames[n], is_selected))
+                        if (ImGui::Selectable(displayText.c_str(), is_selected))
                             creatureModeID = n;
                         if (is_selected)
                             ImGui::SetItemDefaultFocus();
@@ -1754,16 +2180,16 @@ void FableMenu::DrawCreatureData(const char* windowTitle, CThing* creature, bool
 
                 NCreatureMode::EMode creatureMode = (NCreatureMode::EMode)creatureModeID;
 
-                if (ImGui::Button("Add Mode"))
+                if (ImGui::Button(GetLang().ReadString("CrtData", "cd_add_mode", "Add Mode")))
                 {
                     modeManager->AddMode(creatureMode);
                 }
-				ImGui::SameLine();
-                if (ImGui::Button("Remove Mode"))
+                ImGui::SameLine();
+                if (ImGui::Button(GetLang().ReadString("CrtData", "cd_remove_mode", "Remove Mode")))
                 {
                     modeManager->RemoveMode(creatureMode);
                 }
-                if (ImGui::Button("Reset Modes", { -FLT_MIN, 0 }))
+                if (ImGui::Button(GetLang().ReadString("CrtData", "cd_reset_modes", "Reset Modes"), { -FLT_MIN, 0 }))
                 {
                     for (int n = 0; n < IM_ARRAYSIZE(szCreatureModeNames); n++)
                     {
@@ -1780,7 +2206,7 @@ void FableMenu::DrawCreatureData(const char* windowTitle, CThing* creature, bool
             {
                 ImGui::BeginDisabled();
             }
-            if (ImGui::CollapsingHeader("Animations"))
+            if (ImGui::CollapsingHeader(GetLang().ReadString("CrtData", "cd_animations", "Animations")))
             {
                 DrawAnimationCollapse(creature);
             }
@@ -1796,45 +2222,59 @@ void FableMenu::DrawCreatureData(const char* windowTitle, CThing* creature, bool
                 ImGui::BeginDisabled();
             }
 
-            if (ImGui::CollapsingHeader("Carrying"))
+            if (ImGui::CollapsingHeader(GetLang().ReadString("CrtData", "cd_carrying", "Carrying")))
             {
                 static int selectedCarrySlot;
                 static int selectedWeaponID = 0;
                 CTCCarrying* carry = (CTCCarrying*)creature->GetTC(TCI_CARRYING);
                 bool isCarryWeapon = carry->IsCarryingWeapon(creature);
 
-                ImGui::Text("Is Carrying Weapons: %s", isCarryWeapon ? "Yes" : "No");
+                ImGui::Text(GetLang().ReadString("CrtData", "cd_is_carrying", "Is Carrying Weapons: %s"), isCarryWeapon ? GetLang().ReadString("CrtData", "cd_is_yes", "Yes") : GetLang().ReadString("CrtData", "cd_is_no", "No"));
 
-                if (ImGui::BeginCombo("##WeaponType", szCreatureWeapons[selectedWeaponID]))
+                std::string currentDisplay = szCreatureWeapons[selectedWeaponID];
+                auto result = findValue(object_dir, szCreatureWeapons[selectedWeaponID]);
+                if (!isPairEmpty(result))
+                {
+                    currentDisplay = result.second.translate;
+                }
+
+                if (ImGui::BeginCombo("##WeaponType", currentDisplay.c_str()))
                 {
                     for (int i = 0; i < IM_ARRAYSIZE(szCreatureWeapons); i++)
                     {
+                        std::string displayText = szCreatureWeapons[i];
+                        auto result2 = findValue(object_dir, szCreatureWeapons[i]);
+                        if (!isPairEmpty(result2))
+                        {
+                            displayText = result2.second.translate;
+                        }
+
                         bool isSelected = (selectedWeaponID == i);
 
-                        if (ImGui::Selectable(szCreatureWeapons[i], isSelected))
+                        if (ImGui::Selectable(displayText.c_str(), isSelected))
                         {
                             selectedWeaponID = i;
+                        }
 
-                            if (isSelected)
-                            {
-                                ImGui::SetItemDefaultFocus();
-                            }
+                        if (isSelected)
+                        {
+                            ImGui::SetItemDefaultFocus();
                         }
                     }
                     ImGui::EndCombo();
                 }
-                ImGui::RadioButton("Right Hand", &selectedCarrySlot, 0);
+                ImGui::RadioButton(GetLang().ReadString("CrtData", "cd_right_hand", "Right Hand"), &selectedCarrySlot, 0);
                 ImGui::SameLine();
-                ImGui::RadioButton("Left Hand", &selectedCarrySlot, 1);
+                ImGui::RadioButton(GetLang().ReadString("CrtData", "cd_left_hand", "Left Hand"), &selectedCarrySlot, 1);
                 ImGui::SameLine();
-                ImGui::RadioButton("Both Hands", &selectedCarrySlot, 2);
+                ImGui::RadioButton(GetLang().ReadString("CrtData", "cd_both_hands", "Both Hands"), &selectedCarrySlot, 2);
 
                 static const char* szCarrySlots[] = {
                     "CARRY_SLOT_RIGHT_HAND",
                     "CARRY_SLOT_LEFT_HAND"
                 };
 
-                if (ImGui::Button("Add Thing"))
+                if (ImGui::Button(GetLang().ReadString("CrtData", "cd_add_thing", "Add Thing")))
                 {
                     CGameDefinitionManager* defManager = CGameDefinitionManager::GetDefinitionManager();
                     CCharString thingName((char*)szCreatureWeapons[selectedWeaponID]);
@@ -1853,7 +2293,7 @@ void FableMenu::DrawCreatureData(const char* windowTitle, CThing* creature, bool
                         }
                         carry->AddThingInCarrySlot(thing, index, true);
                     }
-                    else 
+                    else
                     {
                         creature->ClearQueuedActions();
                         creature->FinishCurrentAction();
@@ -1863,7 +2303,7 @@ void FableMenu::DrawCreatureData(const char* windowTitle, CThing* creature, bool
                     }
                 }
                 ImGui::SameLine();
-                if (ImGui::Button("Remove Thing"))
+                if (ImGui::Button(GetLang().ReadString("CrtData", "cd_remove_thing", "Remove Thing")))
                 {
                     if (selectedCarrySlot != 2)
                     {
@@ -1886,11 +2326,11 @@ void FableMenu::DrawCreatureData(const char* windowTitle, CThing* creature, bool
                 ImGui::EndDisabled();
             }
 
-            if (ImGui::CollapsingHeader("Wife"))
+            if (ImGui::CollapsingHeader(GetLang().ReadString("CrtData", "cd_wife", "Wife")))
             {
                 CTCWife* wife = (CTCWife*)creature->GetTC(TCI_WIFE);
 
-                if (ImGui::Button("Set As Marryable", { -FLT_MIN, 0 }))
+                if (ImGui::Button(GetLang().ReadString("CrtData", "cd_set_marryable", "Set As Marryable"), { -FLT_MIN, 0 }))
                 {
                     if (!creature->HasTC(TCI_WIFE))
                     {
@@ -1904,7 +2344,7 @@ void FableMenu::DrawCreatureData(const char* windowTitle, CThing* creature, bool
                     ImGui::BeginDisabled();
                 }
 
-                if (ImGui::Button("Marry", { -FLT_MIN, 0 }))
+                if (ImGui::Button(GetLang().ReadString("CrtData", "cd_marry", "Marry"), { -FLT_MIN, 0 }))
                 {
                     wife->Marry(0);
                 }
@@ -1916,7 +2356,7 @@ void FableMenu::DrawCreatureData(const char* windowTitle, CThing* creature, bool
                     ImGui::BeginDisabled();
                 }
 
-                if (ImGui::Button("Have Sex", { -FLT_MIN, 0 }))
+                if (ImGui::Button(GetLang().ReadString("CrtData", "cd_have_sex", "Have Sex"), { -FLT_MIN, 0 }))
                 {
                     wife->HaveSex();
                 }
@@ -1926,7 +2366,7 @@ void FableMenu::DrawCreatureData(const char* windowTitle, CThing* creature, bool
                     ImGui::EndDisabled();
                 }
 
-                if (ImGui::Button("Divorce", { -FLT_MIN, 0 }))
+                if (ImGui::Button(GetLang().ReadString("CrtData", "cd_divorce", "Divorce"), { -FLT_MIN, 0 }))
                 {
                     wife->Divorce();
                 }
@@ -1936,7 +2376,7 @@ void FableMenu::DrawCreatureData(const char* windowTitle, CThing* creature, bool
                     ImGui::EndDisabled();
                 }
             }
-            if (ImGui::CollapsingHeader("Appearance"))
+            if (ImGui::CollapsingHeader(GetLang().ReadString("Appearance", "ap_text", "Appearance")))
             {
                 DrawAppearanceCollapse(creature);
             }
@@ -1949,39 +2389,39 @@ void FableMenu::DrawCameraTab()
 {
     if (TheCamera)
     {
-        ImGui::Checkbox("Set Camera Position", &m_bCustomCameraPos);
-        ImGui::InputFloat3("X | Y | Z", &camPos.X);
+        ImGui::Checkbox(GetLang().ReadString("Camera", "cam_set_position", "Set Camera Position"), &m_bCustomCameraPos);
+        ImGui::InputFloat3(GetLang().ReadString("Camera", "cam_xyz", "X | Y | Z"), &camPos.X);
 
-        ImGui::Checkbox("Set FOV", &m_bCustomCameraFOV);
+        ImGui::Checkbox(GetLang().ReadString("Camera", "cam_set_fov", "Set FOV"), &m_bCustomCameraFOV);
 
         if (m_bCustomCameraFOV)
-            ImGui::InputFloat("FOV", &TheCamera->FOV);
+            ImGui::InputFloat(GetLang().ReadString("Camera", "cam_fov", "FOV"), &TheCamera->FOV);
         ImGui::Separator();
     }
 
-    ImGui::Checkbox("Free Camera", &ms_bFreeCam);
+    ImGui::Checkbox(GetLang().ReadString("Camera", "cam_free_camera", "Free Camera"), &ms_bFreeCam);
     if (ms_bFreeCam)
     {
         ImGui::Separator();
         if (!m_bCustomCameraPos)
-            ImGui::TextColored(ImVec4(1.f, 0.3f, 0.3f, 1.f), "Check \"Set Camera Position\"!");
+            ImGui::TextColored(ImVec4(1.f, 0.3f, 0.3f, 1.f), GetLang().ReadString("Camera", "cam_warn_set_pos", "Check \"Set Camera Position\"!"));
 
-        ImGui::Text("Free Camera Type");
+        ImGui::Text(GetLang().ReadString("Camera", "cam_free_type", "Free Camera Type"));
         ImGui::Separator();
-        ImGui::RadioButton("Custom (Recommended)", &m_nFreeCameraMode, FREE_CAMERA_CUSTOM);
+        ImGui::RadioButton(GetLang().ReadString("Camera", "cam_custom", "Custom (Recommended)"), &m_nFreeCameraMode, FREE_CAMERA_CUSTOM);
         ImGui::SameLine();
-        ShowHelpMarker("A custom free camera implementation, uses NUMPAD keys by default to move the camera. Mouse and key settings can be changed in the Settings menu.");
-        ImGui::RadioButton("Original", &m_nFreeCameraMode, FREE_CAMERA_ORIGINAL);
+        ShowHelpMarker(GetLang().ReadString("Camera", "cam_custom_help", "A custom free camera implementation, uses NUMPAD keys by default to move the camera. Mouse and key settings can be changed in the Settings menu."));
+        ImGui::RadioButton(GetLang().ReadString("Camera", "cam_original", "Original"), &m_nFreeCameraMode, FREE_CAMERA_ORIGINAL);
         if (m_nFreeCameraMode == FREE_CAMERA_CUSTOM)
         {
             ImGui::Separator();
-            ImGui::InputFloat("Free Camera Speed", &m_fFreeCamSpeed);
+            ImGui::InputFloat(GetLang().ReadString("Camera", "cam_speed", "Free Camera Speed"), &m_fFreeCamSpeed);
         }
 
         ImGui::Separator();
     }
 
-    if (ImGui::Button("Teleport Player To Camera Location", { -FLT_MIN, 0 }))
+    if (ImGui::Button(GetLang().ReadString("Camera", "cam_teleport_player", "Teleport Player To Camera Location"), { -FLT_MIN, 0 }))
     {
         CPlayer* plr = CMainGameComponent::Get()->GetPlayerManager()->GetMainPlayer();
         if (plr)
@@ -2000,18 +2440,18 @@ void FableMenu::DrawWorldTab()
     if (wrld)
     {
         ImGui::Separator();
-        ImGui::Text("Settings");
+        ImGui::Text(GetLang().ReadString("World", "world_settings", "Settings"));
         ImGui::Separator();
         bool* minimap = wrld->GetMinimap();
-        ImGui::Checkbox("Minimap", minimap);
+        ImGui::Checkbox(GetLang().ReadString("World", "world_minimap", "Minimap"), minimap);
         if (plr)
         {
             bool& enemies = *(bool*)((int)plr + 0x21B);
-            ImGui::Checkbox("Kill Mode", &enemies);
+            ImGui::Checkbox(GetLang().ReadString("World", "world_kill_mode", "Kill Mode"), &enemies);
         }
-        ImGui::Checkbox("Enemy God Mode", &NGlobalConsole::EnemyGodMode);
+        ImGui::Checkbox(GetLang().ReadString("World", "world_enemy_god_mode", "Enemy God Mode"), &NGlobalConsole::EnemyGodMode);
         static bool fishingAnywhere;
-        if (ImGui::Checkbox("Land Fishing", &fishingAnywhere))
+        if (ImGui::Checkbox(GetLang().ReadString("World", "world_land_fishing", "Land Fishing"), &fishingAnywhere))
         {
             Patch(0x7F0210, { (unsigned char)((BYTE)fishingAnywhere + 0x74) });
         }
@@ -2019,33 +2459,33 @@ void FableMenu::DrawWorldTab()
     }
     if (wrld)
     {
-        if (ImGui::CollapsingHeader("Time"))
+        if (ImGui::CollapsingHeader(GetLang().ReadString("World", "world_time", "Time")))
         {
             int time = *(int*)((int)wrld + 28);
             if (time)
             {
                 float& timeStep = *(float*)((int)time + 16);
-                ImGui::SliderFloat("Time Step", &timeStep, 0.001f, 1.0f);
+                ImGui::SliderFloat(GetLang().ReadString("World", "world_time_step", "Time Step"), &timeStep, 0.001f, 1.0f);
 
-                ImGui::Checkbox("Set Time", &ms_bChangeTime);
+                ImGui::Checkbox(GetLang().ReadString("World", "world_set_time", "Set Time"), &ms_bChangeTime);
                 if (ms_bChangeTime)
                 {
                     float& curTime = *(float*)((int)time + 8);
-                    ImGui::SliderFloat("Time##set", &curTime, 0.0, 1.0f);
+                    ImGui::SliderFloat(GetLang().ReadString("World", "world_time_value", "Time##set"), &curTime, 0.0, 1.0f);
                 }
             }
         }
     }
-    if (ImGui::CollapsingHeader("Region"))
+    if (ImGui::CollapsingHeader(GetLang().ReadString("World", "world_region", "Region")))
     {
         static int hspID = 0;
         static char hspName[256] = {};
         static bool manualInput = false;
 
         bool& quest_regions = *(bool*)(0x1375741);
-        ImGui::Checkbox("Quest Regions", &quest_regions);
+        ImGui::Checkbox(GetLang().ReadString("World", "world_quest_regions", "Quest Regions"), &quest_regions);
         static bool disableRegionBounds;
-        if (ImGui::Checkbox("Disable Region Bounds", &disableRegionBounds))
+        if (ImGui::Checkbox(GetLang().ReadString("World", "world_disable_bounds", "Disable Region Bounds"), &disableRegionBounds))
         {
             if (disableRegionBounds)
             {
@@ -2061,15 +2501,29 @@ void FableMenu::DrawWorldTab()
         {
             ImGui::BeginDisabled();
         }
-        ImGui::Text("Hero Spawn Point");
-        if(!manualInput)
+        ImGui::Text(GetLang().ReadString("World", "world_hero_spawn", "Hero Spawn Point"));
+        if (!manualInput)
         {
-            if (ImGui::BeginCombo("##hsplist", szHolySites[hspID]))
+            std::string currentDisplay = szHolySites[hspID];
+            auto result = findValue(holysites_dir, szHolySites[hspID]);
+            if (!isPairEmpty(result))
+            {
+                currentDisplay = result.second.translate;
+            }
+
+            if (ImGui::BeginCombo("##hsplist", currentDisplay.c_str()))
             {
                 for (int n = 0; n < IM_ARRAYSIZE(szHolySites); n++)
                 {
+                    std::string displayText = szHolySites[n];
+                    auto result2 = findValue(holysites_dir, szHolySites[n]);
+                    if (!isPairEmpty(result2))
+                    {
+                        displayText = result2.second.translate;
+                    }
+
                     bool is_selected = (hspID == n);
-                    if (ImGui::Selectable(szHolySites[n], is_selected))
+                    if (ImGui::Selectable(displayText.c_str(), is_selected))
                         hspID = n;
                     if (is_selected)
                         ImGui::SetItemDefaultFocus();
@@ -2082,8 +2536,8 @@ void FableMenu::DrawWorldTab()
         {
             ImGui::InputText("##hspname", hspName, sizeof(hspName));
         }
-        ImGui::Checkbox("Manual Input", &manualInput);
-        if (ImGui::Button("Teleport", { -FLT_MIN, 0 }))
+        ImGui::Checkbox(GetLang().ReadString("World", "world_manual_input", "Manual Input"), &manualInput);
+        if (ImGui::Button(GetLang().ReadString("World", "world_teleport", "Teleport"), { -FLT_MIN, 0 }))
         {
             if (ms_bSlowmotion)
             {
@@ -2097,15 +2551,15 @@ void FableMenu::DrawWorldTab()
         {
             ImGui::EndDisabled();
         }
-        if (ImGui::Button("Reload Current Region", { -FLT_MIN, 0 }))
+        if (ImGui::Button(GetLang().ReadString("World", "world_reload_region", "Reload Current Region"), { -FLT_MIN, 0 }))
         {
             CWorldMap* map = CThing::GetWorldMap();
             map->ReloadCurrentRegion();
         }
     }
-    if (ImGui::CollapsingHeader("Particles"))
+    if (ImGui::CollapsingHeader(GetLang().ReadString("World", "world_particles", "Particles")))
     {
-        ImGui::TextWrapped("Particle list is available in Help menu.");
+        ImGui::TextWrapped(GetLang().ReadString("World", "world_particles_help", "Particle list is available in Help menu."));
         static CVector particlePosition = {};
         static char particleName[512];
         static int attachType = -1;
@@ -2113,24 +2567,24 @@ void FableMenu::DrawWorldTab()
         static bool attachParticleToCamera;
         static bool particleNameError;
 
-        ImGui::Checkbox("Enable Particles", &NGlobalConsole::EnableParticles);
-        ImGui::InputText("Particle Name", particleName, sizeof(particleName));
-        ImGui::InputFloat3("Particle Position", &particlePosition.X);
-        if (ImGui::Button("Get Player Position"))
+        ImGui::Checkbox(GetLang().ReadString("World", "world_enable_particles", "Enable Particles"), &NGlobalConsole::EnableParticles);
+        ImGui::InputText(GetLang().ReadString("World", "world_particle_name", "Particle Name"), particleName, sizeof(particleName));
+        ImGui::InputFloat3(GetLang().ReadString("World", "world_particle_position", "Particle Position"), &particlePosition.X);
+        if (ImGui::Button(GetLang().ReadString("World", "world_particle_get_pos", "Get Player Position")))
         {
             CThing* playerCharacter = CMainGameComponent::Get()->GetPlayerManager()->GetMainPlayer()->GetCharacterThing();
             particlePosition = *playerCharacter->GetPosition();
         }
-        ImGui::RadioButton("Default", &attachType, -1);
+        ImGui::RadioButton(GetLang().ReadString("World", "world_attach_default", "Default"), &attachType, -1);
         ImGui::SameLine();
-        ImGui::RadioButton("Attach To Camera", &attachType, 0);
+        ImGui::RadioButton(GetLang().ReadString("World", "world_attach_camera", "Attach To Camera"), &attachType, 0);
         ImGui::SameLine();
-        ImGui::RadioButton("Attach To Body", &attachType, 1);
+        ImGui::RadioButton(GetLang().ReadString("World", "world_attach_body", "Attach To Body"), &attachType, 1);
 
         if (ms_bDisableCreateParticle)
             ImGui::BeginDisabled();
 
-        if (ImGui::Button("Create Particle", { -FLT_MIN, 0 }))
+        if (ImGui::Button(GetLang().ReadString("World", "world_create_particle", "Create Particle"), { -FLT_MIN, 0 }))
         {
             CCharString ccstrParticle(particleName);
             CParticleEmitterDatabase* emitterDatabase = CParticleEmitterDatabase::Get();
@@ -2172,13 +2626,13 @@ void FableMenu::DrawWorldTab()
 
         if (particleNameError)
         {
-            ImGui::Text("Error: Undefined particle name");
+            ImGui::Text(GetLang().ReadString("World", "world_particle_error", "Error: Undefined particle name"));
         }
 
         if (ms_bDisableCreateParticle)
             ImGui::EndDisabled();
 
-        if (ImGui::Button("Clear Attachments", { 125, 25 }))
+        if (ImGui::Button(GetLang().ReadString("World", "world_clear_attachments", "Clear Attachments"), { 140, 25 }))
         {
             for (auto attachedParticle : m_vAttachedParticles)
             {
@@ -2194,7 +2648,7 @@ void FableMenu::DrawWorldTab()
             m_vAttachedParticles.clear();
         }
         ImGui::SameLine();
-        if (ImGui::Button("Destroy All Created Particles", { 200, 25 }))
+        if (ImGui::Button(GetLang().ReadString("World", "world_destroy_particles", "Destroy All Created Particles"), { 260, 25 }))
         {
             for (auto thing : m_vCreatedParticles)
             {
@@ -2217,12 +2671,12 @@ void FableMenu::DrawQuestTab()
 
     CQuestManager* q = CQuestManager::Get();
 
-    ImGui::TextWrapped("NOTE: Quest changes might break your savegame! To be safe, do any quest changes on a backup/alternative save.");
+    ImGui::TextWrapped(GetLang().ReadString("Quest", "quest_note", "NOTE: Quest changes might break your savegame! To be safe, do any quest changes on a backup/alternative save."));
 
     static char scriptName[256] = {};
-    if (ImGui::CollapsingHeader("Status Control"))
+    if (ImGui::CollapsingHeader(GetLang().ReadString("Quest", "quest_status_control", "Status Control")))
     {
-        ImGui::Text("Quest Name");
+        ImGui::Text(GetLang().ReadString("Quest", "quest_name", "Quest Name"));
         static bool writeName = false;
 
         ImGui::PushItemWidth(-FLT_MIN);
@@ -2246,13 +2700,13 @@ void FableMenu::DrawQuestTab()
         {
             ImGui::InputText("##quest", scriptName, sizeof(scriptName));
         }
-        ImGui::Checkbox("Manual Input", &writeName);
+        ImGui::Checkbox(GetLang().ReadString("Quest", "quest_manual_input", "Manual Input"), &writeName);
 
         ImGui::PopItemWidth();
 
         if (strlen(scriptName) > 0)
         {
-            if (ImGui::Button("Activate", { -FLT_MIN, 0 }))
+            if (ImGui::Button(GetLang().ReadString("Quest", "quest_activate", "Activate"), { -FLT_MIN, 0 }))
             {
                 CCharString str(scriptName);
                 if (q->IsQuestActive(&str))
@@ -2275,7 +2729,7 @@ void FableMenu::DrawQuestTab()
                 }
 
             }
-            if (ImGui::Button("Deactivate", { -FLT_MIN, 0 }))
+            if (ImGui::Button(GetLang().ReadString("Quest", "quest_deactivate", "Deactivate"), { -FLT_MIN, 0 }))
             {
                 CCharString str(scriptName);
                 if (!q->IsQuestActive(&str))
@@ -2292,7 +2746,7 @@ void FableMenu::DrawQuestTab()
             }
         }
     }
-    if (ImGui::CollapsingHeader("Active Quests"))
+    if (ImGui::CollapsingHeader(GetLang().ReadString("Tweaks", "quest_active", "Active Quests")))
     {
         static bool coreQuest = false;
         static bool optionalQuests = false;
@@ -2300,13 +2754,13 @@ void FableMenu::DrawQuestTab()
         static bool localizedQuests = false;
         int activeQuests = 0;
 
-        ImGui::Checkbox("Core Quests", &coreQuest);
+        ImGui::Checkbox(GetLang().ReadString("Tweaks", "quest_core", "Core Quests"), &coreQuest);
         ImGui::SameLine();
-        ImGui::Checkbox("Optional Quests", &optionalQuests);
+        ImGui::Checkbox(GetLang().ReadString("Tweaks", "quest_optional", "Optional Quests"), &optionalQuests);
         ImGui::SameLine();
-        ImGui::Checkbox("Scripts", &scriptQuests);
+        ImGui::Checkbox(GetLang().ReadString("Tweaks", "quest_scripts", "Scripts"), &scriptQuests);
         ImGui::SameLine();
-        ImGui::Checkbox("Localize Names", &localizedQuests);
+        ImGui::Checkbox(GetLang().ReadString("Tweaks", "quest_localize", "Localize Names"), &localizedQuests);
 
         ImGui::BeginChild("#qlist", { 0, -ImGui::GetFrameHeightWithSpacing() }, true);
         for (int i = 0; i < IM_ARRAYSIZE(szBuiltInQuests); i++)
@@ -2364,7 +2818,7 @@ void FableMenu::DrawQuestTab()
                 }
                 ImGui::SameLine();
                 ImGui::PushID(i);
-                if (ImGui::Button("Deactivate"))
+                if (ImGui::Button(GetLang().ReadString("Tweaks", "quest_btn_deactivate", "Deactivate")))
                 {
                     q->DeactivateQuest(&quest_name, 0);
 
@@ -2372,7 +2826,7 @@ void FableMenu::DrawQuestTab()
                 if (cardThing)
                 {
                     ImGui::SameLine();
-                    if (ImGui::Button("Complete"))
+                    if (ImGui::Button(GetLang().ReadString("Tweaks", "quest_btn_complete", "Complete")))
                     {
                         CTCQuestCard* card = (CTCQuestCard*)cardThing->GetTC(TCI_QUEST_CARD);
                         q->SetQuestAsCompleted(&quest_name, 0, 0, 0);
@@ -2385,22 +2839,22 @@ void FableMenu::DrawQuestTab()
 #ifdef _DEBUG
         if (activeQuests > 0)
         {
-            if (ImGui::Button("Deactivate All", { -FLT_MIN, 0 }))
+            if (ImGui::Button(GetLang().ReadString("Tweaks", "quest_deactivate_all", "Deactivate All"), { -FLT_MIN, 0 }))
             {
                 q->DeactivateAllQuests();
                 Notifications->SetNotificationTime(2500);
-                Notifications->PushNotification("All quests deactivated! (%d)", activeQuests);
+                Notifications->PushNotification(GetLang().ReadString("Tweaks", "quest_all_deactivated", "Все квесты отключены! (%d)"), activeQuests);
                 activeQuests = 0;
             }
         }
 #endif
     }
 
-    if (ImGui::CollapsingHeader("Tweaks"))
+    if (ImGui::CollapsingHeader(GetLang().ReadString("Tweaks", "tweaks_text", "Tweaks")))
     {
-        ImGui::Checkbox("No Bodyguards Limit", &m_bNoBodyGuardsLimit);
-        ImGui::SameLine(); ShowHelpMarker("Allows to hire all bodyguards. Default limit is 2.");
-        ImGui::Checkbox("Locking Leave Quest Region", &NGlobalConsole::GEnableRegionLockingSaveSystem);
+        ImGui::Checkbox(GetLang().ReadString("Tweaks", "quest_no_bg_limit", "No Bodyguards Limit"), &m_bNoBodyGuardsLimit);
+        ImGui::SameLine(); ShowHelpMarker(GetLang().ReadString("Tweaks", "quest_bg_help", "Allows to hire all bodyguards. Default limit is 2."));
+        ImGui::Checkbox(GetLang().ReadString("Tweaks", "quest_lock_region", "Locking Leave Quest Region"), &NGlobalConsole::GEnableRegionLockingSaveSystem);
     }
 }
 
@@ -2408,7 +2862,7 @@ void FableMenu::DrawMiscTab()
 {
     CWorld* wrld = CMainGameComponent::Get()->GetWorld();
     ImGui::Separator();
-    ImGui::Text("Time");
+    ImGui::Text(GetLang().ReadString("Misc", "misc_time_header", "Time"));
     ImGui::Separator();
 
     if (wrld)
@@ -2416,60 +2870,60 @@ void FableMenu::DrawMiscTab()
         CBulletTimeManager* time = wrld->GetBulletTime();
         if (time)
         {
-            if (ImGui::Checkbox("Slowmotion", &time->m_bActive))
+            if (ImGui::Checkbox(GetLang().ReadString("Misc", "misc_slowmotion", "Slowmotion"), &time->m_bActive))
             {
                 ms_bSlowmotion = time->m_bActive;
             }
         }
     }
 
-    ImGui::Checkbox("Update AI", &NGlobalConsole::EnableUpdateAI);
-    ImGui::Checkbox("Update Objects", &NGlobalConsole::EnableUpdateObjects);
+    ImGui::Checkbox(GetLang().ReadString("Misc", "misc_update_ai", "Update AI"), &NGlobalConsole::EnableUpdateAI);
+    ImGui::Checkbox(GetLang().ReadString("Misc", "misc_update_objects", "Update Objects"), &NGlobalConsole::EnableUpdateObjects);
 
     static bool creatureDecay = 1;
     static bool enableShortMelee = 0;
-    if (ImGui::Checkbox("Dead Creature Decay", &creatureDecay))
+    if (ImGui::Checkbox(GetLang().ReadString("Misc", "misc_creature_decay", "Dead Creature Decay"), &creatureDecay))
     {
         Patch<char>(0x8362EA + 1, creatureDecay + 0x84);
     }
     ImGui::Separator();
-    ImGui::Text("Hero");
+    ImGui::Text(GetLang().ReadString("Misc", "misc_hero", "Hero"));
     ImGui::Separator();
 
-    ImGui::Checkbox("Hero God Mode", &NGlobalConsole::HeroGodMode);
-    ImGui::Checkbox("Enable Hero Jump", &NGlobalConsole::EnableHeroJump);
+    ImGui::Checkbox(GetLang().ReadString("Misc", "misc_hero_god", "Hero God Mode"), &NGlobalConsole::HeroGodMode);
+    ImGui::Checkbox(GetLang().ReadString("Misc", "misc_hero_jump", "Enable Hero Jump"), &NGlobalConsole::EnableHeroJump);
     char jumpDesc[256];
-    sprintf(jumpDesc, "Jump action assigned to \"%s\" button. Jump key and others can be changed in settings menu.", eKeyboardMan::KeyToString(SettingsMgr->iHeroJumpKey));
+    sprintf(jumpDesc, GetLang().ReadString("Misc", "misc_help_jump", "Jump action assigned to \"%s\" button. Jump key and others can be changed in settings menu."), eKeyboardMan::KeyToString(SettingsMgr->iHeroJumpKey));
     ImGui::SameLine(); ShowHelpMarker(jumpDesc);
-    ImGui::Checkbox("Enable Hero Sprint", &NGlobalConsole::EnableHeroSprint);
+    ImGui::Checkbox(GetLang().ReadString("Misc", "misc_hero_sprint", "Enable Hero Sprint"), &NGlobalConsole::EnableHeroSprint);
 
     ImGui::Separator();
-    ImGui::Text("Display");
+    ImGui::Text(GetLang().ReadString("Misc", "misc_display", "Display"));
     ImGui::Separator();
 
-    ImGui::Checkbox("Display HUD", &GetHud()->m_bDisplay);
-    if (ImGui::Checkbox("Hide Auto Save Progress", &FGlobals::GDoNotCallStartAutoSaveProgress))
+    ImGui::Checkbox(GetLang().ReadString("Misc", "misc_display_hud", "Display HUD"), &GetHud()->m_bDisplay);
+    if (ImGui::Checkbox(GetLang().ReadString("Misc", "misc_hide_autosave", "Hide Auto Save Progress"), &FGlobals::GDoNotCallStartAutoSaveProgress))
     {
         // Patch SaveGameState variable reset
         Patch(0x4A073B, { (BYTE)FGlobals::GDoNotCallStartAutoSaveProgress });
     }
 
     ImGui::Separator();
-    ImGui::Text("Cheats");
+    ImGui::Text(GetLang().ReadString("Misc", "misc_cheats", "Cheats"));
     ImGui::Separator();
-    ImGui::Checkbox("Infinite Health", &m_bGodMode);
-    ImGui::Checkbox("Infinite Will", &m_bInfiniteWill);
+    ImGui::Checkbox(GetLang().ReadString("Misc", "misc_inf_health", "Infinite Health"), &m_bGodMode);
+    ImGui::Checkbox(GetLang().ReadString("Misc", "misc_inf_will", "Infinite Will"), &m_bInfiniteWill);
 
     ImGui::Separator();
-    ImGui::Text("Console");
+    ImGui::Text(GetLang().ReadString("Misc", "misc_console", "Console"));
     ImGui::Separator();
-    ImGui::InputFloat("Trading Price Multiplier", CTCAIScratchPad::TradingPriceMult);
+    ImGui::InputFloat(GetLang().ReadString("Misc", "misc_trading_mult", "Trading Price Multiplier"), CTCAIScratchPad::TradingPriceMult);
 
-    if (ImGui::InputInt("Primitive Fade Distance", &NGlobalConsole::PrimitiveFadeDistance))
+    if (ImGui::InputInt(GetLang().ReadString("Misc", "misc_fade_dist", "Primitive Fade Distance"), &NGlobalConsole::PrimitiveFadeDistance))
     {
         NGlobalConsole::ForcePrimitiveFadeDistance = (NGlobalConsole::PrimitiveFadeDistance > 0);
     }
-    ImGui::InputFloat("Override Speed Multiplier", &NGlobalConsole::ConsoleOverrideMultiplier);
+    ImGui::InputFloat(GetLang().ReadString("Misc", "misc_speed_mult", "Override Speed Multiplier"), &NGlobalConsole::ConsoleOverrideMultiplier);
 #ifdef _DEBUG
     ImGui::Checkbox("Debug Stress Test", &NGlobalConsole::GCombatStressTestDebug);
     ImGui::Separator();
@@ -2507,14 +2961,14 @@ void FableMenu::DrawSettings()
     ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, { 0.5f, 0.5f });
     ImGui::SetNextWindowPos({ ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y / 2.0f }, ImGuiCond_Once, { 0.5f, 0.5f });
     ImGui::SetNextWindowSize({ 700,700 }, ImGuiCond_Once);
-    ImGui::Begin("Settings", &m_bSubmenuActive[SM_Settings]);
+    ImGui::Begin(GetLang().ReadString("Settings", "stn_text", "Settings"), &m_bSubmenuActive[SM_Settings]);
 
     static int settingID = 0;
     static const char* settingNames[] = {
-        "Menu",
-        "INI",
-        "Keys",
-        "Mouse"
+        GetLang().ReadString("Settings","stn_menu","Menu"), 
+		GetLang().ReadString("Settings","stn_ini","INI"),
+		GetLang().ReadString("Settings","stn_keys","Keys"),
+		GetLang().ReadString("Settings","stn_mouse","Mouse")
     };
 
     enum eSettings {
@@ -2543,26 +2997,26 @@ void FableMenu::DrawSettings()
     switch (settingID)
     {
     case MENU:
-        ImGui::TextWrapped("All user settings are saved to fablemenu_user.ini.");
-        ImGui::Text("Menu Scale");
+        ImGui::TextWrapped(GetLang().ReadString("MenuMain", "stn_menu_text", "All user settings are saved to fablemenu_user.ini."));
+        ImGui::Text(GetLang().ReadString("MenuMain", "stn_menu_scale", "Menu Scale"));
         ImGui::PushItemWidth(-FLT_MIN);
         ImGui::InputFloat("##", &SettingsMgr->fMenuScale);
         ImGui::PopItemWidth();
         break;
     case INI:
-        ImGui::TextWrapped("These settings control FableMenu.ini options. Any changes require game restart to take effect.");
-        ImGui::LabelText("##", "Core");
+        ImGui::TextWrapped(GetLang().ReadString("INI", "stn_ini_text", "These settings control FableMenu.ini options. Any changes require game restart to take effect."));
+        ImGui::LabelText("##", GetLang().ReadString("INI", "stn_ini_core", "Core"));
         ImGui::Separator();
-        ImGui::Checkbox("Slowmotion Spell/Effect Affects Everything", &SettingsMgr->bSlowMotionEffectsEverything);
-        ImGui::Checkbox("Windowed Mode", &SettingsMgr->bUseBuiltInWindowedMode);
+        ImGui::Checkbox(GetLang().ReadString("INI", "stn_ini_slowmotion", "Slowmotion Spell/Effect Affects Everything"), &SettingsMgr->bSlowMotionEffectsEverything);
+        ImGui::Checkbox(GetLang().ReadString("INI", "stn_ini_windowed", "Windowed Mode"), &SettingsMgr->bUseBuiltInWindowedMode);
         ImGui::Separator();
 
         break;
     case KEYS:
         if (m_bPressingKey)
-            ImGui::TextColored(ImVec4(0.f, 1.f, 0.3f, 1.f), "Press a key!");
+            ImGui::TextColored(ImVec4(0.f, 1.f, 0.3f, 1.f), GetLang().ReadString("Keys", "keys_press_key", "Press a key!"));
 
-        if (ImGui::Button("Reset Keys", { -FLT_MIN, 0 }))
+        if (ImGui::Button(GetLang().ReadString("Keys", "keys_reset_btn", "Reset Keys"), { -FLT_MIN, 0 }))
         {
             SettingsMgr->ResetKeys();
             Notifications->SetNotificationTime(2500);
@@ -2570,24 +3024,24 @@ void FableMenu::DrawSettings()
         }
 
         ImGui::Separator();
-        ImGui::LabelText("##", "Core");
+        ImGui::LabelText("##", GetLang().ReadString("Keys", "keys_core", "Core"));
         ImGui::Separator();
-        KeyBind(&SettingsMgr->iMenuOpenKey, "Open/Close Menu", "menu");
+        KeyBind(&SettingsMgr->iMenuOpenKey, GetLang().ReadString("Keys", "keys_open_close", "Open/Close Menu"), "menu");
         ImGui::Separator();
-        ImGui::LabelText("##", "Camera");
+        ImGui::LabelText("##", GetLang().ReadString("Keys", "keys_camera", "Camera"));
         ImGui::Separator();
 
-        KeyBind(&SettingsMgr->iFreeCameraKeyForward, "Forward", "x_plus");
-        KeyBind(&SettingsMgr->iFreeCameraKeyBack, "Back", "x_minus");
-        KeyBind(&SettingsMgr->iFreeCameraKeyLeft, "Left", "y_plus");
-        KeyBind(&SettingsMgr->iFreeCameraKeyRight, "Right", "y_minus");
-        KeyBind(&SettingsMgr->iFreeCameraKeyUp, "Up", "z_plus");
-        KeyBind(&SettingsMgr->iFreeCameraKeyDown, "Down", "z_minus");
+        KeyBind(&SettingsMgr->iFreeCameraKeyForward, GetLang().ReadString("Keys", "keys_forward", "Forward"), "x_plus");
+        KeyBind(&SettingsMgr->iFreeCameraKeyBack, GetLang().ReadString("Keys", "keys_back", "Bacj"), "x_minus");
+        KeyBind(&SettingsMgr->iFreeCameraKeyLeft, GetLang().ReadString("Keys", "keys_left", "Left"), "y_plus");
+        KeyBind(&SettingsMgr->iFreeCameraKeyRight, GetLang().ReadString("Keys", "keys_right", "Right"), "y_minus");
+        KeyBind(&SettingsMgr->iFreeCameraKeyUp, GetLang().ReadString("Keys", "keys_up", "Up"), "z_plus");
+        KeyBind(&SettingsMgr->iFreeCameraKeyDown, GetLang().ReadString("Keys", "keys_down", "Down"), "z_minus");
         
         ImGui::Separator();
-        ImGui::LabelText("##", "Action Keys");
+        ImGui::LabelText("##", GetLang().ReadString("Keys", "keys_actions_keys", "Actions Keys"));
         ImGui::Separator();
-        GameKeyBind(&SettingsMgr->iHeroJumpKey, "Jump", "jump_action", GAME_ACTION_JUMP);
+        GameKeyBind(&SettingsMgr->iHeroJumpKey, GetLang().ReadString("Keys", "keys_jump", "Jump"), "jump_action", GAME_ACTION_JUMP);
         ImGui::Separator();
 
         if (m_bPressingKey)
@@ -2602,22 +3056,22 @@ void FableMenu::DrawSettings()
         }
         break;
     case MOUSE:
-        ImGui::TextWrapped("All user settings are saved to fablemenu_user.ini.");
-        ImGui::Text("Sensitivity");
+        ImGui::TextWrapped(GetLang().ReadString("MenuMain", "stn_menu_text", "All user settings are saved to fablemenu_user.ini."));
+        ImGui::Text(GetLang().ReadString("Mouse", "mouse_sensitivity", "Sensitivity"));
         ImGui::PushItemWidth(-FLT_MIN);
-        ImGui::SliderFloat("", &SettingsMgr->mouse.sens, 0, 10.0f);
+        ImGui::SliderFloat("##slider_mouse", &SettingsMgr->mouse.sens, 0, 10.0f);
         ImGui::PopItemWidth();
-        ImGui::Checkbox("Invert X", &SettingsMgr->mouse.invert_x);
-        ImGui::Checkbox("Invert Y", &SettingsMgr->mouse.invert_y);
+        ImGui::Checkbox(GetLang().ReadString("Mouse", "mouse_invert_x", "Invert X"), &SettingsMgr->mouse.invert_x);
+        ImGui::Checkbox(GetLang().ReadString("Mouse", "mouse_invert_y", "Invert Y"), &SettingsMgr->mouse.invert_y);
         break;
     default:
         break;
     }
 
-    if (ImGui::Button("Save", { -FLT_MIN, 0 }))
+    if (ImGui::Button(GetLang().ReadString("Settings", "stn_btn_save", "Save"), { -FLT_MIN, 0 }))
     {
         Notifications->SetNotificationTime(2500);
-        Notifications->PushNotification("Settings saved to FableMenu.ini and fablemenu_user.ini!");
+        Notifications->PushNotification(GetLang().ReadString("Settings", "stn_save_notification", "Settings saved to FableMenu.ini and fablemenu_user.ini!"));
         GUIImplementationDX9::RequestFontReload();
         SettingsMgr->SaveSettings();
     }
@@ -2630,33 +3084,40 @@ void FableMenu::DrawSettings()
 
 void FableMenu::DrawCreatureList()
 {
+    std::string selectID = "";
+
     ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, { 0.5f, 0.5f });
     ImGui::SetNextWindowPos({ ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y / 2.0f }, ImGuiCond_Once, { 0.5f, 0.5f });
     ImGui::SetNextWindowSize({ 700,700 }, ImGuiCond_Once);
-    ImGui::Begin("Creature List", &m_bSubmenuActive[SM_Creature_List]);
+    ImGui::Begin(GetLang().ReadString("Creatures", "crt_list_text", "Creatures List"), &m_bSubmenuActive[SM_Creature_List]);
 
     static ImGuiTextFilter filter;
-    ImGui::TextWrapped("Click on any entry to copy to clipboard.");
-    ImGui::Text("Search");
+    ImGui::TextWrapped(GetLang().ReadString("Creatures", "crt_list_text_copy", "Click on any entry to copy to clipboard."));
+    ImGui::Text(GetLang().ReadString("Creatures", "crt_list_search", "Search"));
     ImGui::PushItemWidth(-FLT_MIN);
-    filter.Draw("##wclist");
+    filter.Draw("");
     ImGui::PopItemWidth();
 
-    ImGui::BeginChild("##clist", { 0, -ImGui::GetFrameHeightWithSpacing() }, true);
+    ImGui::BeginChild("##wclist", { 0, -ImGui::GetFrameHeightWithSpacing() }, true);
 
-    static int selectID = 0;
-    for (int n = 0; n < IM_ARRAYSIZE(szCreatureList); n++)
+    for (auto& pair : crt_dir)
     {
-        if (filter.PassFilter(szCreatureList[n]))
+        const std::string key = pair.first;
+		const std::string value = pair.second.original;
+        const std::string display_text = pair.second.translate + " [" + pair.second.original + "]";
+
+        if (filter.PassFilter(display_text.c_str()))
         {
-            bool is_selected = (selectID == n);
-            if (ImGui::Selectable(szCreatureList[n], is_selected))
+            bool is_selected = (selectID == key);
+            if (ImGui::Selectable(display_text.c_str(), is_selected))
             {
-                selectID = n;
+                selectID = key;
 
                 char name[256] = {};
-                sprintf(name, "%s", szCreatureList[selectID]);
-                CopyToClipboard(name);
+				char description[512] = {};
+                sprintf(name, "%s", value.c_str());
+                sprintf(description, "%s", display_text.c_str());
+                CopyToClipboard(name, description);
             }
         }
     }
@@ -2672,31 +3133,36 @@ void FableMenu::DrawObjectList()
     ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, { 0.5f, 0.5f });
     ImGui::SetNextWindowPos({ ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y / 2.0f }, ImGuiCond_Once, { 0.5f, 0.5f });
     ImGui::SetNextWindowSize({ 700,700 }, ImGuiCond_Once);
-    ImGui::Begin("Object List", &m_bSubmenuActive[SM_Object_List]);
+    ImGui::Begin(GetLang().ReadString("Objects", "obj_list_text", "Object List"), &m_bSubmenuActive[SM_Object_List]);
 
     static ImGuiTextFilter filter;
-    ImGui::TextWrapped("Click on any entry to copy to clipboard.");
-    ImGui::Text("Search");
+    ImGui::TextWrapped(GetLang().ReadString("Lists", "list_copy_hint", "Click on any entry to copy to clipboard."));
+    ImGui::Text(GetLang().ReadString("Objects", "obj_list_search", "Search"));
     ImGui::PushItemWidth(-FLT_MIN);
-    filter.Draw("");
+    filter.Draw("##wolist");
     ImGui::PopItemWidth();
 
     ImGui::BeginChild("##olist", { 0, -ImGui::GetFrameHeightWithSpacing() }, true);
 
-    static int selectID = 0;
-    for (int n = 0; n < IM_ARRAYSIZE(szObjectsList); n++)
+    std::string selectID = "";
+    for (auto& pair : object_dir)
     {
-        if (filter.PassFilter(szObjectsList[n]))
+        const std::string key = pair.first;
+        const std::string value = pair.second.original;
+        const std::string display_text = pair.second.translate + " [" + pair.second.original + "]";
+
+        if (filter.PassFilter(display_text.c_str()))
         {
-            bool is_selected = (selectID == n);
-            if (ImGui::Selectable(szObjectsList[n], is_selected))
+            bool is_selected = (selectID == key);
+            if (ImGui::Selectable(display_text.c_str(), is_selected))
             {
-                selectID = n;
+                selectID = key;
 
                 char name[256] = {};
-                sprintf(name, "%s", szObjectsList[selectID]);
-                CopyToClipboard(name);
-
+                char description[512] = {};
+                sprintf(name, "%s", value.c_str());
+                sprintf(description, "%s", display_text.c_str());
+                CopyToClipboard(name, description);
             }
         }
     }
@@ -2712,13 +3178,13 @@ void FableMenu::DrawParticleList()
     ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, { 0.5f, 0.5f });
     ImGui::SetNextWindowPos({ ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y / 2.0f }, ImGuiCond_Once, { 0.5f, 0.5f });
     ImGui::SetNextWindowSize({ 700,700 }, ImGuiCond_Once);
-    ImGui::Begin("Particle List", &m_bSubmenuActive[SM_Particle_List]);
+    ImGui::Begin(GetLang().ReadString("Particles", "part_list_text", "Particle List"), &m_bSubmenuActive[SM_Particle_List]);
 
     static ImGuiTextFilter filter;
-    ImGui::TextWrapped("Click on any entry to copy to clipboard.");
-    ImGui::Text("Search");
+    ImGui::TextWrapped(GetLang().ReadString("Lists", "list_copy_hint", "Click on any entry to copy to clipboard."));
+    ImGui::Text(GetLang().ReadString("Particles", "part_list_search", "Search"));
     ImGui::PushItemWidth(-FLT_MIN);
-    filter.Draw("");
+    filter.Draw("##wplist");
     ImGui::PopItemWidth();
 
     ImGui::BeginChild("##plist", { 0, -ImGui::GetFrameHeightWithSpacing() }, true);
@@ -2825,25 +3291,25 @@ void HookWorldUpdate()
         {
             CThing* t = plr->GetCharacterThing();
 
-            if (TheMenu->m_bIsActive && !TheMenu->m_bFrozeControls)
+            if (GetMenu().m_bIsActive && !GetMenu().m_bFrozeControls)
             {
                 plr->DisableInput();
-                TheMenu->m_bFrozeControls = true;
+				GetMenu().m_bFrozeControls = true;
             }
-            else if (!TheMenu->m_bIsActive && TheMenu->m_bFrozeControls)
+            else if (!GetMenu().m_bIsActive && GetMenu().m_bFrozeControls)
             {
                 plr->EnableInput();
-                TheMenu->m_bFrozeControls = false;
+				GetMenu().m_bFrozeControls = false;
             }
 
-            if (TheMenu->m_bGodMode)
+            if (GetMenu().m_bGodMode)
             {
                 CThing* t = plr->GetCharacterThing();
                 if (t)
                     t->m_fHealth = 1000.0f;
             }
 
-            if (TheMenu->m_bInfiniteWill)
+            if (GetMenu().m_bInfiniteWill)
             {
                 if (t)
                 {
@@ -2852,7 +3318,7 @@ void HookWorldUpdate()
                 }
             }
 
-            if (TheMenu->m_bCustomCameraPos && TheMenu->ms_bFreeCam && TheMenu->m_nFreeCameraMode == FREE_CAMERA_CUSTOM)
+            if (GetMenu().m_bCustomCameraPos && GetMenu().ms_bFreeCam && GetMenu().m_nFreeCameraMode == FREE_CAMERA_CUSTOM)
                 FreeCamera::Update();
         }
     }
@@ -2907,7 +3373,7 @@ bool InGame()
 
 bool IsWindowFocused()
 {
-    return TheMenu->m_bIsFocused;
+    return GetMenu().m_bIsFocused;
 }
 
 char* GetUTF8String(wchar_t* name)
@@ -2918,6 +3384,20 @@ char* GetUTF8String(wchar_t* name)
     WideCharToMultiByte(CP_UTF8, 0, name, -1, utf8Buff, size, NULL, NULL);
 
     return utf8Buff;
+}
+
+void CopyToClipboard(char* name, char* description)
+{
+    const size_t len = strlen(name) + 1;
+    HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, len);
+    memcpy(GlobalLock(hMem), name, len);
+    GlobalUnlock(hMem);
+    OpenClipboard(NULL);
+    EmptyClipboard();
+    SetClipboardData(CF_TEXT, hMem);
+    CloseClipboard();
+    Notifications->SetNotificationTime(2500);
+    Notifications->PushNotification(GetLang().ReadString("Lists", "list_notification", "Copied %s to clipboard!"), description);
 }
 
 void CopyToClipboard(char* name)
@@ -2931,5 +3411,43 @@ void CopyToClipboard(char* name)
     SetClipboardData(CF_TEXT, hMem);
     CloseClipboard();
     Notifications->SetNotificationTime(2500);
-    Notifications->PushNotification("Copied %s to clipboard!", name);
+    Notifications->PushNotification(GetLang().ReadString("Lists", "list_notification", "Copied %s to clipboard!"), name);
+}
+
+std::string GetClipboardText() {
+    std::string result;
+
+    if (!OpenClipboard(nullptr)) {
+        return result;
+    }
+
+    if (IsClipboardFormatAvailable(CF_TEXT)) {
+        HANDLE hData = GetClipboardData(CF_TEXT);
+        if (hData != nullptr) {
+            char* pszText = static_cast<char*>(GlobalLock(hData));
+            if (pszText != nullptr) {
+                result = pszText;
+                GlobalUnlock(hData);
+            }
+        }
+    }
+
+    // Закрываем буфер обмена
+    CloseClipboard();
+
+    return result;
+}
+
+bool ButtonAutoSize(const char* text) {
+    return ButtonAutoSize(text, 20.0f, 0.0f);
+}
+
+bool ButtonAutoSize(const char* text, float extraWidth, float extraHeight) {
+    ImVec2 textSize = ImGui::CalcTextSize(text);
+    ImVec2 buttonSize = ImVec2(
+        textSize.x + ImGui::GetStyle().FramePadding.x * 2 + extraWidth,
+        textSize.y + ImGui::GetStyle().FramePadding.y * 2 + extraHeight
+    );
+
+    return ImGui::Button(text, buttonSize);
 }

@@ -1,0 +1,96 @@
+0,MODE_NULL,Пустой режим
+1,MODE_STAND,Стоять
+2,MODE_STAND_HAPPY,Стоять (счастливый)
+3,MODE_STAND_BORED,Стоять (скучающий)
+4,MODE_CARRYING_WEAPON_STAND,Стоять с оружием
+5,MODE_CARRYING_PLATE_STAND,Стоять с тарелкой
+6,MODE_CARRYING_GOODS_STAND,Стоять с товаром
+7,MODE_SNEAK,Красться
+8,MODE_SIT_CHAIR,Сидеть на стуле
+9,MODE_SIT_BENCH,Сидеть на скамейке
+10,MODE_SIT_FLOOR,Сидеть на полу
+11,MODE_SIT_TAVERN_STOOL,Сидеть на табурете в таверне
+12,MODE_BLOCK,Блокировка
+13,MODE_SLEEP_BED,Спать в кровати
+14,MODE_COOK,Готовка
+15,MODE_SCARED,Испуганный
+16,MODE_OUTRAGED,Возмущённый
+17,MODE_CREEPING,Подкрадывание
+18,MODE_CHEERING,Ликование
+19,MODE_HECKLING,Освистывание/Высмеивание
+20,MODE_SAD,Грустный
+21,MODE_ATTRACTED,Привлечённый/Очарованный
+22,MODE_HERO_IMITATION,Подражание герою
+23,MODE_CURIOUS,Любопытный
+24,MODE_BULLY,Задира
+25,MODE_STRAFE,Стрейф (боковое движение)
+26,MODE_HOVER,Зависание
+27,MODE_CONVERSATION,Разговор
+28,MODE_STAND_IN_ALL_DIRECTIONS,Стоять (во все стороны)
+29,MODE_STUNNED,Ошеломлённый
+30,MODE_UNDERGROUND,Под землёй
+31,MODE_KNOCKED_DOWN,Сбитый с ног
+32,MODE_FORCE_PUSHED,Оттолкнутый силой
+33,MODE_FISHING,Рыбалка
+34,MODE_CARRYING_GENERIC_BOX,Переносит ящик
+35,MODE_BATTLE_CHARGE,Боевой рывок
+36,MODE_BERSERK,Берсерк
+37,MODE_ASSASSIN_RUSH,Рывок ассасина
+38,MODE_WADING,Бредёт по воде
+39,MODE_DRINKING_FROM_TANKARD,Пьёт из кружки
+40,MODE_EATING_AT_TABLE,Ест за столом
+41,MODE_HOLD_JUG,Держит кувшин
+42,MODE_SERVE_CUSTOMER,Обслуживает клиента
+43,MODE_FILL_JUG,Наполняет кувшин
+44,MODE_DRUNK,Пьяный
+45,MODE_ARMS_OFF_TABLE,Руки со стола
+46,MODE_HANDS_BOUND,Связанные руки
+47,MODE_SCORPION_KING_TAIL_PLUNGE,Король скорпионов: Удар хвостом
+48,MODE_JACK_OF_BLADES_SUMMON,Джек-из-Тени: Призыв
+49,MODE_JACK_OF_BLADES_FLOAT,Джек-из-Тени: Парение
+50,MODE_JACK_OF_BLADES_FLASH,Джек-из-Тени: Вспышка
+51,MODE_JACK_OF_BLADES_SCREAM,Джек-из-Тени: Крик
+52,MODE_JACK_OF_BLADES_VULNERABLE,Джек-из-Тени: Уязвимость
+53,MODE_JACK_OF_BLADES_DEATH,Джек-из-Тени: Смерть
+54,MODE_THUNDER_LIGHTNING_STORM,Гром: Грозовая буря
+55,MODE_SCORPION_KING_VULNERABLE,Король скорпионов: Уязвимость
+56,MODE_SCORPION_KING_EXHAUSTED,Король скорпионов: Истощение
+57,MODE_CREATURE_IS_PROJECTILE,Существо как снаряд
+58,MODE_ROCK_TROLL_VULNERABLE,Каменный тролль: Уязвимость
+59,MODE_GUILDMASTER_CONCENTRATE,Наставник: Концентрация
+60,MODE_GUILDMASTER_POWERUP_HEAL,Наставник: Усиление лечения
+61,MODE_GUILDMASTER_POWERUP_SHIELD,Наставник: Усиление щита
+62,MODE_GUILDMASTER_POWERUP_SPEED,Наставник: Усиление скорости
+63,MODE_BRIAR_ROSE_CONCENTRATE,Брайер Роуз: Концентрация
+64,MODE_BRIAR_ROSE_INVULNERABLE,Брайер Роуз: Неуязвимость
+65,MODE_BRIAR_ROSE_INTANGIBLE,Брайер Роуз: Нематериальность
+66,MODE_EXPLOSIVE_FORCE_PUSHED,Отброшенный взрывной силой
+67,MODE_DAZED,Оглушённый
+68,MODE_SCREAMER_AGGRESSIVE,Крикун: Агрессивный
+69,MODE_DRAINED,Опустошённый/Высосанный
+70,MODE_ROLL,Перекат
+71,MODE_DRAGON_HOVER,Дракон: Зависание
+72,MODE_DRAGON_SWOOP,Дракон: Пикирование
+73,MODE_DRAGON_DEFAULT,Дракон: Обычный режим
+74,MODE_DRAGON_REAR_UP,Дракон: Встаёт на дыбы
+75,MODE_DRAGON_FIRE_BEAM,Дракон: Огненный луч
+76,MODE_DRAGON_STRAFE,Дракон: Стрейф
+77,MODE_DRAGON_STRAFE_BURNINATE,Дракон: Стрейф с поджогом
+78,MODE_DRAGON_LANDED,Дракон: Приземлился
+79,MODE_DRAGON_GET_HIT,Дракон: Попадание
+80,MODE_DRAGON_FLYING,Дракон: Полёт
+81,MODE_INTANGIBLE,Нематериальный
+82,MODE_DRAGON_HOVER_NAPALM_GROUND,Дракон: Зависание с напалмом по земле
+83,MODE_VULNERABLE,Уязвимый
+84,MODE_UNDERWATER,Под водой
+85,MODE_DRAGON_HOVER_CHARGE_UP_NAPALM_GROUND,Дракон: Зарядка напалма в зависании
+86,MODE_CAGED,В клетке
+87,MODE_SCRIPTED,Скриптовый режим
+88,MODE_BASIC,Базовый режим
+89,MODE_SUMMONER_SUMMON,Призыватель: Призыв
+90,MODE_SUMMONER_LIGHTNING_ORB,Призыватель: Сфера молнии
+91,MODE_CHARGE_FORCE_PUSH,Зарядка Силового Толчка
+92,MODE_SUMMONER_DIE,Призыватель: Смерть
+93,MODE_ICE_TROLL_ICICLE_ASSAULT,Ледяной тролль: Атака сосульками
+94,MODE_SCREAMER_SUPER_ATTACK,Крикун: Супер-атака
+95,MODE_HIT_BY_EPIC_SPELL,Попадание эпического заклинания

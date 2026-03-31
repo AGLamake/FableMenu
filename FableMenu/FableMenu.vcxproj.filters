@@ -216,9 +216,6 @@
     <ClInclude Include="fable\ScriptInterface.h">
       <Filter>Header Files\fable</Filter>
     </ClInclude>
-    <ClInclude Include="CsvReader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="fable\Thing.h">
       <Filter>Header Files\fable</Filter>
     </ClInclude>
@@ -338,6 +335,9 @@
     </ClInclude>
     <ClInclude Include="fable\ThingComponents\Chest.h">
       <Filter>Header Files\fable\ThingComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\CsvReader.h">
+      <Filter>Header Files\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -608,13 +608,24 @@
     <ClCompile Include="fable\ScriptInterface.cpp">
       <Filter>Header Files\fable</Filter>
     </ClCompile>
-    <ClCompile Include="CsvReader.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="utils\CsvReader.cpp">
+      <Filter>Header Files\utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="FableMenu.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\SteamLibrary\steamapps\common\Fable The Lost Chapters\crt.csv">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\SteamLibrary\steamapps\common\Fable The Lost Chapters\obj.csv">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\SteamLibrary\steamapps\common\Fable The Lost Chapters\fablemenu_lang.ini">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -1,0 +1,113 @@
+0,BRAIN_NULL,Пустой мозг/ИИ
+1,BRAIN_GOOD_VILLAGER_BASE_NO_MELEE,Добрый житель (без ближнего боя)
+2,BRAIN_BANDIT_VILLAGER_BASE_NO_MELEE,Житель-бандит (без ближнего боя)
+3,BRAIN_GOOD_VILLAGER_BASE,Добрый житель
+4,BRAIN_BANDIT_VILLAGER_BASE,Житель-бандит
+5,BRAIN_BANDIT_ARCHER,Бандит-лучник
+6,BRAIN_GOOD_VILLAGER_MARKET_TRADER,Добрый рыночный торговец
+7,BRAIN_BANDIT_VILLAGER_MARKET_TRADER,Торговец-бандит
+8,BRAIN_GOOD_VILLAGER_SHOP_KEEPER,Добрый лавочник
+9,BRAIN_GOOD_VILLAGER_WAREHOUSE_WORKER,Добрый работник склада
+10,BRAIN_GOOD_VILLAGER_BARMAID,Добрая барменша
+11,BRAIN_GOOD_VILLAGER_BARMAN,Добрый бармен
+12,BRAIN_BOWERSTONE_POSH_VILLAGER,Житель Боурстоуна (богатый)
+13,BRAIN_BOWERSTONE_POSH_VILLAGER_SHOP_KEEPER,Лавочник Боурстоуна (богатый)
+14,BRAIN_NECROPOLIS_VILLAGER,Житель Некрополиса
+15,BRAIN_GUILD_APPRENTICE,Ученик гильдии (добрый)
+16,BRAIN_GUILD_APPRENTICE_EVIL,Ученик гильдии (злой)
+17,BRAIN_GUILD_SERVANT,Слуга гильдии
+18,BRAIN_GUILD_SHOPKEEPER,Лавочник гильдии
+19,BRAIN_GUILD_BARMAN,Бармен гильдии
+20,BRAIN_GUILD_BARMAID,Барменша гильдии
+21,BRAIN_GUARD_BASE,Стражник (базовый)
+22,BRAIN_GUARD,Стражник
+23,BRAIN_MELEE_GUARD,Стражник-ближник
+24,BRAIN_BANDIT_GUARD,Стражник-бандит
+25,BRAIN_MONSTER_GUARD,Стражник-монстр
+26,BRAIN_GHOST_SWORD,Призрачный меч
+27,BRAIN_GUILDKEEPER,Хранитель гильдии
+28,BRAIN_GUILDKEEPER_BOSS,Босс-хранитель гильдии
+29,BRAIN_SCARLET_ROBE,Алая мантия
+30,BRAIN_GOOD_VILLAGER_GAME_MASTER,Ведущий игр (добрый)
+31,BRAIN_WIFE,Жена
+32,BRAIN_DIVORCED_WIFE,Разведённая жена
+33,BRAIN_BODY_GUARD,Телохранитель
+34,BRAIN_STAND_AROUND_LIKE_A_MORON,Стоит на месте как идиот
+35,BRAIN_BOWERSTONE_VILLAGER_TEST_BUYER,Покупатель (тестовый, Боурстоун)
+36,BRAIN_BOWERSTONE_VILLAGER_TEST_WORKER,Рабочий (тестовый, Боурстоун)
+37,BRAIN_FOLLOW_PLAYER,Следует за игроком
+38,BRAIN_PLAYER_UNDEAD_SERVANT,Слуга-нежить игрока
+39,BRAIN_BANDIT_STEALTH_GUARD,Скрытный стражник-бандит
+40,BRAIN_QUEENS_GUARD_BASIC,Королевский стражник
+41,BRAIN_GENERIC_HUMAN,Обычный человек
+42,BRAIN_BOWERSTONE_VILLAGER,Житель Боурстоуна
+43,BRAIN_KNOTHOLE_VILLAGER,Житель Нотчхолла
+44,BRAIN_FARMERS_WIFE,Жена фермера
+45,BRAIN_CHILD,Ребёнок
+46,BRAIN_BOWERSTONE_CHILD,Ребёнок (Боурстоун)
+47,BRAIN_KNOTHOLE_CHILD,Ребёнок (Нотхоул Глэйд)
+48,BRAIN_KNOTHOLE_VILLAGER_BASE,Житель Нотхоул Глэйд (Основа)
+49,BRAIN_KNOTHOLE_WAREHOUSE_WORKER,Работник склада (Нотхоул Глэйд)
+50,BRAIN_KNOTHOLE_SHOP_KEEPER,Лавочник (Нотхоул Глэйд)
+51,BRAIN_KNOTHOLE_BARMAID,Барменша (Нотхоул Глэйд)
+52,BRAIN_BAR_STAFF,Персонал бара
+53,BRAIN_PROSTITUTE,Проститутка
+54,BRAIN_SHEEP,Овца
+55,BRAIN_CHICKEN,Курица
+56,BRAIN_SMALL_BIRD,Маленькая птица
+57,BRAIN_BUTTERFLY,Бабочка
+58,BRAIN_FIREFLY,Светлячок
+59,BRAIN_IC_INVENTOR,Изобретатель (IC)
+60,BRAIN_ARENA_CELLS,Арена (клетки)
+61,BRAIN_PASSIVE_OVERRIDE,Пассивное переопределение
+62,BRAIN_NULL_OVERRIDE,Пустое переопределение
+63,BRAIN_UNDEAD,Нежить
+64,BRAIN_EARTH_TROLL,Земляной тролль
+65,BRAIN_EARTH_TROLL_NEW,Земляной тролль (новый)
+66,BRAIN_TROLL_ROCK,Каменный тролль
+67,BRAIN_TROLL_ICE,Ледяной тролль
+68,BRAIN_BALVERINE,Оборотень
+69,BRAIN_WHITE_BALVERINE,Белый оборотень
+70,BRAIN_NYMPH,Нимфа
+71,BRAIN_HORNET,Пчела
+72,BRAIN_SCORPION,Скорпион
+73,BRAIN_SCORPION_KING_SUMMONED_SCORPION,Призванный скорпион короля скорпионов
+74,BRAIN_SCORPION_KING,Король скорпионов
+75,BRAIN_BEETLE,Жук
+76,BRAIN_HOBBE_GRUNT,Хобб-ворчун
+77,BRAIN_HOBBE_LIEUTENANT,Хобб-лейтенант
+78,BRAIN_HOBBE_SPELLCASTER,Хобб-заклинатель
+79,BRAIN_HORNET_PICNIC,Пчела (Парк)
+80,BRAIN_HORNET_PICNIC_QUEEN,Королева пчёл (пикник)
+81,BRAIN_BOSS_BANDIT_KING,Босс: Король бандитов
+82,BRAIN_WHISPER,Уиспер
+83,BRAIN_WHISPER_STANDARD_MELEE,Уиспер (ближний бой)
+84,BRAIN_THUNDER,Гром
+85,BRAIN_MINION,Миньон
+86,BRAIN_MINION_DREADWINGS,Миньон Ужасных Крыльев
+87,BRAIN_SUMMONER,Призыватель
+88,BRAIN_BRIAR_ROSE,Браэр Роуз
+89,BRAIN_BRIAR_ROSE_BOSS,Босс: Браэр Роуз
+90,BRAIN_BRIAR_ROSE_IMPOSTER,Браэр Роуз (предатель)
+91,BRAIN_BRIAR_ROSE_FOCAL_SITES,Браэр Роуз (точки сосредоточения)
+92,BRAIN_MAZE,Мэйз
+93,BRAIN_MAZE_TUTORIAL,Мэйз (обучение)
+94,BRAIN_SCYTHE,Жнец
+95,BRAIN_JACK_OF_BLADES,Джек-из-Тени
+96,BRAIN_DRAGON,Дракон
+97,BRAIN_JACK_DRAGON,Джек-дракон
+98,BRAIN_SCREAMER,Баньша (крикун)
+99,BRAIN_KRAKEN,Кракен
+100,BRAIN_KRAKEN_TENTACLE,Щупальце кракена
+101,BRAIN_SUMMONED_BANDIT_VILLAGER_BASE,Призванный житель-бандит (Основа)
+102,BRAIN_SUMMONED_BALVERINE,Призванный оборотень
+103,BRAIN_SUMMONED_HORNET,Призванная пчела
+104,BRAIN_SUMMONED_BEETLE,Призванный жук
+105,BRAIN_SUMMONED_SCORPION,Призванный скорпион
+106,BRAIN_SUMMONED_HOBBE_GRUNT,Призванный хобб-ворчун
+107,BRAIN_SUMMONED_HOBBE_LIEUTENANT,Призванный хобб-лейтенант
+108,BRAIN_SUMMONED_SCREAMER,Призванная баньша (крикун)
+109,BRAIN_SUMMONED_UNDEAD,Призванная нежить
+110,BRAIN_SUMMONED_NYMPH,Призванная нимфа
+111,BRAIN_SUMMONED_THUNDER,Призванный Гром
+112,BRAIN_SUMMONED_MINION,Призванный миньон

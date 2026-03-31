@@ -1,0 +1,95 @@
+1,NW3BronzeDoorHSP,Бронзовая дверь (Северные пустоши)
+2,HobbeCave2HSP,Пещеры хоббов 2
+3,EndGameSecondHSP,Финал (вторая часть)
+4,GuildArrivalHSP,Прибытие в Гильдию
+5,GuildWoodsTeleportExitHSP,Выход из телепорта (Гильдейский лес)
+6,OrchardFarmEvilHSP,Яблочный двор (зло)
+7,OrchardFarmGoodHSP,Яблочный двор (добро)
+8,FocalSitesHSP,Ведьмин Лес
+9,OakvaleHSP,Оуквэйл
+10,ArenaInsideHSP,Арена (внутри)
+11,arenacellshsp,Камеры арены
+12,ArenaHSP,Арена
+13,ArenaHOHHSP,Зал Героев
+14,BanditCampBossHSP,Шатер Два-Ножа
+15,BanditCampResHSP,Лагерь Два-Ножа
+16,BanditCampHSP,Разбойничий лагерь
+17,BanditCampPath2HSP,Тропа в лагере бандитов 2
+18,BanditCampPathEntranceHSP,Вход на тропу (лагерь бандитов)
+19,BarrowFieldsHSP,Холмово поле
+20,BordelloHSP,Темнолесский буардель
+21,BowerstoneJailHSP,Бауэрстоунская тюрьма
+22,BowerstonePoshHSP,Северный Бауэрстоун
+23,BowerstoneSlumsHSP,Южный Бауэрстоун
+24,BowerstoneSlumsWarehousesHSP,Склады (Южный Бауэрстоун)
+25,TavernCellarHSP,Погреб таверны (Южный Бауэрстоун)
+26,starthsp,Начальная локация
+27,DarkwoodHSP,Темнолесье
+28,MinionCampHSP,Лагерь миньонов
+29,DarkwoodTraderCampHSP,Лагерь торговцев (Темнолесье)
+30,HookCoastGatewayHSP,Ворота Крючего берега
+31,ChapelEvilHSP,Часовня Зла
+32,FishermanHSP,Рыбачья гавань
+33,FrescoDomeHSP,Купол с фресками
+34,GibbetWoodsHSP,Висельный лес
+35,GrannysHouseHSP,Розовый домик
+36,GraveyardHSP,Кладбищенский сад
+37,GraveyardCircleHSP,Круг мертвых
+38,GraveyardPathHSP,Старая кладбищенская тропа
+39,GraveyardSecretPassage1HSP,Тайный проход (кладбище)
+40,GWTeleportHSP,Телепорт (Великий лес)
+41,Greatwood3HSP,Чащоба 3
+42,GreatwoodBanditTollHSP,Застава бандитов (Чащоба)
+43,GreatwoodHSP,Чащоба
+44,GreatwoodLakeHSP,Чащобное озеро
+45,GreyHallHSP,Дом Греев
+46,GuildWoodsHSP,Гильдейский лес
+47,HauntedHouseHSP,Дом с привидениями
+48,HauntedHouseCellarHSP,Подвал дома с привидениями
+49,HeroDuelHSP,Дуэль героев
+50,GuildHSP,Гильдия Героев
+51,TempIan01HSP,Временная локация 01
+52,HookCoastHSP,Крючий берег
+53,KnotholeGladeHSP,Нотхоул Глэйд
+54,KrakenChamberHSP,Зал Кракена
+55,LookoutPointHSP,Смотровая площадь
+56,LostBayHSP,Затерянная бухта
+57,GreyBedroomHSP,Спальня леди Грей
+58,NorthernWastesHSP,Северные пустоши
+59,NorthernWastes2HSP,Северные предгорья
+60,NorthernWastes3HSP,Поселок Белогорье
+61,OakVale2HSP,Оуквэйл 2
+62,MemorialGardenHSP,Мемориальный сад
+63,OrchardFarmHSP,Яблочный двор
+64,PicnicAreaHSP,Поляна для пикника
+65,PrisonHSP,Баргейтская темница
+66,HeroTortureHSP,Пыточная камера
+67,PrisonRaceStartHSP,Старт гонки (тюрьма)
+68,PrisonPathHSP,Тюремная тропа
+69,PrisonSecretPassageHSP,Подземный проход
+70,PrisonSecretPassageExteriorHSP,Выход из тайного прохода (тюрьма)
+71,PrisonTortureHSP,Пыточная камера
+72,SnowspireHSP,Поселок Белогорье
+73,NOVStartHSP,Начало (Оуквэйл из детства)
+74,SingingStonesHSP,Ведьмины Камни
+75,AmbushScamHSP,Засада (обман)
+76,Witchwood3HSP,Ведьмин лес 3
+77,WitchWood2HSP,Ведьмин лес 2
+78,WitchwoodCavernHSP,Ведьмина Пещера
+79,DDBanditTollHSP,Темнольесье (Дверь)
+80,DDBordelloHSP,Темнолесский буардель (Дверь)
+81,DDBarrowFieldsHSP,Холмово поле (Дверь)
+82,DD_BCP,Орлиная тропа (Дверь)
+83,DD_BF,Холмово поле (Дверь)
+84,DD_DWS,Темнолесские топи (Дверь)
+85,DD_GWBT,Застава бандитов (Дверь)
+86,DD_GWC,Чащобные пещеры (Дверь)
+87,DD_GH,Дом Греев (Дверь)
+88,DDKnotholeHSP,Нотхоул Глэйд (Дверь)
+89,DDHauntedHouseHSP,Дом с привидениями (Дверь)
+90,DDLookoutPointHSP,Смотровая площадь (Дверь)
+91,DDNecropolisHSP,Некрополь (Дверь)
+92,DesertedFarmHSP,Заброшенная ферма
+93,DRAGONHSP,Драконья скала
+94,ExecutionTreeHSP,Дерево казней
+95,HangingTreeHSP,Висельное дерево

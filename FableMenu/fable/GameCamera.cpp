@@ -10,9 +10,9 @@ void CGameCameraManager::Update()
 	TheCamera = cam;
 
 	if (FableMenu::m_bCustomCameraPos && !FableMenu::ms_bFreeCam)
-		cam->pos = TheMenu->camPos;
+		cam->pos = GetMenu().camPos;
 	else
-		TheMenu->camPos = cam->pos;
+		GetMenu().camPos = cam->pos;
 
 	if (FableMenu::m_bCustomCameraPos || FableMenu::ms_bFreeCam)
 		return;

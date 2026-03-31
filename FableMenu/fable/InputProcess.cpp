@@ -20,7 +20,7 @@ void CInputProcessCameraLookAround::Update(DirectInputState* keyState, int unk)
 		((void(__thiscall*)(CInputProcess*, DirectInputState*, int))0x68D790)(this, keyState, unk);
 	else
 	{
-		if (FableMenu::ms_bFreeCam && TheMenu->m_nFreeCameraMode == FREE_CAMERA_ORIGINAL)
+		if (FableMenu::ms_bFreeCam && GetMenu().m_nFreeCameraMode == FREE_CAMERA_ORIGINAL)
 		{
 			if (TheCamera)
 			{

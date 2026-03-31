@@ -13,7 +13,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅ) resources
+// Польский (Польша) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_PLK)
 LANGUAGE LANG_POLISH, SUBLANG_DEFAULT
@@ -44,12 +44,12 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-#endif    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅ) resources
+#endif    // Польский (Польша) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ resources
+// Русский resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
 LANGUAGE LANG_RUSSIAN, SUBLANG_NEUTRAL
@@ -81,7 +81,7 @@ BEGIN
             VALUE "FileDescription", "FableMenu (FRC)"
             VALUE "FileVersion", "0.6.1.0"
             VALUE "InternalName", "FableMenu.asi"
-            VALUE "LegalCopyright", "Copyright (C) 2025"
+            VALUE "LegalCopyright", "Copyright (C) 2026"
             VALUE "OriginalFilename", "FableMenu.asi"
             VALUE "ProductName", "FableMenu"
             VALUE "ProductVersion", "0.0.0.0"
@@ -93,7 +93,7 @@ BEGIN
     END
 END
 
-#endif    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ resources
+#endif    // Русский resources
 /////////////////////////////////////////////////////////////////////////////
 
 

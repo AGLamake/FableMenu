@@ -31,7 +31,6 @@ CIniReader::CIniReader(char* szFileName)
  memset(m_szFileName, 0x00, 255);
  memcpy(m_szFileName, dllPath, strlen(dllPath));
 }
-
 int CIniReader::ReadInteger(char* szSection, char* szKey, int iDefaultValue)
 {
  int iResult = GetPrivateProfileInt(szSection,  szKey, iDefaultValue, m_szFileName); 

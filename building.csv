@@ -1,0 +1,328 @@
+249,BUILDING_TEMPLATE,Шаблон здания
+250,BUILDING_VILLAGE_TEMPLATE,Шаблон деревенского здания
+251,BUILDING_VILLAGE_WALLS_TEMPLATE,Шаблон деревенской стены
+252,BUILDING_VILLAGE_TAVERN_TEMPLATE,Шаблон деревенской таверны
+253,BUILDING_VILLAGE_SHOP_TEMPLATE,Шаблон деревенской лавки
+254,BUILDING_VILLAGE_MARKETSTALL_TEMPLATE,Шаблон деревенской рыночной палатки
+535,BUILDING_ARENA_EXTERIOR_SHOP_TITLE_VENDOR,Вывеска торговца (Арена, внешний периметр)
+536,BUILDING_HERO_ARENA,Арена героев
+537,BUILDING_ARENA_HERO_PODIUM_01,Подиум героя 01
+538,BUILDING_ARENA_COMBAT_ENTRANCE_01,Вход на арену 01
+539,BUILDING_HERO_SHOP_TENT,Палатка торговца
+540,BUILDING_ARENA_EXTERIOR_SECTION_01,Внешняя секция арены 01
+541,BUILDING_ARENA_EXTERIOR_SECTION_02,Внешняя секция арены 02
+542,BUILDING_ARENA_EXTERIOR_SECTION_03,Внешняя секция арены 03
+543,BUILDING_ARENA_INTERIOR_SECTION_01,Внутренняя секция арены 01
+544,BUILDING_ARENA_INTERIOR_SECTION_02,Внутренняя секция арены 02
+545,BUILDING_ARENA_INTERIOR_SECTION_03,Внутренняя секция арены 03
+546,BUILDING_ARENA_INTERIOR_SECTION_04,Внутренняя секция арены 04
+547,BUILDING_HERO_ARENA_ENTRANCE_EXTERIOR_01,Вход в Арену героев (внешний) 01
+548,BUILDING_HERO_ARENA_CELLS_INTERIOR_01,Камеры Арены героев (интерьер) 01
+549,BUILDING_ARENA_CELLS_02,Камеры арены 02
+550,BUILDING_ARENA_CELLS_03,Камеры арены 03
+551,BUILDING_ARENA_CELLS_04,Камеры арены 04
+552,BUILDING_ARENA_CELLS_05,Камеры арены 05
+553,BUILDING_ARENA_CELLS_06,Камеры арены 06
+554,BUILDING_ARENA_CELLS_07,Камеры арены 07
+555,BUILDING_ARENA_CELLS_WEAPON_STALL_01,Оружейная палатка (камеры арены) 01
+556,BUILDING_HERO_ARENA_HALL_OF_HEROES_01,Зал славы (Арена героев) 01
+557,BUILDING_HOH_01,Зал славы 01
+558,BUILDING_HOH_02,Зал славы 02
+559,BUILDING_HOH_03,Зал славы 03
+560,BUILDING_HOH_04,Зал славы 04
+561,BUILDING_HOH_05,Зал славы 05
+586,BUILDING_BS_SHOP_TAILOR_01,Лавка портного (Бауэрстоун) 01
+587,BUILDING_BS_SHOP_GIFTSHOP_01,Лавка подарков (Бауэрстоун) 01
+588,BUILDING_BS_SHOP_BARBER_01,Цирюльня (Бауэрстоун) 01
+589,BUILDING_BS_SLUM_INN_01,Таверна в трущобах (Бауэрстоун) 01
+590,BUILDING_BS_SCHOOL,Школа (Бауэрстоун)
+591,BUILDING_TOWN_ARCH_01,Городская арка 01
+592,BUILDING_TOWN_BARRACKS_01,Городские казармы 01
+593,BUILDING_TOWN_WAREHOUSE_01,Городской склад 01
+594,BUILDING_TOWN_WAREHOUSE_02,Городской склад 02
+595,BUILDING_TOWN_WAREHOUSE_03,Городской склад 03
+596,BUILDING_BS_GUARD_HUT_02,Сторожевая будка стражи (Бауэрстоун) 02
+597,BUILDING_BS_GATEHOUSE,Крепостные ворота (Бауэрстоун)
+598,BUILDING_BS_BRIDGE,Мост (Бауэрстоун)
+599,BUILDING_BS_INN_CELLAR_01,Подвал таверны (Бауэрстоун) 01
+600,BUILDING_BS_POSH_HOUSE_01,Богатый дом (Бауэрстоун) 01
+601,BUILDING_BS_POSH_HOUSE_02,Богатый дом (Бауэрстоун) 02
+602,BUILDING_BS_HOUSE_SHERIFF_01,Дом шерифа (Бауэрстоун) 01
+603,BUILDING_BS_NORTH_POSH_SHOP_01,Лавка в Северном Бауэрстоуне 01
+604,BUILDING_BS_POSH_GATEHOUSE,Ворота в богатый квартал (Бауэрстоун)
+605,BUILDING_BS_NORTH_POSH_GATEHOUSE_JAIL_01,Тюрьма у ворот Северного Бауэрстоуна 01
+606,BUILDING_BS_NORTH_POSH_GATEHOUSE_JAIL_DISUSED_01,Заброшенная тюрьма у ворот Северного Бауэрстоуна 01
+607,BUILDING_BS_MAYORS_HOUSE_BEDROOM,Спальня в доме мэра (Бауэрстоун)
+608,BUILDING_BS_MAYORS_HOUSE_ENTRANCE_HALL,Прихожая в доме мэра (Бауэрстоун)
+609,BUILDING_BS_MAYORS_HOUSE_HALLWAY,Коридор в доме мэра (Бауэрстоун)
+610,BUILDING_CASTLEHALLWAY02,Замковый коридор 02
+611,BUILDING_CASTLEHALLWAY03,Замковый коридор 03
+612,BUILDING_CASTLEHALLWAY04,Замковый коридор 04
+613,BUILDING_BS_SLUM_HOUSE_01,Дом в трущобах (Бауэрстоун) 01
+614,BUILDING_BS_SLUM_HOUSE_02,Дом в трущобах (Бауэрстоун) 02
+615,BUILDING_BS_SLUM_TEMPLATE,Шаблон трущоб (Бауэрстоун)
+616,BUILDING_BS_SLUM_01,Трущобы (Бауэрстоун) 01
+617,BUILDING_BS_SLUM_02,Трущобы (Бауэрстоун) 02
+618,BUILDING_BS_SLUM_03,Трущобы (Бауэрстоун) 03
+619,BUILDING_BS_SLUM_04,Трущобы (Бауэрстоун) 04
+620,BUILDING_BS_SLUM_05,Трущобы (Бауэрстоун) 05
+621,BUILDING_BS_SLUM_06,Трущобы (Бауэрстоун) 06
+622,BUILDING_BS_SLUM_06_UNINHABITED,Нежилой дом в трущобах (Бауэрстоун) 06
+623,BUILDING_BS_SLUM_BLACKSMITH_01,Кузница в трущобах (Бауэрстоун) 01
+624,BUILDING_BS_SLUM_HOUSE_BUYABLE,Покупной дом в трущобах (Бауэрстоун)
+625,BUILDING_MARKETSTALL_BLUE_OPEN_01,Рыночная палатка (синяя, открытая) 01
+626,BUILDING_MARKETSTALL_BLUE_CLOSED_01,Рыночная палатка (синяя, закрытая) 01
+627,BUILDING_MARKETSTALL_GREEN_OPEN_01,Рыночная палатка (зеленая, открытая) 01
+628,BUILDING_MARKETSTALL_GREEN_CLOSED_01,Рыночная палатка (зеленая, закрытая) 01
+629,BUILDING_MARKETSTALL_PURPLE_OPEN_01,Рыночная палатка (фиолетовая, открытая) 01
+630,BUILDING_MARKETSTALL_PURPLE_CLOSED_01,Рыночная палатка (фиолетовая, закрытая) 01
+631,BUILDING_MARKETSTALL_RED_OPEN_01,Рыночная палатка (красная, открытая) 01
+632,BUILDING_MARKETSTALL_RED_CLOSED_01,Рыночная палатка (красная, закрытая) 01
+633,BUILDING_MARKETSTALL_PURPLE_STOCKED,Рыночная палатка (фиолетовая, с товаром)
+634,BUILDING_MARKETSTALL_BLUE_STOCKED,Рыночная палатка (синяя, с товаром)
+635,BUILDING_ORCHARD_FARM_FARMHOUSE,Фермерский дом (Фруктовый сад)
+636,BUILDING_ORCHARD_FARM_WAREHOUSE_01,Склад (Фруктовый сад) 01
+637,BUILDING_GRANNIES_COTTAGE,Домик бабули
+638,BUILDING_GREATWOOD_FISHING_HUT,Рыбацкая хижина (Великий лес)
+639,BUILDING_WINDMILL,Ветряная мельница
+640,BUILDING_TRADER_TENT_01,Палатка торговца 01
+641,BUILDING_TRADER_TENT_02,Палатка торговца 02
+642,BUILDING_TRADER_TENT_LARGE_01,Большая палатка торговца 01
+643,BUILDING_TRADER_TENT_CHIEF,Палатка вождя
+644,BUILDING_CHAPEL_EVIL,Часовня Зла
+645,BUILDING_BORDELLO_01,Бордель 01
+646,BUILDING_DW_ROOT_CANOPY_01,Навес из корней (Темнолесье) 01
+647,BUILDING_DW_ROOT_CANOPY_02,Навес из корней (Темнолесье) 02
+648,BUILDING_DW_ROOT_CANOPY_03,Навес из корней (Темнолесье) 03
+649,BUILDING_DW_ROOT_CANOPY_04,Навес из корней (Темнолесье) 04
+650,BUILDING_DW_ROOT_SINGLE_01,Одиночный корень (Темнолесье) 01
+651,BUILDING_DW_ROOT_SINGLE_02,Одиночный корень (Темнолесье) 02
+652,BUILDING_DW_ROOT_SINGLE_BIG_01,Большой одиночный корень (Темнолесье) 01
+653,BUILDING_DW_ROOT_WALL_01,Стена из корней (Темнолесье) 01
+654,BUILDING_DW_ROOT_WALL_02,Стена из корней (Темнолесье) 02
+655,BUILDING_DW_ROOT_WALL_03,Стена из корней (Темнолесье) 03
+656,BUILDING_GRAVEYARD_CRYPT_01,Склеп на кладбище 01
+657,BUILDING_GRAVEYARD_CRYPT_02,Склеп на кладбище 02
+658,BUILDING_GRAVEYARD_CRYPT_03,Склеп на кладбище 03
+659,BUILDING_GRAVEYARD_CRYPT_KING,Склеп короля
+660,BUILDING_GRAVEYARD_CRYPT_MAIN,Главный склеп
+661,BUILDING_GRAVEYARD_CRYPT_SECRET,Тайный склеп
+662,BUILDING_GRAVEYARD_COTTAGE,Домик на кладбище
+664,BUILDING_GRAVEYARD_ENTRANCE_GATE,Входные ворота на кладбище
+665,BUILDING_GRAVEYARD_ENTRANCE_WALL_LEFT,Левая стена у входа на кладбище
+666,BUILDING_GRAVEYARD_ENTRANCE_WALL_RIGHT,Правая стена у входа на кладбище
+667,BUILDING_GRAVEYARD_ENTRANCE_GATE_DUMMY,Заглушка ворот кладбища
+668,BUILDING_HAUNTED_HOUSE_STABLES_01,Конюшня у дома с привидениями 01
+669,BUILDING_HAUNTED_HOUSE_OUTBUILDING,Хозпостройка у дома с привидениями
+670,BUILDING_GRAVEYARD_HAUNTED_HOUSE,Дом с привидениями на кладбище
+671,BUILDING_GRAVEYARD_HAUNTED_HOUSE_CELLAR,Подвал дома с привидениями на кладбище
+672,BUILDING_GUILD_EXTERIOR_SHOP_TITLE_VENDOR,Вывеска торговца (Гильдия, снаружи)
+673,BUILDING_GUILD_MAZE_QUARTERS_01,Кварталы лабиринта (Гильдия) 01
+674,BUILDING_GUILD_SERVANTS_QUARTERS_01,Кварталы прислуги (Гильдия) 01
+675,BUILDING_GUILD_APPRENTICE_QUARTERS_01,Кварталы учеников (Гильдия) 01
+676,BUILDING_APPRENTICE_QUARTERS_PART_02,Кварталы учеников, часть 02
+677,BUILDING_APPRENTICE_QUARTERS_PART_03,Кварталы учеников, часть 03
+678,BUILDING_APPRENTICE_QUARTERS_PART_04,Кварталы учеников, часть 04
+679,BUILDING_GUILD_ENTRANCE_HALL_01,Зал приёмов Гильдии 01
+680,BUILDING_HC_ENTRANCEHALL_INT_PART_02,Зал приёмов (Гильдия), интерьер, часть 02
+681,BUILDING_HC_ENTRANCEHALL_INT_PART_03,Зал приёмов (Гильдия), интерьер, часть 03
+682,BUILDING_HC_ENTRANCEHALL_INT_PART_04,Зал приёмов (Гильдия), интерьер, часть 04
+683,BUILDING_HC_ENTRANCEHALL_INT_PART_05,Зал приёмов (Гильдия), интерьер, часть 05
+684,BUILDING_HC_ENTRANCEHALL_INT_PART_06,Зал приёмов (Гильдия), интерьер, часть 06
+685,BUILDING_GUILD_DINING_HALL_01,Обеденный зал Гильдии 01
+686,BUILDING_DINING_HALL_PART_02,Обеденный зал, часть 02
+687,BUILDING_GUILD_LIBRARY_01,Библиотека Гильдии 01
+688,BUILDING_GUILD_SHOP_01,Лавка Гильдии 01
+689,BUILDING_GUILD_EXTERIOR_01,Гильдия (экстерьер) 01
+690,BUILDING_GUILD_EXTERIOR_02,Гильдия (экстерьер) 02
+691,BUILDING_GUILD_EXTERIOR_02a,Гильдия (экстерьер) 02a
+692,BUILDING_GUILD_EXTERIOR_02b,Гильдия (экстерьер) 02b
+693,BUILDING_GUILD_EXTERIOR_03,Гильдия (экстерьер) 03
+694,BUILDING_GUILD_EXTERIOR_04,Гильдия (экстерьер) 04
+695,BUILDING_GUILD_EXTERIOR_05,Гильдия (экстерьер) 05
+696,BUILDING_GUILD_EXTERIOR_05a,Гильдия (экстерьер) 05a
+697,BUILDING_GUILD_EXTERIOR_06,Гильдия (экстерьер) 06
+698,BUILDING_GUILD_FRESCO_DOME_ROOF_01,Купол с фреской (крыша) 01
+699,BUILDING_GUILD_FRESCO_DOME_TUNNEL_01,Купол с фреской (туннель) 01
+700,BUILDING_GUILD_FRESCO_DOME_CAVE_01,Купол с фреской (пещера) 01
+701,BUILDING_GUILD_FRESCO_DOME_01,Купол с фреской 01
+702,BUILDING_FRESCO_DOME_02,Купол с фреской 02
+703,BUILDING_FRESCO_DOME_03,Купол с фреской 03
+704,BUILDING_FRESCO_DOME_04,Купол с фреской 04
+705,BUILDING_FRESCO_DOME_05,Купол с фреской 05
+706,BUILDING_FRESCO_DOME_06,Купол с фреской 06
+707,BUILDING_GUILD_LO_POLY_01,Гильдия (низкополигональная) 01
+708,BUILDING_EXTERIOR_MAIN_PART_02,Основная часть (экстерьер), часть 02
+709,BUILDING_EXTERIOR_MAIN_PART_03,Основная часть (экстерьер), часть 03
+710,BUILDING_EXTERIOR_MAIN_PART_04,Основная часть (экстерьер), часть 04
+711,BUILDING_HKC_BOATHOUSE,Лодочный сарай (Крючий берег)
+712,BUILDING_HKC_CHURCH,Церковь (Крючий берег)
+713,BUILDING_HKC_HOUSE_01,Дом (Крючий берег) 01
+714,BUILDING_HKC_HOUSE_02,Дом (Крючий берег) 02
+715,BUILDING_HKC_HOUSE_BUYABLE,Покупной дом (Крючий берег)
+716,BUILDING_HKC_LIGHTHOUSE,Маяк (Крючий берег)
+721,BUILDING_HKC_TAVERN_01,Таверна (Крючий берег) 01
+722,BUILDING_HKC_SHOP_GENERAL_STORE_01,Универсальная лавка (Крючий берег) 01
+723,BUILDING_HKC_SHOP_WEAPON_STORE_01,Оружейная лавка (Крючий берег) 01
+724,BUILDING_DRAGON_QUEST_DEFENCES_01,Укрепления (Задание с драконом) 01
+725,BUILDING_DRAGON_QUEST_DEFENCES_02,Укрепления (Задание с драконом) 02
+726,BUILDING_DRAGON_QUEST_DEFENCES_03,Укрепления (Задание с драконом) 03
+727,BUILDING_KHG_HOUSE_CHIEFS_HUT,Хижина вождя (Нотхоул Глэйд)
+728,BUILDING_KHG_HOUSE_BUYABLE_HUT,Покупная хижина (Нотхоул Глэйд)
+729,BUILDING_KHG_FEASTING_HALL,Пиршественный зал (Нотхоул Глэйд)
+730,BUILDING_KHG_HOUSE_MEDIUM_01,Средний дом (Нотхоул Глэйд) 01
+731,BUILDING_KHG_HOUSE_MEDIUM_02,Средний дом (Нотхоул Глэйд) 02
+732,BUILDING_KHG_HOUSE_LARGE_01,Большой дом (Нотхоул Глэйд) 01
+733,BUILDING_KHG_RUIN_01,Руины (Нотхоул Глэйд) 01
+734,BUILDING_KHG_SHOP_01,Лавка (Нотхоул Глэйд) 01
+735,BUILDING_KHG_SHOP_02,Лавка (Нотхоул Глэйд) 02
+736,BUILDING_KHG_WORKSHOP,Мастерская (Нотхоул Глэйд)
+737,BUILDING_KHG_WAREHOUSE,Склад (Нотхоул Глэйд)
+738,BUILDING_KHG_WAREHOUSE_02,Склад (Нотхоул Глэйд) 02
+739,BUILDING_KHG_SAWMILL,Лесопилка (Нотхоул Глэйд)
+740,BUILDING_WATERFALL_CAVERN,Водопадная пещера
+741,BUILDING_WATERFALL_CAVERN_02,Водопадная пещера 02
+742,BUILDING_WATERFALL_CAVERN_03,Водопадная пещера 03
+743,BUILDING_WATERFALL_CAVERN_04,Водопадная пещера 04
+744,BUILDING_WATERFALL_CAVERN_05,Водопадная пещера 05
+745,BUILDING_WATERFALL_CAVERN_06,Водопадная пещера 06
+746,BUILDING_WATERFALL_CAVERN_07,Водопадная пещера 07
+747,BUILDING_NW_OUTPOST,Аванпост (Северные пустоши)
+748,BUILDING_NW_BOATHOUSE_01,Лодочный сарай (Северные пустоши) 01
+749,BUILDING_NW_CAVE_ENTRANCE_01,Вход в пещеру (Северные пустоши) 01
+750,BUILDING_NW_GUARD_HUT_01,Сторожевая будка (Северные пустоши) 01
+751,BUILDING_NW_GATEHOUSE_01,Крепостные ворота (Северные пустоши) 01
+752,BUILDING_DRAGON_TOWER_01,Башня дракона 01
+753,BUILDING_OAKVALE_HOUSE_LARGE,Большой дом (Оуквэйл)
+754,BUILDING_OAKVALE_HOUSE_MEDIUM_SINGLE_FLOOR,Средний дом в один этаж (Оуквэйл)
+755,BUILDING_RUSTIC_HERO_HOUSE,Дом героя (деревенский)
+756,BUILDING_OAKVALE_HOUSE_MEDIUM_TWO_FLOORS,Средний дом в два этажа (Оуквэйл)
+757,BUILDING_OAKVALE_TAVERN,Таверна (Оуквэйл)
+758,BUILDING_OV_SHOP_GENERIC_01,Универсальная лавка (Оуквэйл) 01
+759,BUILDING_OV_SHOP_GIFTSHOP_01,Лавка подарков (Оуквэйл) 01
+760,BUILDING_OAKVALE_HOUSE_MEDIUM_SINGLE_FLOOR_BUYABLE,Покупной средний дом в один этаж (Оуквэйл)
+761,BUILDING_CAVE_BASIC_ENTRANCE_01,Стандартный вход в пещеру 01
+762,BUILDING_BEACHHUT,Пляжная хижина
+763,BUILDING_TOWN_TRADERBRIDGE_01,Мост Торговца 01
+764,BUILDING_PRISON_BARRACKS_01,Казармы тюрьмы 01
+765,BUILDING_PRISON_TORTURE_CHAMBER_01,Камера пыток 01
+766,BUILDING_PRISON_WARDER_OFFICE_01,Кабинет надзирателя 01
+767,BUILDING_PRISON_CELL_BLOCK_01,Тюремный блок 01
+768,BUILDING_PRISON_CELL_BLOCK_02,Тюремный блок 02
+769,BUILDING_PRISON_CELL_BLOCK_03,Тюремный блок 03
+770,BUILDING_PRISON_CELL_BLOCK_04,Тюремный блок 04
+771,BUILDING_PRISON_CELL_BLOCK_05,Тюремный блок 05
+772,BUILDING_KRAKEN_CHAMBER,Зал Кракена
+773,BUILDING_KRAKEN_CHAMBER_ENTRANCE,Вход в Зал Кракена
+774,BUILDING_KRAKEN_CHAMBER_BLOCKED_01,Зал Кракена (заблокирован) 01
+775,BUILDING_KRAKEN_CHAMBER_BLOCKED_02,Зал Кракена (заблокирован) 02
+776,BUILDING_KRAKEN_CHAMBER_EXIT,Выход из Зала Кракена
+777,BUILDING_PASSAGE_PRISON_HALL_01,Коридор (тюрьма) 01
+778,BUILDING_PASSAGE_PRISON_BEND_S_01,Изгиб коридора (тюрьма, S) 01
+779,BUILDING_PASSAGE_PRISON_JUNCTION_01,Перекресток коридора (тюрьма) 01
+780,BUILDING_PASSAGE_PRISON_BEND_LEFT_01,Поворот коридора налево (тюрьма) 01
+781,BUILDING_PASSAGE_PRISON_BEND_U_LEFT_01,П-образный поворот налево (тюрьма) 01
+782,BUILDING_PASSAGE_PRISON_DOOR_BUFFER_01,Буфер двери (тюрьма) 01
+783,BUILDING_PASSAGE_GY_JUNCTION_01,Перекресток (кладбище) 01
+784,BUILDING_PASSAGE_GY_BEND_LEFT_01,Поворот налево (кладбище) 01
+785,BUILDING_PASSAGE_GY_BEND_U_LEFT_01,П-образный поворот налево (кладбище) 01
+786,BUILDING_PASSAGE_GY_BEND_RIGHT_01,Поворот направо (кладбище) 01
+787,BUILDING_PASSAGE_GY_BEND_S_01,Изгиб (кладбище) 01
+788,BUILDING_PASSAGE_GY_DOOR_BUFFER_01,Буфер двери (кладбище) 01
+790,BUILDING_PRISON_COURTYARD_01,Тюремный двор 01
+809,BUILDING_PRISON_CELL_DIVIDING_WALL_01,Разделительная стена в камере 01
+810,BUILDING_PRISON_CELL_SECTION_END_01,Конец секции камер 01
+811,BUILDING_PRISON_CELL_SECTION_MID_01,Середина секции камер 01
+812,BUILDING_PRISON_EXT_WALL_ARCH_01,Внешняя стена тюрьмы (арка) 01
+813,BUILDING_PRISON_EXT_WALL_CORNER_01,Внешняя стена тюрьмы (угол) 01
+814,BUILDING_PRISON_EXT_WALL_STRAIGHT_01,Внешняя стена тюрьмы (прямая) 01
+815,BUILDING_PRISON_BARRACKS_LARGE_01,Большие тюремные казармы 01
+816,BUILDING_PRISON_BARRACKS_SMALL_01,Малые тюремные казармы 01
+817,BUILDING_PRISON_SOLITARY_CELL_01,Карцер 01
+818,BUILDING_PRISON_SOLITARY_CELL_SECTION_01,Секция карцеров 01
+819,BUILDING_PRISON_SOLITARY_CELL_CORRIDOR_01,Коридор карцеров 01
+820,BUILDING_PRISON_STAIRCASE_01,Тюремная лестница 01
+821,BUILDING_PRISON_STORE_ROOM_01,Тюремная кладовая 01
+822,BUILDING_SNOWSPIRE_HOUSE_BUYABLE,Покупной дом (Северные пустоши)
+823,BUILDING_SNOWSPIRE_HOUSE_SMALL_01,Маленький дом (Северные пустоши) 01
+824,BUILDING_SNOWSPIRE_HOUSE_MEDIUM_SINGLE_FLOOR,Средний дом в один этаж (Северные пустоши)
+825,BUILDING_SNOWSPIRE_HOUSE_LARGE,Большой дом (Северные пустоши)
+826,BUILDING_SNOWSPIRE_HOUSE_MEDIUM_TWO_FLOORS,Средний дом в два этажа (Северные пустоши)
+827,BUILDING_SNOWSPIRE_SHOP_CHARITY_01,Благотворительная лавка (Северные пустоши) 01
+828,BUILDING_SNOWSPIRE_SHOP_BLACKSMITH_01,Кузница (Северные пустоши) 01
+829,BUILDING_SNOWSPIRE_SHOP_TAILOR_01,Лавка портного (Северные пустоши) 01
+830,BUILDING_SNOWSPIRE_WAREHOUSE_01,Склад (Северные пустоши) 01
+831,BUILDING_SNOWSPIRE_WAREHOUSE_02,Склад (Северные пустоши) 02
+832,BUILDING_SNOWSPIRE_TAVERN,Таверна (Северные пустоши)
+833,BUILDING_SNOWSPIRE_GATEHOUSE,Крепостные ворота (Северные пустоши)
+834,BUILDING_SNOWSPIRE_MARKET_STALL_OPEN_01,Рыночная палатка (открытая, Северные пустоши) 01
+835,BUILDING_SNOWSPIRE_MARKET_STALL_TATTOOIST_01,Палатка татуировщика (Северные пустоши) 01
+836,BUILDING_WW_TRADER_STALL_WAGON_01,Фургон-лавка торговца (Западные пустоши) 01
+837,BUILDING_BARROWFIELDS_MARKETSTALL_01,Рыночная палатка (Курганные поля) 01
+838,BUILDING_BARROWFIELDS_MARKETSTALL_02,Рыночная палатка (Курганные поля) 02
+839,BUILDING_BARROWFIELDS_HOME_TENT,Жилая палатка (Курганные поля)
+840,BUILDING_CHAPEL_GOOD,Часовня Добра
+2887,BUILDING_BANDIT_TOWER_ARCHER_01,Башня лучника (бандиты) 01
+2888,BUILDING_BANDIT_SCOUT_POST_01,Пост разведчика (бандиты) 01
+2889,BUILDING_BANDIT_TENT_01,Палатка бандита 01
+2890,BUILDING_BANDIT_TENT_01A,Палатка бандита 01A
+2891,BUILDING_BANDIT_TENT_01B,Палатка бандита 01B
+2892,BUILDING_BANDIT_TENT_02,Палатка бандита 02
+2893,BUILDING_BANDIT_TENT_04,Палатка бандита 04
+2894,BUILDING_BANDIT_TENT_DARKWOOD_STALL_TEMPLATE,Шаблон палатки-лавки бандита (Темнолесье)
+2895,BUILDING_BANDIT_TENT_DARKWOOD_STALL_01,Палатка-лавка бандита (Темнолесье) 01
+2896,BUILDING_BANDIT_TENT_DARKWOOD_STALL_02,Палатка-лавка бандита (Темнолесье) 02
+2897,BUILDING_BANDIT_TENT_DARKWOOD_STALL_04,Палатка-лавка бандита (Темнолесье) 04
+2898,BUILDING_BANDIT_TAVERN_DUMMY,Заглушка таверны бандита
+2899,BUILDING_BANDIT_CHIEF_TENT,Палатка вождя бандитов
+2900,BUILDING_BLOODSTONE_MARKETSTALL_01,Рыночная палатка (Бладстоун) 01
+2901,BUILDING_BLOODSTONE_TAVERN,Таверна (Бладстоун)
+2902,BUILDING_BANDIT_MARKET_STALL_CLOSED_01,Рыночная палатка бандита (закрытая) 01
+2903,BUILDING_BANDIT_MARKET_STALL_OPEN_BASE,Основа открытой рыночной палатки бандита
+2904,BUILDING_BANDIT_CAMP_STALL_01,Лавка в лагере бандитов 01
+2905,BUILDING_BANDIT_CAMP_STALL_02,Лавка в лагере бандитов 02
+2906,BUILDING_BANDIT_CAMP_STALL_03,Лавка в лагере бандитов 03
+2980,BUILDING_BREAKSIEGE_BANDIT_TENT_01,Палатка бандита (Прорыв осады) 01
+2981,BUILDING_BREAKSIEGE_BANDIT_TENT_03,Палатка бандита (Прорыв осады) 03
+3665,BUILDING_LPDD_CHAMBER,Зал (Затерянные палаты...)
+3666,BUILDING_LPDD_02,Затерянные палаты... 02
+3667,BUILDING_LPDD_03,Затерянные палаты... 03
+3668,BUILDING_LPDD_04,Затерянные палаты... 04
+3669,BUILDING_LPDD_05,Затерянные палаты... 05
+3670,BUILDING_LPDD_06,Затерянные палаты... 06
+3671,BUILDING_LPDD_07,Затерянные палаты... 07
+3921,BUILDING_CRYPT,Склеп
+3922,BUILDING_HANGING_TREE_JAIL,Тюрьма у Висельного дерева
+3923,BUILDING_HANGING_TREE_FARM_COTTAGE_01,Фермерский домик (Висельное дерево) 01
+4146,BUILDING_CAVE_HOBBE_CHIEF_CHAMBER_01,Зал вождя хоббитов (пещера) 01
+4147,BUILDING_CAVE_HOBBE_ENTRANCE_01,Вход в пещеру хоббитов 01
+4148,BUILDING_CAVE_HOBBE_ENTRANCE_OUTSIDE_01,Вход в пещеру хоббитов (снаружи) 01
+4149,BUILDING_CAVE_HOBBE_LARDER_01,Кладовая хоббитов (пещера) 01
+4150,BUILDING_CAVE_HOBBE_STEPS_01,Ступени в пещере хоббитов 01
+4151,BUILDING_CAVE_HOBBE_TUNNEL_01,Туннель хоббитов 01
+4152,BUILDING_CAVE_NYMPH_BRIDGE_CAVERN,Пещера с мостом нимфы
+4153,BUILDING_CAVE_NYMPH_CHAMBER,Зал нимфы
+4154,BUILDING_CAVE_NYMPH_MAIN_HALL_ROCK,Главный зал нимфы (скала)
+4155,BUILDING_CAVE_NYMPH_MAIN_HALL,Главный зал нимфы
+4156,BUILDING_CAVE_GIBBET_WOOD_ENTRANCE_01,Вход в пещеру (Висельный лес) 01
+4165,BUILDING_HOBBE_CAVE_SECTION_01,Секция пещеры хоббитов 01
+4166,BUILDING_HOBBECAVE_01,Пещера хоббитов 01
+4167,BUILDING_HOBBECAVE_02,Пещера хоббитов 02
+4168,BUILDING_HOBBECAVE_03,Пещера хоббитов 03
+4169,BUILDING_HOBBECAVE_04,Пещера хоббитов 04
+4170,BUILDING_HOBBE_CAVE_LARDER_01,Кладовая в пещере хоббитов 01
+4171,BUILDING_HOBBE_CAVE_CHAMBER_01,Зал в пещере хоббитов 01
+4172,BUILDING_HOBBE_CAVE_CAVE_01,Пещера хоббитов 01
+4173,BUILDING_HOBBE_CAVE_FINAL_CORRIDOR,Финальный коридор (пещера хоббитов)
+4174,BUILDING_HOBBE_CAVE_FINAL_CORRIDOR_02,Финальный коридор (пещера хоббитов) 02
+4175,BUILDING_HOBBE_CAVE_CAVE_SMALL_01,Малая пещера хоббитов 01
+4176,BUILDING_HOBBE_CAVE_THRONE_ROOM_02,Тронный зал (пещера хоббитов) 02
+4177,BUILDING_HOBBE_CAVE_NYMPH_CHAMBER,Зал нимфы (пещера хоббитов)
+4178,BUILDING_HOBBE_CAVE_NYMPH_CHAMBER_01,Зал нимфы (пещера хоббитов) 01
+4179,BUILDING_HOBBE_CAVE_NYMPH_CHAMBER_02,Зал нимфы (пещера хоббитов) 02
+4180,BUILDING_HOBBE_CAVE_NYMPH_CHAMBER_03,Зал нимфы (пещера хоббитов) 03
+4181,BUILDING_HOBBE_CAVE_NYMPH_CHAMBER_04,Зал нимфы (пещера хоббитов) 04
+4182,BUILDING_HOBBE_CAVE_NYMPH_CHAMBER_05,Зал нимфы (пещера хоббитов) 05
+4183,BUILDING_HOBBE_CAVE_NYMPH_CHAMBER_06,Зал нимфы (пещера хоббитов) 06
+4184,BUILDING_HOBBE_CAVE_NYMPH_CHAMBER_07,Зал нимфы (пещера хоббитов) 07
+14761,BUILDING_PEHM_HERO_CENTRE_01,Центр героя (Темнолесье)

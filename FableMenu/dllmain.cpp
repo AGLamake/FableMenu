@@ -28,7 +28,7 @@ void PluginProcess()
 	{
 		eMouse::UpdateMouse();
 		Notifications->Update();
-		TheMenu->Process();
+		GetMenu().Process();
 		Sleep(1);
 	}
 }

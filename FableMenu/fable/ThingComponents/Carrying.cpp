@@ -4,6 +4,7 @@
 CTCCarrying* CTCCarrying::Alloc(CThing* creature)
 {
 	CallMethodAndReturn<CTCCarrying*, 0x4E7DFC, CThing*>(creature);
+	return 0;
 }
 
 bool CTCCarrying::IsCarryingWeapon(CThing* creature)

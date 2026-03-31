@@ -1,4 +1,3 @@
-ID,ORIGINAL,TRANSLATE,CRASH,LIMITED
 113,NULLDEF_CREATURE,СБОЙ,СБОЙ (вылетает игра),1,0
 255,CREATURE_BASE_TEMPLATE,Шаблон для существ,СБОЙ (вылетает игра),1,0
 256,CREATURE_AI_BASE_TEMPLATE,Шаблон для существ с ИИ,СБОЙ (вылетает игра),1,0
@@ -6,7 +5,7 @@ ID,ORIGINAL,TRANSLATE,CRASH,LIMITED
 258,CREATURE_GENERIC_ADULT_MALE_VILLAGER_TEMPLATE,Ничего не появляется,"Ничего не появляется, сбоя нет",0,0
 259,CREATURE_GENERIC_ADULT_FEMALE_VILLAGER_TEMPLATE,Ничего не появляется,"Ничего не появляется, сбоя нет",0,0
 260,CREATURE_GENERIC_CHILD_VILLAGER_TEMPLATE,Шаблон для жителя-ребенка,СБОЙ (вылетает игра),1,0
-261,CREATURE_COMBAT_ENEMY_HUMANOID_TEMPLATE,"Шаблон для человекоподобного существа, способного сражаться",СБОЙ (вылетает игра),1,0
+261,CREATURE_COMBAT_ENEMY_HUMANOID_TEMPLATE,"Шаблон для человекоподобного существа способного сражаться",СБОЙ (вылетает игра),1,0
 262,CREATURE_BANDIT_SKELETON_COMMON_BASE,Говорящий меч,NPC,0,0
 263,CREATURE_BANDIT_BASE,Говорящий меч,NPC,0,0
 264,CREATURE_RIVAL_HERO_BASE,Говорящий меч,NPC,0,0
@@ -124,7 +123,7 @@ ID,ORIGINAL,TRANSLATE,CRASH,LIMITED
 1215,CREATURE_SUMMONER_01,Призывающий (синий),NPC,0,0
 1216,CREATURE_SUMMONER_02,Призывающий (красный),NPC,0,0
 1217,CREATURE_SUMMONER_FLAME_SLICE_DUMMY,Оса,NPC,0,0
-1220,CREATURE_INVISIBLE_BODGE,Ничего не появляется,"Ничего не появляется, сбоя нет",0,0
+1220,CREATURE_INVISIBLE_BODGE,Ничего не появляется,"Ничего не появляется сбоя нет",0,0
 1222,CREATURE_DRAGON_BASE,СБОЙ - Шаблон дракона,СБОЙ (вылетает игра),1,0
 1223,CREATURE_DRAGON_01,Дракон,NPC,0,0
 1224,CREATURE_DRAGON_01_HOVER,Дракон (зависший на хвосте),NPC,0,0
@@ -189,7 +188,7 @@ ID,ORIGINAL,TRANSLATE,CRASH,LIMITED
 1287,CREATURE_HORNET_LEV_03,Оса,NPC,0,0
 1288,CREATURE_HORNET_QUEEN_01,Королева ос,NPC,0,0
 1289,CREATURE_SCORPION_BLACK,Скорпион,NPC,0,0
-1290,CREATURE_SCORPION_KING_SUMMONED_SCORPION,"Скорпион, призываемый Арахноксом",NPC,0,0
+1290,CREATURE_SCORPION_KING_SUMMONED_SCORPION,"Скорпион призываемый Арахноксом",NPC,0,0
 1291,CREATURE_SCORPION_BROWN,Скорпион,NPC,0,0
 1292,CREATURE_SCORPION_QUEEN,Большой скорпион,NPC,0,0
 1294,CREATURE_SCORPION_KING,Арахнокс (король скорпионов),NPC,0,0
@@ -201,7 +200,7 @@ ID,ORIGINAL,TRANSLATE,CRASH,LIMITED
 1300,CREATURE_MONSTER_GUARD,Стражник-оборотень,NPC,0,0
 1468,CREATURE_HERO_TEMPLATE,СБОЙ,СБОЙ (вылетает игра),1,0
 1469,CREATURE_HERO_HUMAN_BASE,СБОЙ,СБОЙ (вылетает игра),1,0
-1470,CREATURE_HERO,Герой Оуквэйла (гильдеец),NPC,0,0
+1470,CREATURE_HERO,Герой Оуквэйла,NPC,0,0
 1471,CREATURE_HERO_TRAINING,Герой Оуквэйла (гильдеец),NPC,0,0
 1472,CREATURE_HERO_CHILD,Герой Оуквэйла (ребенок),NPC,0,0
 1473,CREATURE_HERO_BALVERINE,Оборотень (в присиде),NPC,0,0
@@ -306,10 +305,10 @@ ID,ORIGINAL,TRANSLATE,CRASH,LIMITED
 1584,CREATURE_YOUNG_HERO,Герой Оуквэйла (ребенок),NPC,0,0
 1585,CREATURE_LADY_GREY,Леди Грей,NPC,0,0
 1586,CREATURE_LADY_GREYS_SISTER,Аманда Грей,NPC,0,0
-1587,CREATURE_BODY_GUARD,"Телохранитель (сильный, злой)",NPC,0,0
-1588,CREATURE_BODY_GUARD_WEAK,"Телохранитель (слабый, злой)",NPC,0,0
-1589,CREATURE_BODY_GUARD_GOOD,"Теохранитель (сильный, добрый)",NPC,0,0
-1590,CREATURE_BODY_GUARD_GOOD_WEAK,"Теохранитель (слабый, добрый)",NPC,0,0
+1587,CREATURE_BODY_GUARD,Телохранитель (сильный злой),NPC,0,0
+1588,CREATURE_BODY_GUARD_WEAK,Телохранитель (слабый злой),NPC,0,0
+1589,CREATURE_BODY_GUARD_GOOD,Телохранитель (сильный добрый),NPC,0,0
+1590,CREATURE_BODY_GUARD_GOOD_WEAK,Телохранитель (слабый, добрый),NPC,0,0
 1591,GHOSTLY_SWORD,Меч-Призрак,NPC,0,0
 1592,CREATURE_GRAVEYARD_CARETAKER,Могильщик,NPC,0,0
 1593,CREATURE_FISHERMAN,Рыбак,NPC,0,0
@@ -335,7 +334,7 @@ ID,ORIGINAL,TRANSLATE,CRASH,LIMITED
 1613,CREATURE_PROPHET_04,Пророк Огненного Сердца 4,NPC,0,0
 1614,CREATURE_PROPHET_05,Пророк Огненного Сердца 5,NPC,0,0
 1615,CREATURE_BS_ARMED_VILLAGER_BULLY_MALE_ADULT,Хулиган (с мечом),NPC,0,0
-1616,CREATURE_BIGASS_CHICKEN,Курица (огромная),"Без дополнительных функций",1,1
+1616,CREATURE_BIGASS_CHICKEN,Курица (огромная),Без дополнительных функций,1,1
 1617,CREATURE_GUILD_GOOD_APPRENTICE_MALE,Экзаменатор Гильдии,NPC,0,0
 1618,CREATURE_GUILD_APPRENTICE_FEMALE,Ученица Гильдии,NPC,0,0
 1619,CREATURE_GUILD_EVIL_APPRENTICE_FEMALE,Ученица Гильдии (в черном),NPC,0,0
@@ -365,7 +364,7 @@ ID,ORIGINAL,TRANSLATE,CRASH,LIMITED
 1643,CREATURE_CAGED_VILLAGER_FEMALE,Девушка (пленница),NPC,0,0
 1644,CREATURE_BS_VILLAGER_BOY,Мальчик (ребенок),NPC,0,0
 1645,CREATURE_BS_VILLAGER_GIRL,Девочка (ребенок),NPC,0,0
-1646,CREATURE_BS_VILLAGER_DEAD_MALE,"Мужчина (не прозрачный, но призрак)",NPC,0,0
+1646,CREATURE_BS_VILLAGER_DEAD_MALE,Мужчина (не прозрачный призрак),NPC,0,0
 1647,CREATURE_BS_VILLAGER_MARKET_TRADER,Житель Бауэрстоуна,NPC,0,0
 1648,CREATURE_BS_VILLAGER_GREENGROCER,Житель Бауэрстоуна,NPC,0,0
 1649,CREATURE_BS_VILLAGER_BUTCHER,Житель Бауэрстоуна,NPC,0,0
@@ -489,7 +488,7 @@ ID,ORIGINAL,TRANSLATE,CRASH,LIMITED
 1768,CREATURE_HOOK_COAST_VILLAGER_MALE_SHOPKEEPER,Торговец (невидимый),NPC,0,0
 1769,CREATURE_HOOK_COAST_VILLAGER_FEMALE_SHOPKEEPER,Торговец (невидимая),NPC,0,0
 1770,CREATURE_HOOK_COAST_VILLAGER_MALE_BLACKSMITH,Кузнец (Крючий берег),NPC,0,0
-1771,CREATURE_HOOK_COAST_VILLAGER_FEMALE_TAILOR,"Лавочник (девушка, Крючий берег)",NPC,0,0
+1771,CREATURE_HOOK_COAST_VILLAGER_FEMALE_TAILOR,Лавочник (девушка Крючий берег),NPC,0,0
 1772,CREATURE_HOOK_COAST_VILLAGER_MALE_BARMAN,Трактирщик (Крючий берег),NPC,0,0
 1773,CREATURE_HOOK_COAST_VILLAGER_MALE_UNEMPLOYED,Житель Крючьего берега,NPC,0,0
 1774,CREATURE_HOOK_COAST_VILLAGER_FEMALE_BARMAID,Барменша (Крючий берег),NPC,0,0

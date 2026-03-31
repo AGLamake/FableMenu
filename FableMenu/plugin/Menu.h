@@ -2,8 +2,9 @@
 #include "..\Fable.h"
 #include <vector>
 #include "../helper/eKeyboardMan.h"
+#include <map>
 
-#define FABLEMENU_VERSION "0.6"
+#define FABLEMENU_VERSION "0.6.1 (FRC)"
 #define NUM_FACTIONS 30
 #define NUM_BRAIN_NAMES 113
 #define NUM_CREATURES 700
@@ -23,6 +24,7 @@ enum eMenuSubMenus {
 	SM_Creature_List,
 	SM_Object_List,
 	SM_Particle_List,
+	SM_FableShop_List,
 	SM_Total
 };
 
@@ -109,6 +111,7 @@ public:
 	void	 DrawCreatureList();
 	void	 DrawObjectList();
 	void	 DrawParticleList();
+	void	 DrawFableShopList();
 
 	void	 DrawKeyBind(char* name, int* var);
 	void	 KeyBind(int* var, char* bindName, char* name);
@@ -126,7 +129,7 @@ public:
 	static bool ms_bSlowmotion;
 };
 
-extern FableMenu* TheMenu;
+FableMenu& GetMenu();
 void HookRegularUpdate();
 void HookWorldUpdate();
 bool InGame();
@@ -134,3 +137,7 @@ bool InGame();
 bool IsWindowFocused();
 char* GetUTF8String(wchar_t* name);
 void CopyToClipboard(char* name);
+void CopyToClipboard(char* name, char* description);
+std::string GetClipboardText();
+bool ButtonAutoSize(const char* text);
+bool ButtonAutoSize(const char* text, float extraWidth, float extraHeight);

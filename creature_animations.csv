@@ -1,0 +1,232 @@
+0,ST_SNEAK,Красться
+1,ST_WALK,Ходьба
+2,ST_RUN,Бег
+3,ST_OPINION_,Мнение/Эмоция
+4,ST_SPRINT,Бег
+5,ST_JOG,Бег трусцой
+6,ST_SLOW_WALK,Медленная ходьба
+7,ST_HEAD_TURN_H,Поворот головы (горизонтально)
+8,ST_HEAD_TURN_V,Поворот головы (вертикально)
+9,ST_BLINK,Моргание
+10,ST_ABILITY_FAST_SHEATHE_TO_COMBAT_POSE,Быстрое вложение оружия в боевую стойку
+11,ST_WALK_,Ходьба (альт.)
+12,ST_HOVER_,Зависание
+13,ST_BUILD_DIVINE_WRATH,Накопление Божественного Гнева
+14,ST_BUILD_UNHOLY_POWER,Накопление Нечестивой Силы
+15,ST_ABILITY_FAST_UNSHEATHE_TO_COMBAT_POSE,Быстрое обнажение оружия в боевую стойку
+16,ST_FLY,Полет
+17,ST_HOMICIDAL_INTRO,Вступление (убийственное)
+18,ST_IDLE,Ожидание
+19,ST_HOLD_BOX_PUT_DOWN,Удержание ящика (поставить)
+20,ST_CALL_OVER,Подозвать
+21,ST_PICK_UP_GENERIC_BOX,Поднять ящик
+22,ST_RUN_STOP,Остановка после бега
+23,ST_RUN_180_TURN,Разворот на 180° во время бега
+24,ST_JUMP,Прыжок
+25,ST_IDLE_COMB,Ожидание (комбинированное)
+26,ST_IDLE_SUBTLE,Ожидание (незаметное)
+27,ST_IDLE_MELEE,Ожидание (ближний бой)
+28,ST_STAND_UP_FROM_FLOOR,Встать с пола
+29,ST_SIT_ON_FLOOR,Сидеть на полу
+30,ST_DRAIN_LIFE_OUTOF,Выход из вампиризма
+31,ST_CAST_DRAIN_LIFE,Применение вампиризма
+32,ST_CAST_DRAIN_LIFE_ADVANCE,Применение вампиризма (продвижение)
+33,ST_DIE,Смерть
+34,ST_RELEASE_ENFLAME,Высвобождение Огненного Круга
+35,ST_BUILD_UP_ENFLAME,Накопление Огненного Круга
+36,ST_RELEASE_PHYSICAL_SHIELD,Высвобождение Физического Щита
+37,ST_BUILD_UP_PHYSICAL_SHIELD,Накопление Физического Щита
+38,ST_REMOVE_PHYSICAL_SHIELD,Снятие Физического Щита
+39,ST_CAST_TURNCOAT,Применение Предательства
+40,ST_BUILD_UP_TURNCOAT,Накопление Предательства
+41,ST_RELEASE_TURNCOAT,Высвобождение Предательства
+42,ST_BUILD_UP_DRAIN_LIFE,Накопление вампиризма
+43,ST_RELEASE_DRAIN_LIFE,Высвобождение вампиризма
+44,ST_CAST_HEAL,Применение лечения (на другого)
+45,ST_CAST_HEAL_SELF,Применение лечения (на себя)
+46,ST_BUILD_UP_HEAL,Накопление лечения (на другого)
+47,ST_BUILD_UP_HEAL_SELF,Накопление лечения (на себя)
+48,ST_RELEASE_HEAL,Высвобождение лечения (на другого)
+49,ST_RELEASE_HEAL_SELF,Высвобождение лечения (на себя)
+50,ST_CAST_SUMMON_GHOST_SWORD,Призыв Призрачного Меча
+51,ST_BUILD_UP_SUMMON_GHOST_SWORD,Накопление Призрачного Меча
+52,ST_RELEASE_SUMMON_GHOST_SWORD,Высвобождение Призрачного Меча
+53,ST_CAST_SUMMON_SPELL,Призыв заклинанием
+54,ST_BUILD_UP_SUMMON_SPELL,Накопление призыва
+55,ST_RELEASE_SUMMON_SPELL,Высвобождение призыва
+56,ST_BUILD_UP_FIREBALL_SPELL,Накопление Огненного Шара
+57,ST_TELEPORT,Телепортация
+58,ST_TELEPORT_OUT,Телепортация (выход)
+59,ST_TELEPORT_IN,Телепортация (вход)
+60,ST_CAST_DIVINE_WRATH,Применение Божественного Гнева
+61,ST_RELEASE_DIVINE_WRATH,Высвобождение Божественного Гнева
+62,ST_RELEASE_LOOP_DIVINE_WRATH,Цикл высвобождения Божественного Гнева
+63,ST_CAST_UNHOLY_POWER,Применение Нечестивой Силы
+64,ST_RELEASE_UNHOLY_POWER,Высвобождение Нечестивой Силы
+65,ST_RELEASE_LOOP_UNHOLY_POWER,Цикл высвобождения Нечестивой Силы
+66,ST_FORCE_PUSH_INTO,Вход в Силовой Толчок
+67,ST_BUILDUP_PHYSICAL_SHIELD,Накопление Физического Щита
+68,ST_BUILDUP_ENFLAME,Накопление Огненного Круга
+69,ST_HEAL_INTO,Вход в лечение
+70,ST_HEAL_RELEASE,Высвобождение лечения
+71,ST_GET_UP_FROM_FALL,Подняться после падения
+72,ST_FORCE_PUSH_RELEASE,Высвобождение Силового Толчка
+73,ST_STRIKE_SPECIAL,Специальный удар
+74,ST_JUMP_AWAY_FROM_COMBAT,Прыжок из боя
+75,ST_JUMP_AWAY_FROM_COMBAT_LONG,Длинный прыжок из боя
+76,ST_BATTLE_CHARGE_CAST,Применение Боевого Рывка
+77,ST_BUILD_UP_SLOW_TIME,Накопление Замедления Времени
+78,ST_CAST_ASSASSIN_RUSH,Применение Рывка Ассасина
+79,ST_BATTLE_CHARGE_BUILD_UP,Накопление Боевого Рывка
+80,ST_BATTLE_CHARGE_IMPACT,Удар Боевого Рывка
+81,ST_BATTLE_CHARGE_MISS,Промах Боевого Рывка
+82,ST_BATTLE_CHARGE_TURN_LEFT,Поворот налево во время Боевого Рывка
+83,ST_BATTLE_CHARGE_TURN_RIGHT,Поворот направо во время Боевого Рывка
+84,ST_MULTI_ARROW_CAST,Применение Множественных Стрел
+85,ST_HOLDING_PLATE,Удержание тарелки
+86,ST_SNEAK_POSE,Поза крадущегося
+87,ST_SNEAK_UPRIGHT_POSE,Поза крадущегося (выпрямленный)
+88,ST_SNEAK_UPRIGHT,Красться выпрямившись
+89,ST_STRIKE_LIGHT_OUTOF,Выход из легкого удара
+90,ST_SLEEPING_IN_BED,Сон в кровати
+91,ST_WALK_OUT_OF,Выход из ходьбы
+92,ST_WALK_INTO,Вход в ходьбу
+93,ST_WIPE_TABLE,Протирка стола
+94,ST_OPINION_FEAR_REACTION_SHRINKING_AWAY,Реакция страха (отшатывание)
+95,ST_OPINION_FEAR_IDLE_COWERING,Ожидание страха (съеживание)
+96,ST_OPINION_DISAPPROVAL_POINTING_AWAY_GET_OUT,Неодобрение (указание уйти)
+97,ST_OPINION_RIDICULE_SNIGGER,Насмешка (хихиканье)
+98,ST_OPINION_RIDICULE_BELLY_LAUGH,Насмешка (хохот)
+99,ST_OPINION_FEAR_REACTION_SURPRISED,Реакция страха (удивление)
+100,ST_OPINION_DISAPPROVAL_SHAKE_FIST,Неодобрение (угроза кулаком)
+101,ST_OPINION_DISAPPROVAL_DISMISSING_HAND_SWIPE,Неодобрение (отмахивание)
+102,ST_OPINION_ATTRACTED_PREENING_SELF,Привлекательность (прихорашивание)
+103,ST_OPINION_ATTRACTED_HANDS_CLASPED_SWAYING,Привлекательность (раскачивание со сложенными руками)
+104,ST_OPINION_NEUTRAL_SHOUTING_WITH_HANDS_CUPPED,Нейтральное (крик рупором)
+105,ST_OPINION_DISAPPROVAL_CALLING_OVER_FOR_FIGHT,Неодобрение (вызов на бой)
+106,ST_OPINION_APPROVAL_WAVING_AT_DISTANCE,Одобрение (махание издалека)
+107,ST_OPINION_NEUTRAL_REACTION_HAND_UP_GREET,Нейтральная реакция (приветствие рукой)
+108,ST_OPINION_APPROVAL_REACTION_ARMS_WIDE_GREET,Одобрение (широкое приветствие)
+109,ST_CROUCH_TALK_TO_CHILD_OUTOF,Выход из разговора с ребенком (на корточках)
+110,ST_CROUCH_TALK_TO_CHILD_LOOP,Цикл разговора с ребенком (на корточках)
+111,ST_CROUCH_TALK_TO_CHILD_INTO,Вход в разговор с ребенком (на корточках)
+112,ST_SEATED_CHAIR_RAISE_HAND,Поднятие руки (сидя на стуле)
+113,ST_CRYING_ON_THE_SPOT_OUTOF,Выход из плача
+114,ST_CRYING_ON_THE_SPOT_LOOP,Цикл плача
+115,ST_CRYING_ON_THE_SPOT_INTO,Вход в плач
+116,ST_WORK_GET_CRATE,Работа (взять ящик)
+117,ST_HOLDING_CRATE,Удержание ящика
+118,ST_WORK_PUT_CRATE,Работа (поставить ящик)
+119,ST_WASH_FLOOR_OUTOF,Выход из мытья пола
+120,ST_WASH_FLOOR_LOOP,Цикл мытья пола
+121,ST_WASH_FLOOR_INTO,Вход в мытье пола
+122,ST_BLOW_KISS_LOOP,Цикл воздушного поцелуя
+123,ST_PUKING,Рвота
+124,ST_PISSING,Мочеиспускание
+125,ST_DICEGAME_WATCHING_OUTOF,Выход из наблюдения за игрой в кости
+126,ST_DICEGAME_PLAYING,Игра в кости
+127,ST_DICEGAME_PLAYING_WIN,Победа в игре в кости
+128,ST_DICEGAME_PLAYING_LOSE,Поражение в игре в кости
+129,ST_DICEGAME_PLAYING_THROW,Бросок костей
+130,ST_DICEGAME_PICKING_DICE,Поднятие костей
+131,ST_DICEGAME_WATCHING_INTO,Вход в наблюдение за игрой в кости
+132,ST_LISTENING_TO_PLANS_LOOP,Цикл прослушивания планов
+133,ST_LISTENING_TO_PLANS_BREAKDOWN,Прерывание прослушивания планов
+134,ST_MAKING_PLANS_ON_FLOOR_WITH_SWORD_OUTOF,Выход из планирования с мечом на полу
+135,ST_MAKING_PLANS_ON_FLOOR_WITH_SWORD_LOOP,Цикл планирования с мечом на полу
+136,ST_MAKING_PLANS_ON_FLOOR_WITH_SWORD_INTO,Вход в планирование с мечом на полу
+137,ST_LISTENING_TO_PLANS_OUTOF,Выход из прослушивания планов
+138,ST_LISTENING_TO_PLANS_INTO,Вход в прослушивание планов
+139,ST_TRAINEE_STRIKE_DUMMY,Ученик (удар по манекену)
+140,ST_TRAINEE_FIRE_BOW_RELEASE,Ученик (выстрел из лука)
+141,ST_TRAINEE_FIRE_BOW_LOAD,Ученик (зарядка лука)
+142,ST_TRAINEE_SPELLS,Ученик (заклинания)
+143,ST_TRAINEE_PERUSE_LIBRARY,Ученик (изучение библиотеки)
+144,ST_TRAINEE_LOOK_AT_MAP_TABLE,Ученик (взгляд на карту)
+145,ST_SIT_ON_SEAT,Сесть на стул
+146,ST_STAND_UP_FROM_SEAT,Встать со стула
+147,ST_SIT_ON_BENCH,Сесть на скамейку
+148,ST_STAND_UP_FROM_BENCH,Встать со скамейки
+149,ST_CHICKEN_EATING_INTO,Вход в поедание цыпленка
+150,ST_CHICKEN_EATING_LOOP,Цикл поедания цыпленка
+151,ST_CHICKEN_EATING_OUTOF,Выход из поедания цыпленка
+152,ST_CHICKEN_COOKING_INTO,Вход в приготовление цыпленка
+153,ST_CHICKEN_COOKING_LOOP,Цикл приготовления цыпленка
+154,ST_CHICKEN_COOKING_OUTOF,Выход из приготовления цыпленка
+155,ST_SITTING_SING_SONG_DRUNK_INTO,Вход в пьяное пение (сидя)
+156,ST_SITTING_SING_SONG_DRUNK_LOOP,Цикл пьяного пения (сидя)
+157,ST_SITTING_TAKE_BOTTLE_FROM_POCKET,Достать бутылку из кармана (сидя)
+158,ST_SITTING_DRINKING_LOOP,Цикл питья (сидя)
+159,ST_SITTING_THROW_BOTTLE_AWAY,Выбросить бутылку (сидя)
+160,ST_TANTRUM_OUTOF,Выход из истерики
+161,ST_TANTRUM_LOOP,Цикл истерики
+162,ST_TANTRUM_INTO,Вход в истерику
+163,ST_EATING,Еда
+164,ST_LOOK_AROUND,Оглядывание
+165,ST_SURPRISE,Удивление
+166,ST_CLEAN_WINDOWS,Мытье окон
+167,ST_DISGUSTED,Отвращение
+168,ST_AGGRESSIVE,Агрессия
+169,ST_TEACH_INTO,Вход в обучение
+170,ST_TEACH_LOOP,Цикл обучения
+171,ST_TEACH_OUTOF,Выход из обучения
+172,ST_SAWING_OUTOF,Выход из пилки
+173,ST_SAWING_LOOP,Цикл пилки
+174,ST_SAWING_INTO,Вход в пилку
+175,ST_GET_ITEM_OUT_OF_POCKET,Достать предмет из кармана
+176,ST_FILL_ITEM,Наполнение предмета
+177,ST_LIGHT_CANDLE,Зажечь свечу
+178,ST_UNLIGHT_CANDLE,Потушить свечу
+179,ST_EMOTE,Эмоция
+180,ST_SURPRISED,Удивленный
+181,ST_SLEEP_ON_FLOOR_OUTOF,Выход из сна на полу
+182,ST_SLEEP_ON_FLOOR_IDLE,Ожидание сна на полу
+183,ST_SLEEP_ON_FLOOR_INTO,Вход в сон на полу
+184,ST_SAT_EATING_INTO,Вход в еду (сидя)
+185,ST_SAT_EATING_OUTOF,Выход из еды (сидя)
+186,ST_SAT_EATING_LOOP,Цикл еды (сидя)
+187,ST_STRIKE_LIGHT_INTO,Вход в легкий удар
+188,ST_FALL_TO_GROUND,Падение на землю
+189,ST_MUNCH,Жевание
+190,ST_FEED_OUTOF,Выход из кормления
+191,ST_FEED_LOOP,Цикл кормления
+192,ST_FEED_INTO,Вход в кормление
+193,ST_RUN_JUMP,Прыжок с разбега
+194,ST_POINT,Указание
+195,ST_HELLO,Приветствие
+196,ST_PRAY_STANDING_OUTOF,Выход из молитвы стоя
+197,ST_PRAY_STANDING_LOOP,Цикл молитвы стоя
+198,ST_PRAY_STANDING_INTO,Вход в молитву стоя
+199,ST_PRAY_OUTOF,Выход из молитвы
+200,ST_PRAY_LOOP,Цикл молитвы
+201,ST_PRAY_INTO,Вход в молитву
+202,ST_CHANTING_LOOP,Цикл песнопения
+203,ST_CHANTING_INTO,Вход в песнопение
+204,ST_ARGUING_POINT_AT,Спор (указывание на)
+205,ST_ARGUING_POINT_AWAY,Спор (указывание прочь)
+206,ST_COME_ON,Призыв/Давай
+207,ST_SALUTE,Салют
+208,ST_STRIKE_COMBO_FIREBALL,Комбо-удар с огненным шаром
+209,ST_STRIKE_LEFT_FIREBALL,Удар слева с огненным шаром
+210,ST_OPINION_DISAPPROVAL_POINT_AT,Неодобрение (указание)
+211,ST_OPINION_DISAPPROVAL_BOOING,Неодобрение (освистывание)
+212,ST_OPINION_NEUTRAL_POINTING_CALLING_FRIEND,Нейтральное (указание зову другу)
+213,ST_OPINION_APPROVAL_ECSTATIC_GESTURING_OUTOF,Выход из восторженного жестикулирования
+214,ST_OPINION_APPROVAL_ECSTATIC_GESTURING_LOOP,Цикл восторженного жестикулирования
+215,ST_OPINION_APPROVAL_ECSTATIC_GESTURING_INTO,Вход в восторженное жестикулирование
+216,ST_OPINION_APPROVAL_CHEERING_BOTH_ARMS_UP,Одобрение (ликование с поднятыми руками)
+217,ST_OPINION_APPROVAL_CLAPPING_ARMS_UP,Одобрение (аплодисменты с поднятыми руками)
+218,ST_OPINION_APPROVAL_CLAPPING_NORMAL,Одобрение (обычные аплодисменты)
+219,ST_OPINION_DISAPPROVAL_NYAH_NYAH,Неодобрение (дразнилка "ня-ня")
+220,ST_OPINION_RIDICULE_POINT_AND_LAUGH,Насмешка (указание и смех)
+221,ST_OPINION_DISAPPROVAL_THUMBS_DOWN,Неодобрение (большой палец вниз)
+222,ST_OPINION_NEUTRAL_POINT_AT,Нейтральное (указание)
+223,ST_OPINION_FEAR_WALK_EDGING_BACKWARDS,Страх (отступление назад)
+224,ST_UNPERTURBED_GESTURE,Невозмутимый жест
+225,ST_WAVE_SPECIAL_01,Особый взмах 01
+226,ST_THREATEN,Угроза
+227,ST_WAVE_SPECIAL_02,Особый взмах 02
+228,ST_BOAST,Хвастовство
+229,ST_PUKE_INTO,Вход в рвоту
+230,ST_PUKE_LOOP,Цикл рвоты
+231,ST_PUKE_OUTOF,Выход из рвоты
